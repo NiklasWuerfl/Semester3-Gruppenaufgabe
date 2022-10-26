@@ -7,6 +7,7 @@
     * fehlende Funktionen:
         * bestimmte Attribute bestimmter Entitäten abfragen
         * bestimmte Attribute bestimmter Entitäten ändern
+        * Berechnung der Note einer Prüfungsleistung?
 
     * andere TO DO's:
         * Sicherstellen des richtigen Datentyps bei Übergabe einer Entität als Liste
@@ -466,6 +467,26 @@ def database_setup(database_path):
         create_table(conn, sql_create_admin_table)
     else:
         print("error! cannot create the database connection")
+
+
+def get_all_modules(student_id):
+    """
+    noch nicht implementiert!
+    alle Module eines Studenten ausgeben
+
+    Args:
+        student_id: Student, für den die Noten ausgegeben werden sollen
+
+    Returns:
+        data: Dictionary mit allen Modulen des Studenten {modul_name: [credits, note]}
+    """
+
+    sql = '''SELECT * FROM Pruefungsleistung WHERE student_id=?'''
+    # cur = conn.cursor()
+    # cur.execute(sql, (pruefungsleistung_student, pruefungsleistung_veranstaltung,))
+    # conn.commit()
+    return {1:[5, 1.8], 2:[5, 2.8], 3: [10, 2.4]}
+
 
 
 if __name__ == '__main__':

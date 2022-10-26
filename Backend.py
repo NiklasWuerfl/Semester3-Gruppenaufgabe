@@ -44,3 +44,29 @@
 import database as db
 import pandas as pd
 import fastapi as api
+
+def get_gpa(student_id):
+    """
+    Berechnet GPA
+    noch wird die Bachelorarbeit und die Credit-Anzahl nicht berücksichtigt
+
+    :param student_id
+    :return: gpa: Float
+
+    Test:
+        * ungültige student_id angeben
+        *
+    """
+
+    alle_noten = db.get_all_modules(student_id)
+    ects_reached = 0
+    # print(alle_noten)
+    # print(ects_reached)
+    # print (list(alle_noten.values()))
+    gewichtete_noten_sum = 0.0
+    for i in alle_noten.values():
+        gewichtete_noten_sum += i[0] * i[1]
+        ects_reached += i[0]
+
+    gpa = gewichtete_noten_sum/ects_reached
+    return gpa
