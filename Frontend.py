@@ -1,27 +1,54 @@
+"""Modul für Frontend
+
+author: Daniela Mayer
+date: 27.10.2022
+version: 1.0.0
+licence: free
 """
-    Modul zur Modellierung des Frontends
-    Verwaltet welche Programmseiten angezeigt werden und nimmt Nutzerinteraktionen an, die an die REST API weitergegeben werden
-    Macht entsprechende Anfragen an API/Backend und zeigt die erhaltenen "Ergebnisse" für den Nutzer an
 
-    mögliche Module:
-        * Streamlit
-        * Tkinter
-        * SimpleGUI
-        * Django
+import PySimpleGUI as sg
 
-    benötigte Funktionen:
-        * Anmeldungsfenster
-        * einheitliche Startseite? Anzeige der verschiedenen Funktionen auf Grundlage der Rolle
-        * Studenten: Übersicht der eigenen Module, Noten und Credits
-        * Dozenten: Übersicht der Kurse und Vorlesungen (Durchschnitte?)
-        * Admin: Organisationsstruktur der angelegten User?
-        generell: API Kommunikation
+def LoginSeite():
+    """Implimentierung der Login Seite
 
-    außerdem könnten wir hier ein EasterEgg einbauen -> Kreativitätspunkte
+        Tests:
+        *
+        *
+    """
+    
+    layout = [[sg.Text('Username:'), sg.InputText()],
+          [sg.Text('Passwort:'), sg.InputText()],
+          [sg.Button('Anmelden')]]
 
-    author:
-    date: 26.10.2022
-    version: 1.0.0
-    licence: free (open source)
-"""
-import PySimpleGUI as psg
+    window=sg.Window('Login Seite', layout)
+
+    while True:
+        event, values= window.read()
+        if event == sg.WIN_CLOSED:
+            break
+
+    window.close()
+
+def FalseLoginSeite():
+    """Implimentierung der Seite nach falschem einloggen
+
+        Tests:
+        *
+        *
+    """
+    
+    layout = [[sg.Text('Username oder Passwort falsch', text_color= 'red')],
+        [sg.Text('Username:'), sg.InputText()],
+        [sg.Text('Passwort:'), sg.InputText()],
+        [sg.Button('Anmelden')],
+        [sg.Text('Falls Sie das Passwort vergessen haben, wenden Sie sich an den Administrator!')]]
+
+    window=sg.Window('Login Seite', layout)
+
+    while True:
+        event, values= window.read()
+        if event == sg.WIN_CLOSED:
+            break
+
+    window.close()
+
