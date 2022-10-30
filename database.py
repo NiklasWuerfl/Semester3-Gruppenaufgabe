@@ -6,21 +6,21 @@
         * Attribute bestimmter Entitäten abfragen
         * Attribute bestimmter Entitäten ändern
         * Passwort & Nutzername an Personen gespeichert
+        * alle Prüfungsleistungen eines Studenten abfragen
 
     * fehlende Funktionen:
         * Rückmeldung von Niklas & Manu
 
     * andere TO DO's:
         * Sicherstellen des richtigen Datentyps bei Übergabe einer Entität als Liste
-        * Entitäten müssen ID bekommen, die noch nicht vergeben ist
+        * existieren die Studenten & Veranstaltungs ID beim Anlegen einer neuen Prüfungsleistung && punkte_erreicht > punkte_gesamt
 
     * weitere Anmerkungen bzw. zu Dokumentieren:
         * welche Module müssen in Entwicklungsumgebung installiert sein?
-        * auch testen?
 
     author: Emma Müller
-    date: 29.10.2022
-    version: 1.0.1
+    date: 30.10.2022
+    version: 1.0.2
     licence: free (open source)
 """
 
@@ -85,9 +85,12 @@ def create_student(conn, student):
             *
     """
     sql = '''INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (?,?,?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, student)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, student)
+        conn.commit()
+    except Error as create_student_error:
+        print(create_student_error)
 
 
 def create_kurs(conn, kurs):
@@ -105,9 +108,12 @@ def create_kurs(conn, kurs):
             *
     """
     sql = '''INSERT INTO Kurs(kurs_id,name,dozent_id) VALUES (?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, kurs)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, kurs)
+        conn.commit()
+    except Error as create_kurs_error:
+        print(create_kurs_error)
 
 
 def create_dozent(conn, dozent):
@@ -125,9 +131,12 @@ def create_dozent(conn, dozent):
             *
     """
     sql = '''INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (?,?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, dozent)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, dozent)
+        conn.commit()
+    except Error as create_dozent_error:
+        print(create_dozent_error)
 
 
 def create_modul(conn, modul):
@@ -145,9 +154,12 @@ def create_modul(conn, modul):
             *
     """
     sql = '''INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, modul)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, modul)
+        conn.commit()
+    except Error as create_modul_error:
+        print(create_modul_error)
 
 
 def create_veranstaltung(conn, veranstaltung):
@@ -165,9 +177,12 @@ def create_veranstaltung(conn, veranstaltung):
             *
     """
     sql = '''INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, veranstaltung)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, veranstaltung)
+        conn.commit()
+    except Error as create_veranstaltung_error:
+        print(create_veranstaltung_error)
 
 
 def create_pruefungsleistung(conn, pruefugsleistung):
@@ -185,9 +200,12 @@ def create_pruefungsleistung(conn, pruefugsleistung):
             *
     """
     sql = '''INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, pruefugsleistung)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, pruefugsleistung)
+        conn.commit()
+    except Error as create_pruefungsleistung_error:
+        print(create_pruefungsleistung_error)
 
 
 def create_admin(conn, admin):
@@ -207,9 +225,12 @@ def create_admin(conn, admin):
             *
     """
     sql = '''INSERT INTO Admin(admin_id,vorname,nachname,nutzername,passwort) VALUES (?,?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute(sql, admin)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, admin)
+        conn.commit()
+    except Error as create_admin_error:
+        print(create_admin_error)
 
 
 
@@ -228,9 +249,12 @@ def delete_student(conn, student_id):
             *
     """
     sql = '''DELETE FROM Student WHERE student_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (student_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (student_id,))
+        conn.commit()
+    except Error as delete_student_error:
+        print(delete_student_error)
 
 
 def delete_kurs(conn, kurs_id):
@@ -248,9 +272,12 @@ def delete_kurs(conn, kurs_id):
             *
     """
     sql = '''DELETE FROM Kurs WHERE kurs_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (kurs_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (kurs_id,))
+        conn.commit()
+    except Error as delete_kurs_error:
+        print(delete_kurs_error)
 
 
 def delete_dozent(conn, dozent_id):
@@ -268,9 +295,12 @@ def delete_dozent(conn, dozent_id):
             *
     """
     sql = '''DELETE FROM Dozent WHERE dozent_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (dozent_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (dozent_id,))
+        conn.commit()
+    except Error as delete_dozent_error:
+        print(delete_dozent_error)
 
 
 def delete_modul(conn, modul_id):
@@ -288,9 +318,12 @@ def delete_modul(conn, modul_id):
             *
     """
     sql = '''DELETE FROM Modul WHERE modul_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (modul_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (modul_id,))
+        conn.commit()
+    except Error as delete_modul_error:
+        print(delete_modul_error)
 
 
 def delete_veranstaltung(conn, veranstaltung_id):
@@ -308,9 +341,12 @@ def delete_veranstaltung(conn, veranstaltung_id):
             *
     """
     sql = '''DELETE FROM Veranstaltung WHERE veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (veranstaltung_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (veranstaltung_id,))
+        conn.commit()
+    except Error as delete_veranstaltung_error:
+        print(delete_veranstaltung_error)
 
 
 def delete_pruefungsleistung(conn, pruefungsleistung_veranstaltung, pruefungsleistung_student):
@@ -329,9 +365,12 @@ def delete_pruefungsleistung(conn, pruefungsleistung_veranstaltung, pruefungslei
             *
     """
     sql = '''DELETE FROM Pruefungsleistung WHERE student_id=? and veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (pruefungsleistung_student,pruefungsleistung_veranstaltung,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (pruefungsleistung_student,pruefungsleistung_veranstaltung,))
+        conn.commit()
+    except Error as delete_pruefungsleistung_error:
+        print(delete_pruefungsleistung_error)
 
 
 def delete_admin(conn, admin_id):
@@ -351,9 +390,12 @@ def delete_admin(conn, admin_id):
             *
     """
     sql = '''DELETE FROM Admin WHERE admin_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (admin_id,))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (admin_id,))
+        conn.commit()
+    except Error as delete_admin_error:
+        print(delete_admin_error)
 
 
 def get_student_by_id(conn, student_id):
@@ -371,9 +413,13 @@ def get_student_by_id(conn, student_id):
             *
     """
     sql = '''SELECT * FROM Student WHERE student_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (student_id,))
-    student = cur.fetchall()
+    student = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (student_id,))
+        student = cur.fetchall()
+    except Error as get_student_by_id_error:
+        print(get_student_by_id_error)
     return student[0]
 
 
@@ -392,9 +438,13 @@ def get_kurs_by_id(conn, kurs_id):
             *
     """
     sql = '''SELECT * FROM Kurs WHERE kurs_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (kurs_id,))
-    kurs = cur.fetchall()
+    kurs = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (kurs_id,))
+        kurs = cur.fetchall()
+    except Error as get_kurs_by_id_error:
+        print(get_kurs_by_id_error)
     return kurs[0]
 
 
@@ -413,9 +463,13 @@ def get_dozent_by_id(conn, dozent_id):
             *
     """
     sql = '''SELECT * FROM Dozent WHERE dozent_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (dozent_id,))
-    dozent = cur.fetchall()
+    dozent = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (dozent_id,))
+        dozent = cur.fetchall()
+    except Error as get_dozent_by_id_error:
+        print(get_dozent_by_id_error)
     return dozent[0]
 
 
@@ -434,9 +488,13 @@ def get_modul_by_id(conn, modul_id):
             *
     """
     sql = '''SELECT * FROM Modul WHERE student_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (modul_id,))
-    modul = cur.fetchall()
+    modul = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (modul_id,))
+        modul = cur.fetchall()
+    except Error as get_modul_by_id_error:
+        print(get_modul_by_id_error)
     return modul[0]
 
 
@@ -455,9 +513,13 @@ def get_veranstaltung_by_id(conn, veranstaltung_id):
             *
     """
     sql = '''SELECT * FROM Veranstaltung WHERE veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (veranstaltung_id,))
-    veranstaltung = cur.fetchall()
+    veranstaltung = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (veranstaltung_id,))
+        veranstaltung = cur.fetchall()
+    except Error as get_veranstaltung_by_id_error:
+        print(get_veranstaltung_by_id_error)
     return veranstaltung[0]
 
 
@@ -477,9 +539,13 @@ def get_pruefungsleistung_by_id(conn, pruefungsleistung_student_id, pruefungslei
             *
     """
     sql = '''SELECT * FROM Pruefungsleistung WHERE student_id=? AND veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (pruefungsleistung_student_id,pruefungsleistung_veranstaltung_id,))
-    pruefungsleistung = cur.fetchall()
+    pruefungsleistung = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (pruefungsleistung_student_id,pruefungsleistung_veranstaltung_id,))
+        pruefungsleistung = cur.fetchall()
+    except Error as get_pruefungsleistung_by_id_error:
+        print(get_pruefungsleistung_by_id_error)
     return pruefungsleistung[0]
 
 
@@ -498,9 +564,13 @@ def get_admin_by_id(conn, admin_id):
             *
     """
     sql = '''SELECT * FROM Admin WHERE admin_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (admin_id,))
-    admin = cur.fetchall()
+    admin = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (admin_id,))
+        admin = cur.fetchall()
+    except Error as get_admin_by_id_error:
+        print(get_admin_by_id_error)
     return admin[0]
 
 
@@ -521,9 +591,12 @@ def edit_student(conn, student):
             *
     """
     sql = '''UPDATE Student SET student_id=?, vorname=?, nachname=?, kurs_id=?, nutzername=?, passwort=? WHERE student_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (student[0],student[1],student[2],student[3],student[4],student[5],student[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (student[0],student[1],student[2],student[3],student[4],student[5],student[0]))
+        conn.commit()
+    except Error as edit_student_error:
+        print(edit_student_error)
 
 
 def edit_kurs(conn, kurs):
@@ -543,9 +616,12 @@ def edit_kurs(conn, kurs):
             *
     """
     sql = '''UPDATE Kurs SET kurs_id=?, name=?, dozent_id=? WHERE kurs_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (kurs[0],kurs[1],kurs[2],kurs[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (kurs[0],kurs[1],kurs[2],kurs[0]))
+        conn.commit()
+    except Error as edit_kurs_error:
+        print(edit_kurs_error)
 
 
 def edit_dozent(conn, dozent):
@@ -565,9 +641,12 @@ def edit_dozent(conn, dozent):
             *
     """
     sql = '''UPDATE Dozent SET dozent_id=?, vorname=?, nachname=?, nutzername=?, passwort=? WHERE dozent_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (dozent[0],dozent[1],dozent[2],dozent[3],dozent[4],dozent[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (dozent[0],dozent[1],dozent[2],dozent[3],dozent[4],dozent[0]))
+        conn.commit()
+    except Error as edit_dozent_error:
+        print(edit_dozent_error)
 
 
 def edit_modul(conn, modul):
@@ -587,9 +666,12 @@ def edit_modul(conn, modul):
             *
     """
     sql = '''UPDATE Modul SET modul_id=?, modulname=?, credits=?, kurs_id=? WHERE modul_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (modul[0],modul[1],modul[2],modul[3],modul[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (modul[0],modul[1],modul[2],modul[3],modul[0]))
+        conn.commit()
+    except Error as edit_modul_error:
+        print(edit_modul_error)
 
 
 def edit_veranstaltung(conn, veranstaltung):
@@ -609,9 +691,12 @@ def edit_veranstaltung(conn, veranstaltung):
             *
     """
     sql = '''UPDATE Veranstaltung SET veranstaltung_id=?, name=?, dozent_id=?, modul_id=? WHERE veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (veranstaltung[0],veranstaltung[1],veranstaltung[2],veranstaltung[3],veranstaltung[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (veranstaltung[0],veranstaltung[1],veranstaltung[2],veranstaltung[3],veranstaltung[0]))
+        conn.commit()
+    except Error as edit_veranstaltung_error:
+        print(edit_veranstaltung_error)
 
 
 def edit_pruefungsleistung(conn, pruefungsleistung):
@@ -631,9 +716,12 @@ def edit_pruefungsleistung(conn, pruefungsleistung):
             *
     """
     sql = '''UPDATE Pruefungsleistung SET student_id=?, veranstaltung_id=?, punkte_gesamt=?, punkte_erreicht=? WHERE student_id=? AND veranstaltung_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (pruefungsleistung[0],pruefungsleistung[1],pruefungsleistung[2],pruefungsleistung[3],pruefungsleistung[0],pruefungsleistung[1]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (pruefungsleistung[0],pruefungsleistung[1],pruefungsleistung[2],pruefungsleistung[3],pruefungsleistung[0],pruefungsleistung[1]))
+        conn.commit()
+    except Error as edit_pruefungsleistung_error:
+        print(edit_pruefungsleistung_error)
 
 
 def edit_admin(conn, admin):
@@ -653,9 +741,37 @@ def edit_admin(conn, admin):
             *
     """
     sql = '''UPDATE Admin SET admin_id=?, vorname=?, nachname=?, nutzername=?, passwort=? WHERE admin_id=?'''
-    cur = conn.cursor()
-    cur.execute(sql, (admin[0],admin[1],admin[2],admin[3],admin[4],admin[0]))
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (admin[0],admin[1],admin[2],admin[3],admin[4],admin[0]))
+        conn.commit()
+    except Error as edit_admin_error:
+        print(edit_admin_error)
+
+
+def get_all_pruefungsleistung_by_student(conn, student_id):
+    """ alle Prüfungsleistungen eines Studenten aus Tabelle 'Pruefungsleistung' abfragen
+
+        Args:
+            conn (Connection): Connection-Objekt für Verbindung zur Datenbank
+            student_id (int): einzigartige ID des Studenten, die in Tabelle 'Pruefungsleistung' als Verlinkung zum Studenten dient
+
+        Returns:
+            list: Liste mit Listen welche Attribute-Werte aller gesuchten Prüfungsleistungen beinhaltet
+
+        Test:
+            *
+            *
+    """
+    sql = '''SELECT * FROM Pruefungsleistung WHERE student_id=?'''
+    pruefungsleistungen = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (student_id,))
+        pruefungsleistungen = cur.fetchall()
+    except Error as get_all_pruefungsleistung_by_student_error:
+        print(get_all_pruefungsleistung_by_student_error)
+    return pruefungsleistungen
 
 
 def database_setup(conn):
@@ -747,41 +863,43 @@ def database_setup(conn):
                                     passwort text
                             );'''
 
-    cur = conn.cursor()
-
     # create tables
     if conn is not None:
-        # create dozent table
-        cur.execute('''DROP TABLE IF EXISTS Dozent''')
-        create_table(conn, sql_create_dozent_table)
-        # create student table
-        cur.execute('''DROP TABLE IF EXISTS Student''')
-        create_table(conn, sql_create_student_table)
-        # create kurs table
-        cur.execute('''DROP TABLE IF EXISTS Kurs''')
-        create_table(conn, sql_create_kurs_table)
-        # create modul table
-        cur.execute('''DROP TABLE IF EXISTS Modul''')
-        create_table(conn, sql_create_modul_table)
-        # create veranstaltung table
-        cur.execute('''DROP TABLE IF EXISTS Veranstaltung''')
-        create_table(conn, sql_create_veranstaltung_table)
-        # create pruefungsleitung table
-        cur.execute('''DROP TABLE IF EXISTS Pruefungsleistung''')
-        create_table(conn, sql_create_pruefungsleistung_table)
-        # create admin table
-        cur.execute('''DROP TABLE IF EXISTS Admin''')
-        create_table(conn, sql_create_admin_table)
+        try:
+            cur = conn.cursor()
+            # create dozent table
+            cur.execute('''DROP TABLE IF EXISTS Dozent''')
+            create_table(conn, sql_create_dozent_table)
+            # create student table
+            cur.execute('''DROP TABLE IF EXISTS Student''')
+            create_table(conn, sql_create_student_table)
+            # create kurs table
+            cur.execute('''DROP TABLE IF EXISTS Kurs''')
+            create_table(conn, sql_create_kurs_table)
+            # create modul table
+            cur.execute('''DROP TABLE IF EXISTS Modul''')
+            create_table(conn, sql_create_modul_table)
+            # create veranstaltung table
+            cur.execute('''DROP TABLE IF EXISTS Veranstaltung''')
+            create_table(conn, sql_create_veranstaltung_table)
+            # create pruefungsleitung table
+            cur.execute('''DROP TABLE IF EXISTS Pruefungsleistung''')
+            create_table(conn, sql_create_pruefungsleistung_table)
+            # create admin table
+            cur.execute('''DROP TABLE IF EXISTS Admin''')
+            create_table(conn, sql_create_admin_table)
+        except Error as database_setup_error:
+            print(database_setup_error)
     else:
         print("error! cannot create the database connection")
 
 
 if __name__ == '__main__':
-    """kurzfristige Main-Funktion des Moduls
-        * wenn Modul nur als Auslagerung der Datenbankfunktionen dient:
-            * Verbindung zur Datenbank in anderer Funktion erstellen (Connection-Objekt)
-            * Konstante DATABASE_FILE in dieser Funktion speichern
-    """
+    #kurzfristige Main-Funktion des Moduls
+    #   wenn Modul nur als Auslagerung der Datenbankfunktionen dient:
+    #       Verbindung zur Datenbank in anderer Funktion erstellen (Connection-Objekt)
+    #       Konstante DATABASE_FILE in dieser Funktion speichern
+
     # create a database connection
     DATABASE_FILE = "test.db"
     my_connect = create_database_connection(DATABASE_FILE)
