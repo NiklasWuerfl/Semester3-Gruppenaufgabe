@@ -1,5 +1,5 @@
 """ Modul für Datenbankkommunikation
-    * bisher implementierte Funktionen:
+    * bisher implementierte Funktionen/Funktionalitäten:
         * Tabellen erstellen
         * Entitäten in Tabellen einfügen
         * Entitäten aus Tabellen löschen
@@ -7,28 +7,31 @@
         * Attribute bestimmter Entitäten ändern
         * Passwort & Nutzername an Personen gespeichert
         * alle Prüfungsleistungen eines Studenten abfragen
+        * Sicherstellen des richtigen Datentyps der Paramter von Funktionen die mit Datenbank interagieren
+        * Sicherstellen, dass punkte_gesamt >= punkte_erreicht
+        * Sicherstellen des richtigen Datentyps bei Übergabe einer Entität -> Übergabe als Tupel mit festgelegten Typen
 
     * fehlende Funktionen:
         * Rückmeldung von Niklas & Manu
 
     * andere TO DO's:
-        * Sicherstellen des richtigen Datentyps bei Übergabe einer Entität als Liste
-        * existieren die Studenten & Veranstaltungs ID beim Anlegen einer neuen Prüfungsleistung && punkte_erreicht > punkte_gesamt
+        * existieren die Studenten & Veranstaltungs ID beim Anlegen einer neuen Prüfungsleistung
 
     * weitere Anmerkungen bzw. zu Dokumentieren:
         * welche Module müssen in Entwicklungsumgebung installiert sein?
+        * am Ende: Konformität mit PEP 8 Richtlinien überprüfen (https://legacy.python.org/dev/peps/pep-0008/#function-and-method-arguments)
 
     author: Emma Müller
     date: 30.10.2022
-    version: 1.0.2
+    version: 1.0.3
     licence: free (open source)
 """
 
 import sqlite3
-from sqlite3 import Error
+from sqlite3 import Connection, Error
 
 
-def create_database_connection(database_path):
+def create_database_connection(database_path: str):
     """ Verbindung zur SQLite-Datenbank herstellen
 
         Args:
@@ -49,7 +52,7 @@ def create_database_connection(database_path):
     return conn
 
 
-def create_table(conn, sql_create_table):
+def create_table(conn: Connection, sql_create_table: str):
     """Tabelle in Datenbank mit Hilfe des sql_create_table-Befehls
 
         Args:
@@ -70,12 +73,12 @@ def create_table(conn, sql_create_table):
         print(connection_error)
 
 
-def create_student(conn, student):
+def create_student(conn: Connection, student: tuple[int, str, str, int, str, str]):
     """ neuen Student in Tabelle 'Student' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            student (list): Liste mit Werten der Attribute eines Students in Reihenfolge (student_id, vorname, nachname, kurs_id, nutzername, passwort)
+            student (tuple): Tupel mit Werten der Attribute eines Students in Reihenfolge (student_id, vorname, nachname, kurs_id, nutzername, passwort)
 
         Returns:
             None
@@ -93,12 +96,12 @@ def create_student(conn, student):
         print(create_student_error)
 
 
-def create_kurs(conn, kurs):
+def create_kurs(conn: Connection, kurs: tuple[int, str, int]):
     """ neuen Kurs in Tabelle 'Kurs' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            kurs (list): Liste mit Werten der Attribute eines Kurses in Reihenfolge (kurs_id, name, dozent_id)
+            kurs (tuple): Tupel mit Werten der Attribute eines Kurses in Reihenfolge (kurs_id, name, dozent_id)
 
         Returns:
             None
@@ -116,12 +119,12 @@ def create_kurs(conn, kurs):
         print(create_kurs_error)
 
 
-def create_dozent(conn, dozent):
+def create_dozent(conn: Connection, dozent: tuple[int, str, str, str, str]):
     """ neuen Dozent in Tabelle 'Dozent' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            dozent (list): Liste mit Werten der Attribute eines Dozenten in Reihenfolge (dozent_id, vorname, nachname, nutzername, passwort)
+            dozent (tuple): Tupel mit Werten der Attribute eines Dozenten in Reihenfolge (dozent_id, vorname, nachname, nutzername, passwort)
 
         Returns:
             None
@@ -139,12 +142,12 @@ def create_dozent(conn, dozent):
         print(create_dozent_error)
 
 
-def create_modul(conn, modul):
+def create_modul(conn: Connection, modul: tuple[int, str, int, int]):
     """ neues Modul in Tabelle 'Modul' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            modul (list): Liste mit Werten der Attribute eines Moduls in Reihenfolge (modul_id, modulname, credits, kurs_id)
+            modul (tuple): Tupel mit Werten der Attribute eines Moduls in Reihenfolge (modul_id, modulname, credits, kurs_id)
 
         Returns:
             None
@@ -162,12 +165,12 @@ def create_modul(conn, modul):
         print(create_modul_error)
 
 
-def create_veranstaltung(conn, veranstaltung):
+def create_veranstaltung(conn: Connection, veranstaltung: tuple[int, str, int, int]):
     """ neue Veranstaltung in Tabelle 'Veranstaltung' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            veranstaltung (list): Liste mit Werten der Attribute einer Veranstaltung in Reihenfolge (veranstaltung_id, name, dozent_id, modul_id)
+            veranstaltung (tuple): Tupel mit Werten der Attribute einer Veranstaltung in Reihenfolge (veranstaltung_id, name, dozent_id, modul_id)
 
         Returns:
             None
@@ -185,12 +188,12 @@ def create_veranstaltung(conn, veranstaltung):
         print(create_veranstaltung_error)
 
 
-def create_pruefungsleistung(conn, pruefugsleistung):
+def create_pruefungsleistung(conn: Connection, pruefugsleistung: tuple[int, int, int, int]):
     """ neue Prüfungsleistung in Tabelle 'Pruefungsleistung' einfügen
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            pruefungsleistung (list): Liste mit Werten der Attribute einer Prüfungsleistung in Reihenfolge (student_id, veranstaltung_id, punkte_gesamt, punkte_erreicht)
+            pruefungsleistung (tuple): Tupel mit Werten der Attribute einer Prüfungsleistung in Reihenfolge (student_id, veranstaltung_id, punkte_gesamt, punkte_erreicht)
 
         Returns:
             None
@@ -199,23 +202,26 @@ def create_pruefungsleistung(conn, pruefugsleistung):
             * Werte der Attribute mit falschen Datentyp (z.B. Integer anstatt String)
             *
     """
-    sql = '''INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (?,?,?,?)'''
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, pruefugsleistung)
-        conn.commit()
-    except Error as create_pruefungsleistung_error:
-        print(create_pruefungsleistung_error)
+    if pruefugsleistung[2] >= pruefugsleistung[3]:
+        sql = '''INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (?,?,?,?)'''
+        try:
+            cur = conn.cursor()
+            cur.execute(sql, pruefugsleistung)
+            conn.commit()
+        except Error as create_pruefungsleistung_error:
+            print(create_pruefungsleistung_error)
+    else:
+        print("Es können nicht mehr Punkte erreicht werden, als möglich ist zu erreichen!")
 
 
-def create_admin(conn, admin):
+def create_admin(conn: Connection, admin: tuple[int, str, str, str, str]):
     """ neuen Admin in Tabelle 'Admin' einfügen
         * Admins können nur im Backend angelegt werden
         * kein Usertyp kann über das Frontend die Tabelle 'Admin' bearbeiten
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            admin (list): Liste mit Werten der Attribute eines Admins in Reihenfolge (admin_id, vorname, nachname, nutzername, passwort)
+            admin (tuple): Tupel mit Werten der Attribute eines Admins in Reihenfolge (admin_id, vorname, nachname, nutzername, passwort)
 
         Returns:
             None
@@ -234,7 +240,7 @@ def create_admin(conn, admin):
 
 
 
-def delete_student(conn, student_id):
+def delete_student(conn: Connection, student_id: int):
     """ bestimmten Student aus der Tabelle 'Student' löschen
 
         Args:
@@ -257,7 +263,7 @@ def delete_student(conn, student_id):
         print(delete_student_error)
 
 
-def delete_kurs(conn, kurs_id):
+def delete_kurs(conn: Connection, kurs_id: int):
     """ bestimmten Kurs aus der Tabelle 'Kurs' löschen
 
         Args:
@@ -280,7 +286,7 @@ def delete_kurs(conn, kurs_id):
         print(delete_kurs_error)
 
 
-def delete_dozent(conn, dozent_id):
+def delete_dozent(conn: Connection, dozent_id: int):
     """ bestimmten Dozent aus der Tabelle 'Dozent' löschen
 
         Args:
@@ -303,7 +309,7 @@ def delete_dozent(conn, dozent_id):
         print(delete_dozent_error)
 
 
-def delete_modul(conn, modul_id):
+def delete_modul(conn: Connection, modul_id: int):
     """ bestimmtes Modul aus der Tabelle 'Modul' löschen
 
         Args:
@@ -326,7 +332,7 @@ def delete_modul(conn, modul_id):
         print(delete_modul_error)
 
 
-def delete_veranstaltung(conn, veranstaltung_id):
+def delete_veranstaltung(conn: Connection, veranstaltung_id: int):
     """ bestimmte Veranstaltung aus der Tabelle 'Veranstaltung' löschen
 
         Args:
@@ -349,7 +355,7 @@ def delete_veranstaltung(conn, veranstaltung_id):
         print(delete_veranstaltung_error)
 
 
-def delete_pruefungsleistung(conn, pruefungsleistung_veranstaltung, pruefungsleistung_student):
+def delete_pruefungsleistung(conn: Connection, pruefungsleistung_veranstaltung: int, pruefungsleistung_student: int):
     """ bestimmten Prüfungsleistung aus der Tabelle 'Pruefungsleistung' löschen
 
         Args:
@@ -373,7 +379,7 @@ def delete_pruefungsleistung(conn, pruefungsleistung_veranstaltung, pruefungslei
         print(delete_pruefungsleistung_error)
 
 
-def delete_admin(conn, admin_id):
+def delete_admin(conn: Connection, admin_id: int):
     """ bestimmter Admin aus der Tabelle 'Admin' löschen
         * Admins können nur aus dem Backend gelöscht werden
         * kein Usertyp kann über das Frontend die Tabelle 'Admin' bearbeiten
@@ -398,7 +404,7 @@ def delete_admin(conn, admin_id):
         print(delete_admin_error)
 
 
-def get_student_by_id(conn, student_id):
+def get_student_by_id(conn: Connection, student_id: int) -> list:
     """ Attribut-Werte eines Studenten aus Tabelle 'Student' abfragen
 
         Args:
@@ -423,7 +429,7 @@ def get_student_by_id(conn, student_id):
     return student[0]
 
 
-def get_kurs_by_id(conn, kurs_id):
+def get_kurs_by_id(conn: Connection, kurs_id: int) -> list:
     """ Attribut-Werte eines Kurses aus Tabelle 'Kurs' abfragen
 
         Args:
@@ -448,7 +454,7 @@ def get_kurs_by_id(conn, kurs_id):
     return kurs[0]
 
 
-def get_dozent_by_id(conn, dozent_id):
+def get_dozent_by_id(conn: Connection, dozent_id: int) -> list:
     """ Attribut-Werte eines Dozenten aus Tabelle 'Dozent' abfragen
 
         Args:
@@ -473,7 +479,7 @@ def get_dozent_by_id(conn, dozent_id):
     return dozent[0]
 
 
-def get_modul_by_id(conn, modul_id):
+def get_modul_by_id(conn: Connection, modul_id: int) -> list:
     """ Attribut-Werte eines Moduls aus Tabelle 'Modul' abfragen
 
         Args:
@@ -498,7 +504,7 @@ def get_modul_by_id(conn, modul_id):
     return modul[0]
 
 
-def get_veranstaltung_by_id(conn, veranstaltung_id):
+def get_veranstaltung_by_id(conn: Connection, veranstaltung_id: int) -> list:
     """ Attribut-Werte einer Veranstaltung aus Tabelle 'Veranstaltung' abfragen
 
         Args:
@@ -523,7 +529,7 @@ def get_veranstaltung_by_id(conn, veranstaltung_id):
     return veranstaltung[0]
 
 
-def get_pruefungsleistung_by_id(conn, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
+def get_pruefungsleistung_by_id(conn: Connection, pruefungsleistung_student_id: int, pruefungsleistung_veranstaltung_id: int) -> list:
     """ Attribut-Werte einer Prüfungsleistung aus Tabelle 'Pruefungsleistung' abfragen
 
         Args:
@@ -549,7 +555,7 @@ def get_pruefungsleistung_by_id(conn, pruefungsleistung_student_id, pruefungslei
     return pruefungsleistung[0]
 
 
-def get_admin_by_id(conn, admin_id):
+def get_admin_by_id(conn: Connection, admin_id: int) -> list:
     """ Attribut-Werte eines Admins aus Tabelle 'Admin' abfragen
 
         Args:
@@ -574,14 +580,15 @@ def get_admin_by_id(conn, admin_id):
     return admin[0]
 
 
-def edit_student(conn, student):
+def edit_student_by_id(conn: Connection, student_id: int, student: tuple[int, str, str, int, str, str]):
     """ Attribute eines Studenten in Tabelle 'Student' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_student_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_student_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            student (list): Liste mit neuen Werten der Attribute eines Students in Reihenfolge (student_id, vorname, nachname, kurs_id, nutzername, passwort)
+            student_id (int): einzigartige ID des Studenten zur Identifizierung
+            student (tuple): Tupel mit neuen Werten der Attribute eines Students in Reihenfolge (student_id, vorname, nachname, kurs_id, nutzername, passwort)
 
         Returns:
             None
@@ -593,20 +600,21 @@ def edit_student(conn, student):
     sql = '''UPDATE Student SET student_id=?, vorname=?, nachname=?, kurs_id=?, nutzername=?, passwort=? WHERE student_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (student[0],student[1],student[2],student[3],student[4],student[5],student[0]))
+        cur.execute(sql, (student[0],student[1],student[2],student[3],student[4],student[5],student_id))
         conn.commit()
-    except Error as edit_student_error:
-        print(edit_student_error)
+    except Error as edit_student_by_id_error:
+        print(edit_student_by_id_error)
 
 
-def edit_kurs(conn, kurs):
+def edit_kurs_by_id(conn: Connection, kurs_id: int, kurs: tuple[int, str, int]):
     """ Attribute eines Kurses in Tabelle 'Kurs' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_kurs_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_kurs_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            kurs (list): Liste mit neuen Werten der Attribute eines Kurses in Reihenfolge (kurs_id, name, dozent_id)
+            kurs_id (int): einzigartige ID des Kurses zur Identifizierung
+            kurs (tuple): Tupel mit neuen Werten der Attribute eines Kurses in Reihenfolge (kurs_id, name, dozent_id)
 
         Returns:
             None
@@ -618,20 +626,21 @@ def edit_kurs(conn, kurs):
     sql = '''UPDATE Kurs SET kurs_id=?, name=?, dozent_id=? WHERE kurs_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (kurs[0],kurs[1],kurs[2],kurs[0]))
+        cur.execute(sql, (kurs[0],kurs[1],kurs[2],kurs_id))
         conn.commit()
-    except Error as edit_kurs_error:
-        print(edit_kurs_error)
+    except Error as edit_kurs_by_id_error:
+        print(edit_kurs_by_id_error)
 
 
-def edit_dozent(conn, dozent):
+def edit_dozent_by_id(conn: Connection, dozent_id: int, dozent: tuple[int, str, str, str, str]):
     """ Attribute eines Dozenten in Tabelle 'Dozent' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_dozent_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_dozent_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            dozent (list): Liste mit neuen Werten der Attribute eines Dozent in Reihenfolge (dozent_id, vorname, nachname, nutzername, passwort)
+            dozent_id (int): einzigartige ID des Dozenten zur Identifizierung
+            dozent (tuple): Tupel mit neuen Werten der Attribute eines Dozent in Reihenfolge (dozent_id, vorname, nachname, nutzername, passwort)
 
         Returns:
             None
@@ -643,20 +652,21 @@ def edit_dozent(conn, dozent):
     sql = '''UPDATE Dozent SET dozent_id=?, vorname=?, nachname=?, nutzername=?, passwort=? WHERE dozent_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (dozent[0],dozent[1],dozent[2],dozent[3],dozent[4],dozent[0]))
+        cur.execute(sql, (dozent[0],dozent[1],dozent[2],dozent[3],dozent[4],dozent_id))
         conn.commit()
-    except Error as edit_dozent_error:
-        print(edit_dozent_error)
+    except Error as edit_dozent_by_id_error:
+        print(edit_dozent_by_id_error)
 
 
-def edit_modul(conn, modul):
+def edit_modul_by_id(conn: Connection, modul_id: int, modul: tuple[int, str, int, int]):
     """ Attribute eines Moduls in Tabelle 'Modul' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_modul_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_modul_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            modul (list): Liste mit neuen Werten der Attribute eines Moduls in Reihenfolge (modul_id, modulname, credits, kurs_id)
+            modul_id (int): einzigartige ID des Moduls zur Identifizierung
+            modul (tuple): Tupel mit neuen Werten der Attribute eines Moduls in Reihenfolge (modul_id, modulname, credits, kurs_id)
 
         Returns:
             None
@@ -668,20 +678,21 @@ def edit_modul(conn, modul):
     sql = '''UPDATE Modul SET modul_id=?, modulname=?, credits=?, kurs_id=? WHERE modul_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (modul[0],modul[1],modul[2],modul[3],modul[0]))
+        cur.execute(sql, (modul[0],modul[1],modul[2],modul[3],modul_id))
         conn.commit()
-    except Error as edit_modul_error:
-        print(edit_modul_error)
+    except Error as edit_modul_by_id_error:
+        print(edit_modul_by_id_error)
 
 
-def edit_veranstaltung(conn, veranstaltung):
-    """ Attribute eines Moduls in Tabelle 'Veranstaltung' verändern
+def edit_veranstaltung_by_id(conn: Connection, veranstaltung_id: int, veranstaltung: tuple[int, str, int, int]):
+    """ Attribute einer Veranstaltung in Tabelle 'Veranstaltung' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_veranstaltung_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_veranstaltung_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            veranstaltung (list): Liste mit neuen Werten der Attribute einer Veranstaltung in Reihenfolge (veranstaltung_id, name, dozent_id, modul_id)
+            veranstaltung_id (int): einzigartige ID der Veranstaltung zur Identifizierung
+            veranstaltung (tuple): Tupel mit neuen Werten der Attribute einer Veranstaltung in Reihenfolge (veranstaltung_id, name, dozent_id, modul_id)
 
         Returns:
             None
@@ -693,20 +704,22 @@ def edit_veranstaltung(conn, veranstaltung):
     sql = '''UPDATE Veranstaltung SET veranstaltung_id=?, name=?, dozent_id=?, modul_id=? WHERE veranstaltung_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (veranstaltung[0],veranstaltung[1],veranstaltung[2],veranstaltung[3],veranstaltung[0]))
+        cur.execute(sql, (veranstaltung[0],veranstaltung[1],veranstaltung[2],veranstaltung[3],veranstaltung_id))
         conn.commit()
-    except Error as edit_veranstaltung_error:
-        print(edit_veranstaltung_error)
+    except Error as edit_veranstaltung_by_id_error:
+        print(edit_veranstaltung_by_id_error)
 
 
-def edit_pruefungsleistung(conn, pruefungsleistung):
+def edit_pruefungsleistung_by_student_and_veranstaltung(conn: Connection, pruefungsleistung_student: int, pruefungsleistung_veranstaltung: int, pruefungsleistung: tuple[int, int, int, int]):
     """ Attribute einer Prüfungsleistung in Tabelle 'Pruefungsleistung' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_pruefungsleistung_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_pruefungsleistung_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            pruefungsleistung (list): Liste mit neuen Werten der Attribute einer Pruefungsleistung in Reihenfolge (student_id, veranstaltung, punkte_gesamt, punkte_erreicht)
+            pruefungsleistung_student (int): einzigartige ID des Studenten der Prüfungsleistung abgelegt hat
+            pruefungsleistung_veranstaltung (int): einzigartige ID der Veranstaltung für die Prüfungsleistung abgelegt wurde
+            pruefungsleistung (tuple): Tupel mit neuen Werten der Attribute einer Pruefungsleistung in Reihenfolge (student_id, veranstaltung, punkte_gesamt, punkte_erreicht)
 
         Returns:
             None
@@ -718,20 +731,21 @@ def edit_pruefungsleistung(conn, pruefungsleistung):
     sql = '''UPDATE Pruefungsleistung SET student_id=?, veranstaltung_id=?, punkte_gesamt=?, punkte_erreicht=? WHERE student_id=? AND veranstaltung_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (pruefungsleistung[0],pruefungsleistung[1],pruefungsleistung[2],pruefungsleistung[3],pruefungsleistung[0],pruefungsleistung[1]))
+        cur.execute(sql, (pruefungsleistung[0],pruefungsleistung[1],pruefungsleistung[2],pruefungsleistung[3],pruefungsleistung_student,pruefungsleistung_veranstaltung))
         conn.commit()
-    except Error as edit_pruefungsleistung_error:
-        print(edit_pruefungsleistung_error)
+    except Error as edit_pruefungsleistung_by_student_and_veranstaltung_error:
+        print(edit_pruefungsleistung_by_student_and_veranstaltung_error)
 
 
-def edit_admin(conn, admin):
+def edit_admin_by_id(conn: Connection, admin_id: int, admin: tuple[int, str, str, str, str]):
     """ Attribute eines Admins in Tabelle 'Admin' verändern
         * neue Attribute als ein Argument übergeben
-        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_admin_by_id-Funktion & Auswahl Attribut in Liste angeben
+        * wenn nur einzelne Attribute geändert: nicht zu ändernde Attribute durch get_admin_by_id-Funktion & Auswahl aus Liste, Attribut in übergebenem Tupel angeben
 
         Args:
             conn (Connection): Connection-Objekt für Verbindung zur Datenbank
-            admin (list): Liste mit neuen Werten der Attribute eines Admins in Reihenfolge (admin_id, vorname, nachname, nutzername, passwort)
+            admin_id (int): einzigartige ID des Admins zur Identifizierung
+            admin (tuple): Tupel mit neuen Werten der Attribute eines Admins in Reihenfolge (admin_id, vorname, nachname, nutzername, passwort)
 
         Returns:
             None
@@ -743,13 +757,13 @@ def edit_admin(conn, admin):
     sql = '''UPDATE Admin SET admin_id=?, vorname=?, nachname=?, nutzername=?, passwort=? WHERE admin_id=?'''
     try:
         cur = conn.cursor()
-        cur.execute(sql, (admin[0],admin[1],admin[2],admin[3],admin[4],admin[0]))
+        cur.execute(sql, (admin[0],admin[1],admin[2],admin[3],admin[4],admin_id))
         conn.commit()
-    except Error as edit_admin_error:
-        print(edit_admin_error)
+    except Error as edit_admin_by_id_error:
+        print(edit_admin_by_id_error)
 
 
-def get_all_pruefungsleistung_by_student(conn, student_id):
+def get_all_pruefungsleistung_by_student(conn: Connection, student_id: int) -> list[list]:
     """ alle Prüfungsleistungen eines Studenten aus Tabelle 'Pruefungsleistung' abfragen
 
         Args:
@@ -774,7 +788,7 @@ def get_all_pruefungsleistung_by_student(conn, student_id):
     return pruefungsleistungen
 
 
-def database_setup(conn):
+def database_setup(conn: Connection):
     """ alle Tabellen in Datenbank erstellt (Student, Kurs, Dozent, Veranstaltung, Modul, Pruefungsleistung, Admin)
         * im Moment: bei neuem Start der Applikation Datenbank komplett zurückgesetzt
 
