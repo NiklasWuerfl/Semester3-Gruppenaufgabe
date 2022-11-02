@@ -17,8 +17,8 @@ def LoginSeite():
     """
     
     layout = [[sg.Text('Login', font=('any', 12, 'bold'))],
-          [sg.Text('Username:'), sg.InputText()],
-          [sg.Text('Passwort:'), sg.InputText()],
+          [sg.Text('Username:'), sg.InputText(key='-name-', do_not_clear=False)],
+          [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
           [sg.Button('Anmelden')]]
 
     window=sg.Window('Studierendenverwaltungssystem', layout)
@@ -28,7 +28,7 @@ def LoginSeite():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
-            break
+            AnmeldeDaten= values['-name-'], values['-passwort-']
 
     window.close()
 
@@ -44,10 +44,33 @@ def FalseLoginSeite():
     
     layout = [[sg.Text('Login', font=('any', 12, 'bold'))],
         [sg.Text('Username oder Passwort falsch', text_color= 'red')],
-        [sg.Text('Username:'), sg.InputText()],
-        [sg.Text('Passwort:'), sg.InputText()],
+        [sg.Text('Username:'), sg.InputText(key='-name-', do_not_clear=False)],
+        [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
         [sg.Button('Anmelden')],
         [sg.Text('Falls Sie das Passwort vergessen haben, wenden Sie sich an den Administrator!')]]
+
+    window=sg.Window('Studierendenverwaltungssystem', layout)
+
+    while True:
+        event, values= window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "Anmelden":
+             AnmeldeDaten= values['-name-'], values['-passwort-']
+
+    window.close()
+
+
+
+def ErfolgreicherLogout():
+    """Seite nach dem Logout
+
+        Tests:
+        *
+        *
+    """
+
+    layout = [[sg.Text('Sie haben sich erfolgreich abgemeldet!')]]
 
     window=sg.Window('Studierendenverwaltungssystem', layout)
 
@@ -60,8 +83,10 @@ def FalseLoginSeite():
 
     window.close()
 
-def StudierendenSeite():
-    """Seite für Studierende für die Einsicht der Noten
+
+
+def StudierendenAnsichtAllgemein():
+    """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
         Tests:
         *
