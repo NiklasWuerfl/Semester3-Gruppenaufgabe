@@ -915,7 +915,7 @@ if __name__ == '__main__':
     #       Konstante DATABASE_FILE in dieser Funktion speichern
 
     # create a database connection
-    DATABASE_FILE = "test.db"
+    DATABASE_FILE = "data.db"
     my_connect = create_database_connection(DATABASE_FILE)
     my_cursor = my_connect.cursor()
 
