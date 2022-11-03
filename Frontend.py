@@ -11,7 +11,7 @@ import PySimpleGUI as sg
 def LoginSeite():
     """Implimentierung der Login Seite
 
-        Tests:
+    Tests:
         *
         *
     """
@@ -37,7 +37,7 @@ def LoginSeite():
 def FalseLoginSeite():
     """Implimentierung der Seite nach falschem einloggen
 
-        Tests:
+    Tests:
         *
         *
     """
@@ -65,7 +65,7 @@ def FalseLoginSeite():
 def ErfolgreicherLogout():
     """Seite nach dem Logout
 
-        Tests:
+    Tests:
         *
         *
     """
@@ -88,37 +88,99 @@ def ErfolgreicherLogout():
 def StudierendenAnsichtAllgemein():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
-        Tests:
+    Tests:
         *
         *
     """
-    information_array=[
-    ['Programmierung', 1, 5.0, 120, 100, 1.6, True],
-    ['Mathe 1', 1, 5.0, 120, 75, 2.5, True]]
+    modul_information_array=[
+        ['Programmierung', 1, 5.0, 120, 100, 1.6, True],
+        ['Mathe 1', 1, 5.0, 120, 75, 2.5, True]]
 
     headings=['Modul', 'Versuch', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
     
     layout = [[sg.Text('Herzlich Willkommen!'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
           [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
-          [sg.Table(values=information_array, headings=headings, max_col_width=35,
+          [sg.Table(values=modul_information_array, headings=headings, max_col_width=35,
                     auto_size_columns=True,
                     display_row_numbers=True,
                     justification='left',
                     num_rows= 5,
                     key= '-Table-',
-                    row_height=35)],
+                    row_height=35,
+                    enable_events= True)],
           [sg.Text('Gesamt', font=('any', 12, 'bold')), sg.Text('Cedits gesamt'), sg.Text('GPA')]]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
 
     while True:
         event, values= window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            break
+            PasswortAendernSeite
         elif event == "Abmelden":
+            ErfolgreicherLogout
+            window.close()
+        elif event== "-Table-":
+            print(values['-Table-'][0])
+            selected_row_index= values['-Table-'][0]
+            Modul_information= modul_information_array[selected_row_index]
+            StudierendenAnsichtModul(Modul_information)
+
+    window.close()
+
+
+
+def StudierendenAnsichtModul(Modul_info):
+    """einzel Noten der Veranstaltungen eines Moduls und gesamt Noten werden angezeigt
+
+    Args:
+        Modul_info (Array): Informationen über Modul
+
+    Tests:
+        *
+        *
+    """
+    Modul_name= Modul_info[0]
+
+    layout = [[sg.Text(Modul_name)]
+          ]
+          
+    window=sg.Window('Studierendenverwaltungssystem', layout)
+    
+    while True:
+        event, values= window.read()
+        if event == sg.WIN_CLOSED:
             break
+    
+    window.close()
+
+
+
+def PasswortAendernSeite():
+    """Seite zum ändern des Passwortes
+
+    Tests:
+        *
+        *
+    """
+
+    layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
+          [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
+          [sg.Text('Passwort *'), sg.InputText(key='-passwort-', do_not_clear=False)],
+          [sg.Text('neues Passwort *'), sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
+          [sg.Text('Psswort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
+          [sg.Button('Ändern')]]
+
+    window=sg.Window('Studierendenverwaltungssystem', layout)
+
+    while True:
+        event, values= window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "Ändern":
+            ÄnderungsDaten= values['-name-'], values['-passwort-'], values['-neuesPasswort-'], values['-wiPasswort-']
+            window.close()
 
     window.close()
 
