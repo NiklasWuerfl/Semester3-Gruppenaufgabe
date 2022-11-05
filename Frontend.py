@@ -21,16 +21,16 @@ def LoginSeite():
           [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
           [sg.Button('Anmelden')]]
 
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    Login_window=sg.Window('Studierendenverwaltungssystem', layout)
 
     while True:
-        event, values= window.read()
+        event, values= Login_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
             AnmeldeDaten= values['-name-'], values['-passwort-']
 
-    window.close()
+    Login_window.close()
 
 
 
@@ -49,16 +49,16 @@ def FalseLoginSeite():
         [sg.Button('Anmelden')],
         [sg.Text('Falls Sie das Passwort vergessen haben, wenden Sie sich an den Administrator!')]]
 
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    FalseLogin_window=sg.Window('Studierendenverwaltungssystem', layout)
 
     while True:
-        event, values= window.read()
+        event, values= FalseLogin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
              AnmeldeDaten= values['-name-'], values['-passwort-']
 
-    window.close()
+    FalseLogin_window.close()
 
 
 
@@ -72,16 +72,16 @@ def ErfolgreicherLogout():
 
     layout = [[sg.Text('Sie haben sich erfolgreich abgemeldet!')]]
 
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    Logout_window=sg.Window('Studierendenverwaltungssystem', layout)
 
     while True:
-        event, values= window.read()
+        event, values= Logout_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
             break
 
-    window.close()
+    Logout_window.close()
 
 
 
@@ -110,24 +110,24 @@ def StudierendenAnsichtAllgemein():
                     enable_events= True)],
           [sg.Text('Gesamt', font=('any', 12, 'bold')), sg.Text('Cedits gesamt'), sg.Text('GPA')]]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Studi_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
 
     while True:
-        event, values= window.read()
+        event, values= Studi_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
             PasswortAendernSeite
         elif event == "Abmelden":
             ErfolgreicherLogout
-            window.close()
+            Studi_window.close()
         elif event== "-Table-":
             print(values['-Table-'][0])
             selected_row_index= values['-Table-'][0]
             Modul_information= modul_information_array[selected_row_index]
             StudierendenAnsichtModul(Modul_information)
 
-    window.close()
+    Studi_window.close()
 
 
 
@@ -142,18 +142,34 @@ def StudierendenAnsichtModul(Modul_info):
         *
     """
     Modul_name= Modul_info[0]
+    Modul_pg= str(Modul_info[3])
+    Modul_pe= str(Modul_info[4])
+    Modul_Note= str(Modul_info[5])
+    Modulinhalt=[['Java', 1, 5.0, 60, 45, 2.6, True],
+    ['Python', 1, 5.0, 60, 55, 1.8, True]]
 
-    layout = [[sg.Text(Modul_name)]
+    headings=['Veranstaltung', 'Versuch', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
+
+    layout = [[sg.Text(Modul_name, font=('any', 12, 'bold'))],
+            [sg.Table(values=Modulinhalt, headings=headings, max_col_width=35,
+                    auto_size_columns=True,
+                    display_row_numbers=True,
+                    justification='left',
+                    num_rows= 5,
+                    key= '-Table-',
+                    row_height=35,
+                    enable_events= True)],
+            [sg.Text(Modul_name +": P. g. " + Modul_pg + ", P.e. " + Modul_pe + ", Note " + Modul_Note)]
           ]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    Modul_window=sg.Window('Studierendenverwaltungssystem', layout)
     
     while True:
-        event, values= window.read()
+        event, values= Modul_window.read()
         if event == sg.WIN_CLOSED:
             break
     
-    window.close()
+    Modul_window.close()
 
 
 
@@ -172,16 +188,16 @@ def PasswortAendernSeite():
           [sg.Text('Psswort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
           [sg.Button('Ändern')]]
 
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout)
 
     while True:
-        event, values= window.read()
+        event, values= Passwort_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Ändern":
             ÄnderungsDaten= values['-name-'], values['-passwort-'], values['-neuesPasswort-'], values['-wiPasswort-']
-            window.close()
+            Passwort_window.close()
 
-    window.close()
+    Passwort_window.close()
 
 
