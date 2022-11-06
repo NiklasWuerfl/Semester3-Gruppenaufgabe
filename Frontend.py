@@ -172,7 +172,7 @@ def StudierendenAnsichtModul(Modul_info, Nutzer: str):
         event, values= window.read()
         if event == sg.WIN_CLOSED:
             break
-        if event == 'zurück':
+        elif event == 'zurück':
             if Nutzer== "Studi":
                 window.close()
                 StudierendenAnsichtAllgemein()
@@ -207,5 +207,86 @@ def PasswortAendernSeite():
             Passwort_window.close()
 
     Passwort_window.close()
+
+
+def VeranstaltungsnotenEintragenDoz():
+    """Dozenten können hier die Noten ihrer Studierenden eintragen
+
+    Tests:
+    *
+    *
+    """
+    
+    Anzahl_Versuche= ('1', '2') 
+    Bestanden= (True, False)
+    Prüfungsinfo_Veranstaltung_Array= []
+
+    layout = [[sg.Text('Herzlich Willkommen'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
+          [sg.Text('Veranstaltungsnoten eintragen', font=('any', 12, 'bold'))],
+          [sg.Text('Veranstaltungs Id:'), sg.InputText(key= '-Veran_id-', do_not_clear=True)],
+          [sg.Text('Matrikelnummer:'), sg.InputText(key='-Matrikelnummer-', do_not_clear=False)],
+          [sg.Text('Versuch:'), sg.Combo(Anzahl_Versuche, enable_events=True, key='-Versuch-')],
+          [sg.Text('Punkte gesamt'), sg.InputText(key= '-Punkte_gesamt-', do_not_clear=True), sg.Text('Punkte erreicht'), sg.InputText(key= '-Punkte_erreicht-', do_not_clear=False)], 
+          [sg.Text('Note'), sg.InputText(key= '-Note-', do_not_clear=False)],
+          [sg.Text('Bestanden'), sg.Combo(Bestanden, enable_events=True, key='-Bestanden-')],
+          [sg.Button('OK')]]
+          
+    VeranNoten_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+
+    while True:
+        event, values= VeranNoten_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "Passwort ändern":
+            PasswortAendernSeite
+        elif event == "Abmelden":
+            VeranNoten_window.close()
+            ErfolgreicherLogout
+        elif event == "OK":
+            Prüfungsinfo_Veranstaltung= values['-Veran_id-'], values['-Matrikelnummer-'], values['-Versuch-'], 
+            values['-Punkte_gesamt-'], values['-Punkte_erreicht-'], values['-Note-'], values['-Bestanden-']
+            Prüfungsinfo_Veranstaltung_Array.append(Prüfungsinfo_Veranstaltung)
+
+    VeranNoten_window.close()
+
+
+
+def AdministationAllgemein():
+    """Erste Seite des Administrators
+    * sollen Studierende, Dozierende, Studiengangsleitung, Veranstaltungen oder Module bearbeitet, neu angelet oder gelöscht werden
+
+    Tests:
+    *
+    * 
+    """
+
+    layout = [[sg.Text('Administration'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
+          [sg.Text('Was möchten Sie bearbeiten/ anlegen oder löschen?')],
+          [sg.Button('Studierende', font=('any', 9, 'underline')), sg.Button('Dozierende', font=('any', 9, 'underline')), sg.Button('Studiengangsleitung', font=('any', 9, 'underline'))],
+          [sg.Button('Veranstaltung', font=('any', 9, 'underline')), sg.Button('Modul', font=('any', 9, 'underline'))]]
+          
+    Admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+
+    while True:
+        event, values= Admin_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "Passwort ändern":
+            PasswortAendernSeite
+        elif event == "Abmelden":
+            Admin_window.close()
+            ErfolgreicherLogout
+        elif event == 'Studierende':
+            break
+        elif event == 'Dozierende':
+            break
+        elif event == 'Studiengangsleitung':
+            break
+        elif event == 'Veranstaltung':
+            break
+        elif event == 'Modul':
+            break
+
+    Admin_window.close()
 
 
