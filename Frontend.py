@@ -119,9 +119,10 @@ def StudierendenAnsichtAllgemein():
         elif event == "Passwort ändern":
             PasswortAendernSeite
         elif event == "Abmelden":
-            ErfolgreicherLogout
             Studi_window.close()
+            ErfolgreicherLogout
         elif event== "-Table-":
+            Studi_window.close()
             print(values['-Table-'][0])
             selected_row_index= values['-Table-'][0]
             Modul_information= modul_information_array[selected_row_index]
@@ -131,16 +132,18 @@ def StudierendenAnsichtAllgemein():
 
 
 
-def StudierendenAnsichtModul(Modul_info):
-    """einzel Noten der Veranstaltungen eines Moduls und gesamt Noten werden angezeigt
+def StudierendenAnsichtModul(Modul_info, Nutzer: str):
+    """ Informationen über Veranstaltungen eines Moduls mit Noten und Punkten
 
     Args:
-        Modul_info (Array): Informationen über Modul
+        Modul_info (_type_): _description_
+        Nutzer (str): _description_
 
-    Tests:
+    Test:
         *
         *
     """
+
     Modul_name= Modul_info[0]
     Modul_pg= str(Modul_info[3])
     Modul_pe= str(Modul_info[4])
@@ -150,7 +153,7 @@ def StudierendenAnsichtModul(Modul_info):
 
     headings=['Veranstaltung', 'Versuch', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
 
-    layout = [[sg.Text(Modul_name, font=('any', 12, 'bold'))],
+    layout = [[sg.Text(Modul_name)],
             [sg.Table(values=Modulinhalt, headings=headings, max_col_width=35,
                     auto_size_columns=True,
                     display_row_numbers=True,
@@ -159,17 +162,22 @@ def StudierendenAnsichtModul(Modul_info):
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)],
-            [sg.Text(Modul_name +": P. g. " + Modul_pg + ", P.e. " + Modul_pe + ", Note " + Modul_Note)]
+            [sg.Text(Modul_name +": P. g. " + Modul_pg + ", P.e. " + Modul_pe + ", Note " + Modul_Note)],
+            [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Modul_window=sg.Window('Studierendenverwaltungssystem', layout)
+    window=sg.Window('Studierendenverwaltungssystem', layout)
     
     while True:
-        event, values= Modul_window.read()
+        event, values= window.read()
         if event == sg.WIN_CLOSED:
             break
+        if event == 'zurück':
+            if Nutzer== "Studi":
+                window.close()
+                StudierendenAnsichtAllgemein()
     
-    Modul_window.close()
+    window.close()
 
 
 
