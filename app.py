@@ -1,388 +1,158 @@
-""" Modul für API
+""" Modul für API mit database.py
 
     author: Emma Müller
-    date: 07.11.2022
+    date: 09.11.2022
     version: 1.0.0
     licence: free (open source)
 """
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import Student_be as StBE
-from sqlalchemy.orm import *
-import models
+import database as db
 
-# create the extension
-db = SQLAlchemy()
 # create the Flask application object
-app = Flask(__name__)
+app = Flask("app")
 # configure the SQLite database, relative to the app instance folder
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + 'data.db' + '?check_same_thread=False'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# initialise app with the extension
-db.init_app(app)
+
+# database elements
+DATABASE_FILE = "data.db"
+my_connect = db.create_database_connection(DATABASE_FILE)
+my_cursor = my_connect.cursor()
+
+
+# create index page (login)
+@app.route('/')
+def index():
+    return 'hello my friends :)'
+
 
 #@app.route('/signup/<string:nutzername>/<string:passwort>', methods=['GET'])
 #def anmeldung(username: str, passwort: str):
 
-#@app.route('/logout/')
-#def abmeldung():
-#    return
+@app.route('/logout/')
+def abmeldung():
+   return 'du bist abgemeldet'
 
 @app.route('/createStudent/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def createStudent(student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
-    student = db.session.execute(Student).filter_by(student_id=student_id).first()
-
-    if student:
-        return 'Es existiert bereits ein Student mit dieser ID!'
-    else:
-        neuerStudent = Student(student_id=student_id,vorname=vorname,nachname=nachname,kurs_id=kurs_id,nutzername=nutzername,passwort=passwort)
-        db.session.add(neuerStudent)
-        db.session.commit()
-        return 'Student wurde erfolgreich angelegt!'
+    return db.create_student(my_connect,[student_id,vorname,nachname,kurs_id,nutzername,passwort])
 
 @app.route('/createKurs/<int:kurs_id>/<string:name>/<int:dozent_id>', methods=['GET'])
 def createKurs(kurs_id: int, name: str, dozent_id: int):
-    kurs = db.session.execute(Kurs).filter_by(kurs_id=kurs_id).first()
-
-    if kurs:
-        return 'Es existiert bereits ein Kurs mit dieser ID!'
-    else:
-        neuerKurs = Kurs(kurs_id=kurs_id,name=name,dozent_id=dozent_id)
-        db.session.add(neuerKurs)
-        db.session.commit()
-        return 'Kurs wurde erfolgreich angelegt!'
+    return db.create_kurs(my_connect, [kurs_id,name,dozent_id])
 
 @app.route('/createDozent/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def createDozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
-    dozent = db.session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
-
-    if dozent:
-        return 'Es existiert bereits ein Dozent mit dieser ID!'
-    else:
-        neuerDozent = Dozent(dozent_id=dozent_id,vorname=vorname,nachname=nachname,nutzername=nutzername,passwort=passwort)
-        db.session.add(neuerDozent)
-        db.session.commit()
-        return 'Dozent wurde erfolgreich angelegt!'
+    return db.create_dozent(my_connect, [dozent_id,vorname,nachname,nutzername,passwort])
 
 @app.route('/createModul/<int:modul_id>/<string:modulname>/<int:credits>/<int:kurs_id>', methods=['GET'])
 def createModul(modul_id: int, modulname: str, credits: int, kurs_id: int):
-    modul = db.session.execute(Modul).filter_by(modul_id=modul_id).first()
-
-    if modul:
-        return 'Es existiert bereits ein Modul mit dieser ID!'
-    else:
-        neuesModul = Modul(modul_id=modul_id,modulname=modulname,credits=credits,kurs_id=kurs_id)
-        db.session.add(neuesModul)
-        db.session.commit()
-        return 'Modul wurde erfolgreich angelegt!'
+    return db.create_modul(my_connect, [modul_id,modulname,credits,kurs_id])
 
 @app.route('/createVeranstaltung/<int:veranstaltung_id>/<string:name>/<int:dozent_id>/<int:modul_id>', methods=['GET'])
 def createVeranstaltung(veranstaltung_id: int, name: str, dozent_id: int, modul_id: int):
-    veranstaltung = db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id).first()
-
-    if veranstaltung:
-        return 'Es existiert bereits eine Veranstaltung mit dieser ID!'
-    else:
-        neueVeranstaltung = Veranstaltung(veranstaltung_id=veranstaltung_id,name=name,dozent_id=dozent_id,modul_id=modul_id)
-        db.session.add(neueVeranstaltung)
-        db.session.commit()
-        return 'Veranstaltung wurde erfolgreich angelegt!'
+    return db.create_veranstaltung(my_connect, [veranstaltung_id,name,dozent_id,modul_id])
 
 @app.route('/createPruefungsleistung/<int:student_id>/<int:veranstaltung_id>/<int:punkte_gesamt>/<int:punkte_erreicht>', methods=['GET'])
 def createPruefungsleistung(student_id: int, veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int):
-    pruefungsleistung = db.session.execute(Pruefungsleistung).filter_by(student_id=student_id,veranstaltung_id=veranstaltung_id).first()
-
-    if pruefungsleistung:
-        return 'Es existiert bereits ein Prüfungsleistung dieses Studenten für diese Veranstaltung!'
-    else:
-        neuePruefungsleistung = Pruefungsleistung(student_id=student_id,veranstaltung_id=veranstaltung_id,punkte_gesamt=punkte_gesamt,punkte_erreicht=punkte_erreicht)
-        db.session.add(neuePruefungsleistung)
-        db.session.commit()
-        return 'Prüfungsleistung wurde erfolgreich angelegt!'
+    return db.create_pruefungsleistung(my_connect, [student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht])
 
 @app.route('/createAdmin/<int:admin_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def createAdmin(admin_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
-    admin = db.session.execute(Admin).filter_by(admin_id=admin_id).first()
-
-    if admin:
-        return 'Es existiert bereits ein Admin mit dieser ID!'
-    else:
-        neuerAdmin = Admin(admin_id=admin_id,vorname=vorname,nachname=nachname,nutzername=nutzername,passwort=passwort)
-        db.session.add(neuerAdmin)
-        db.session.commit()
-        return 'Admin wurde erfolgreich angelegt!'
+    return db.create_admin(my_connect, [admin_id,vorname,nachname,nutzername,passwort])
 
 @app.route('/deleteStudent/<int:student_id>', methods=['GET'])
 def deleteStudent(student_id: int):
-    student = db.session.execute(Student).filter_by(student_id=student_id).first()
-
-    if student:
-        db.session.execute(Student).filter_by(student_id=student_id).delete()
-        db.session.execute(Pruefungsleistung).filter_by(student_id=student_id).delete()
-        return 'Der Student und alle zugehörigen Prüfungsleistungen wurden gelöscht!'
-    else:
-        return 'Dieser Student existiert nicht!'
+    return db.delete_student(my_connect, student_id)
 
 @app.route('/deleteKurs/<int:kurs_id>', methods=['GET'])
 def deleteKurs(kurs_id: int):
-    kurs = db.session.execute(Kurs).filter_by(kurs_id=kurs_id).first()
-
-    if kurs:
-        db.session.execute(Kurs).filter_by(kurs_id=kurs_id).delete()
-        db.session.execute(Modul).filter_by(kurs_id=kurs_id).delete()
-        veranstaltungen_query = db.session.execute(Veranstaltung).filter_by(kurs_id=kurs_id).scalars()
-        veranstaltungen = veranstaltungen_query.statement.execute().fetchall()
-        for veranstaltung in veranstaltungen:
-            db.session.execute(Pruefungsleistung).filter_by(veranstaltung.veranstaltung_id).delete()
-            db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung.veranstaltung_id).delete()
-        db.session.execute(Student).filter_by(kurs_id=kurs_id).delete()
-        return 'Der Kurs und alle zugehörigen Module, Veranstaltungen, Prüfungsleistungen und Studenten wurden gelöscht!'
-    else:
-        return 'Dieser Kurs existiert nicht!'
+    return db.delete_kurs(my_connect, kurs_id)
 
 @app.route('/deleteDozent/<int:dozent_id>', methods=['GET'])
 def deleteDozent(dozent_id: int):
-    dozent = db.session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
-
-    if dozent:
-        db.session.execute(Dozent).filter_by(dozent_id=dozent_id).delete()
-        veranstaltungen_query = db.session.execute(Veranstaltung).filter_by(dozent_id=dozent_id).delete()
-        veranstaltungen = veranstaltungen_query.statement.execute().fetchall()
-        for veranstaltung in veranstaltungen:
-            db.session.execute(Pruefungsleistung).filter_by(veranstaltung.veranstaltung_id).delete()
-            db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung.veranstaltung_id).delete()
-        return 'Der Dozent und alle seine Veranstaltungen und Prüfungsleistungen wurden gelöscht!'
-    else:
-        return 'Dieser Dozent existiert nicht!'
+    return db.delete_dozent(my_connect, dozent_id)
 
 @app.route('/deleteModul/<int:modul_id>', methods=['GET'])
 def deleteModul(modul_id: int):
-    modul = db.session.execute(Modul).filter_by(modul_id=modul_id).first()
-
-    if modul:
-        db.session.execute(Modul).filter_by(modul_id=modul_id).delete()
-        veranstaltungen_query = db.session.execute(Veranstaltung).filter_by(modul_id=modul_id)
-        veranstaltungen = veranstaltungen_query.statement.execute().fetchall()
-        for veranstaltung in veranstaltungen:
-            db.session.execute(Pruefungsleistung).filter_by(veranstaltung.veranstaltung_id).delete()
-            db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung.veranstaltung_id).delete()
-        return 'Das Modul und alle zugehörigen Veranstaltungen und Prüfungsleistungen wurden gelöscht!'
-    else:
-        return 'Dieses Modul existiert nicht!'
+    return db.delete_modul(my_connect, modul_id)
 
 @app.route('/deleteVeranstaltung/<int:veranstaltung_id>', methods=['GET'])
 def deleteVeranstaltung(veranstaltung_id: int):
-    veranstaltung = db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id).first()
-
-    if veranstaltung:
-        db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id).delete()
-        db.session.execute(Pruefungsleistung).filter_by(veranstaltung_id=veranstaltung_id).delete()
-        return 'Diese Veranstaltung und alle zugehörigen Prüfungsleistungen wurden gelöscht!'
-    else:
-        return 'Diese Veranstaltung existiert nicht!'
+    return db.delete_veranstaltung(my_connect, veranstaltung_id)
 
 @app.route('/deletePruefungsleistung/<int:student_id>/<int:veranstaltung_id>', methods=['GET'])
 def deletePruefungsleistung(student_id: int, veranstaltung_id: int):
-    pruefungsleistung = db.session.execute(Pruefungsleistung).filter_by(student_id=student_id, veranstaltung_id=veranstaltung_id).first()
-
-    if pruefungsleistung:
-        db.session.execute(Pruefungsleistung).filter_by(student_id=student_id,veranstaltung_id=veranstaltung_id).delete()
-        return 'Diese Prüfungsleistung wurde gelöscht!'
-    else:
-        return 'Diese Prüfungsleistung existiert nicht!'
+    return db.delete_pruefungsleistung(my_connect, student_id,veranstaltung_id)
 
 @app.route('/deleteAdmin/<int:admin_id>', methods=['GET'])
 def deleteAdmin(admin_id: int):
-    admin = db.session.execute(Admin).filter_by(admin_id=admin_id).first()
-
-    if admin:
-        db.session.execute(Admin).filter_by(admin_id=admin_id).delete()
-        return 'Dieser Admin wurde gelöscht!'
-    else:
-        return 'Dieser Admin existiert nicht!'
+    return db.delete_admin(my_connect, admin_id)
 
 @app.route('/changeStudent/<int:student_id_old>/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def changeStudent(student_id_old: int, student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
-    student = db.session.execute(Student).filter_by(student_id=student_id_old).first()
-
-    if student:
-        student.student_id = student_id
-        student.vorname = vorname
-        student.nachname = nachname
-        student.kurs_id = kurs_id
-        student.nutzername = nutzername
-        student.passwort = passwort
-        db.session.commit()
-        return 'Student wurde bearbeitet!'
-    else:
-        return 'Es existiert kein Student mit dieser ID!'
+    return db.edit_student_by_id(my_connect, student_id_old, [student_id,vorname,nachname,kurs_id,nutzername,passwort])
 
 @app.route('/changeKurs/<int:kurs_id_old>/<int:kurs_id>/<string:name>/<int:dozent_id>', methods=['GET'])
 def changeKurs(kurs_id_old: int,kurs_id: int, name: str, dozent_id: int):
-    kurs = db.session.execute(Kurs).filter_by(kurs_id=kurs_id_old).first()
-
-    if kurs:
-        kurs.kurs_id = kurs_id
-        kurs.name = name
-        kurs.dozent_id = dozent_id
-        db.session.commit()
-        return 'Kurs wurde bearbeitet!'
-    else:
-        return 'Es existiert kein Kurs mit dieser ID!'
+    return db.edit_kurs_by_id(my_connect, kurs_id_old, [kurs_id,name,dozent_id])
 
 @app.route('/changeDozent/<int:dozent_id_old>/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def changeDozent(dozent_id_old: int,dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
-    dozent = db.session.execute(Dozent).filter_by(dozent_id=dozent_id_old).first()
-
-    if dozent:
-        dozent.dozent_id = dozent_id
-        dozent.vorname = vorname
-        dozent.nachname = nachname
-        dozent.nutzername = nutzername
-        dozent.passwort = passwort
-        db.session.commit()
-        return 'Dozent wurde bearbeitet!'
-    else:
-        return 'Es existiert kein Dozent mit dieser ID!'
+    return db.edit_dozent_by_id(my_connect, dozent_id_old, [dozent_id,vorname,nachname,nutzername,passwort])
 
 @app.route('/changeModul/<int:modul_id_old>/<int:modul_id>/<string:modulname>/<int:credits>/<int:kurs_id>', methods=['GET'])
 def changeModul(modul_id_old: int, modul_id: int, modulname: str, credits: int, kurs_id: int):
-    modul = db.session.execute(Modul).filter_by(modul_id=modul_id_old).first()
-
-    if modul:
-        modul.modul_id = modul_id
-        modul.modulname = modulname
-        modul.credits = credits
-        modul.kurs_id = kurs_id
-        db.session.commit()
-        return 'Modul wurde bearbeitet!'
-    else:
-        return 'Es existiert kein Modul mit dieser ID!'
+    return db.edit_modul_by_id(my_connect, modul_id_old, [modul_id,modulname,credits,kurs_id])
 
 @app.route('/changeVeranstaltung/<int:veranstaltung_id_old>/<int:veranstaltung_id>/<string:name>/<int:dozent_id>/<int:modul_id>', methods=['GET'])
 def changeVeranstaltung(veranstaltung_id_old: int, veranstaltung_id: int, name: str, dozent_id: int, modul_id: int):
-    veranstaltung = db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id_old).first()
-
-    if veranstaltung:
-        veranstaltung.veranstaltung_id = veranstaltung_id
-        veranstaltung.name = name
-        veranstaltung.dozent_id = dozent_id
-        veranstaltung.modul_id = modul_id
-        db.session.commit()
-        return 'Veranstaltung wurde bearbeitet!'
-    else:
-        return 'Es existiert keine Veranstaltung mit dieser ID!'
+    return db.edit_veranstaltung_by_id(my_connect, veranstaltung_id_old, [veranstaltung_id,name,dozent_id,modul_id])
 
 @app.route('/changePruefungsleistung/<int:student_id_old>/<int:veranstaltung_id_old>/<int:student_id>/<int:veranstaltung_id>/<int:punkte_gesamt>/<int:punkte_erreicht>', methods=['GET'])
 def changePruefungsleistung(student_id_old: int, veranstaltung_id_old: int, student_id: int, veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int):
-    pruefungsleistung = db.session.execute(Pruefungsleistung).filter_by(student_id=student_id_old,veranstaltung_id=veranstaltung_id_old).first()
-
-    if pruefungsleistung:
-        pruefungsleistung.student_id = student_id
-        pruefungsleistung.veranstaltung_id = veranstaltung_id
-        pruefungsleistung.punkte_gesamt = punkte_gesamt
-        pruefungsleistung.punkte_erreicht = punkte_erreicht
-        db.session.commit()
-        return 'Prüfungsleistung wurde bearbeitet!'
-    else:
-        return 'Es existiert keine Prüfungsleistung von diesem Studenten in dieser Veranstaltung!'
+    return db.edit_pruefungsleistung_by_student_and_veranstaltung(my_connect, student_id_old, veranstaltung_id_old, [student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht])
 
 @app.route('/changeAdmin/<int:admin_id_old>/<int:admin_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
 def changeAdmin(admin_id_old: int, admin_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
-    admin = db.session.execute(Admin).filter_by(admin_id=admin_id_old).first()
-
-    if admin:
-        admin.admin_id = admin_id
-        admin.vorname = vorname
-        admin.nachname = nachname
-        admin.nutzername = nutzername
-        admin.passwort = passwort
-        db.session.commit()
-        return 'Admin wurde bearbeitet!'
-    else:
-        return 'Es existiert kein Admin mit dieser ID!'
+    return db.edit_admin_by_id(my_connect, admin_id_old, [admin_id,vorname,nachname,nutzername,passwort])
 
 @app.route('/getStudent/<int:student_id>', methods=["GET"])
 def getStudent(student_id: int):
-    student = db.session.execute(Student).filter_by(student_id=student_id).first()
-
-    if student:
-        return [student.student_id,student.vorname,student.nachname,student.kurs_id,student.nutzername,student.passwort]
-    else:
-        return 'Es existiert kein Student mit dieser ID!'
+    return db.get_student_by_id(my_connect, student_id)
 
 @app.route('/getKurs/<int:kurs_id>', methods=["GET"])
 def getKurs(kurs_id: int):
-    kurs = db.session.execute(Kurs).filter_by(kurs_id=kurs_id).first()
-
-    if kurs:
-        return [kurs.kurs_id,kurs.name,kurs.dozent_id]
-    else:
-        return 'Es existiert kein Kurs mit dieser ID!'
+    return db.get_kurs_by_id(my_connect, kurs_id)
 
 @app.route('/getDozent/<int:dozent_id>', methods=["GET"])
-def getDozent(student_id: int):
-    dozent = db.session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
-
-    if dozent:
-        return [dozent.dozent_id,dozent.vorname,dozent.nachname,dozent.nutzername,dozent.passwort]
-    else:
-        return 'Es existiert kein Dozent mit dieser ID!'
+def getDozent(dozent_id: int):
+    return db.get_dozent_by_id(my_connect, dozent_id)
 
 @app.route('/getModul/<int:modul_id>', methods=["GET"])
 def getModul(modul_id: int):
-    modul = db.session.execute(Modul).filter_by(modul_id=modul_id).first()
-
-    if modul:
-        return [modul.modul_id,modul.modulname,modul.credits,modul.kurs_id]
-    else:
-        return 'Es existiert kein Modul mit dieser ID!'
+    return db.get_modul_by_id(my_connect, modul_id)
 
 @app.route('/getVeranstaltung/<int:veranstaltung_id>', methods=["GET"])
 def getVeranstaltung(veranstaltung_id: int):
-    veranstaltung = db.session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id).first()
-
-    if veranstaltung:
-        return [veranstaltung.veranstaltung_id,veranstaltung.name,veranstaltung.dozent_id,veranstaltung.modul_id]
-    else:
-        return 'Es existiert keine Veranstaltung mit dieser ID!'
+    return db.get_veranstaltung_by_id(my_connect, veranstaltung_id)
 
 @app.route('/getPruefungsleistung/<int:student_id>/<int:veranstaltung_id>', methods=["GET"])
 def getPruefungsleistung(student_id: int, veranstaltung_id: int):
-    pruefungsleistung = db.session.execute(Pruefungsleistung).filter_by(student_id=student_id,veranstaltung_id=veranstaltung_id).first()
+    return db.get_pruefungsleistung_by_id(my_connect, student_id, veranstaltung_id)
 
-    if pruefungsleistung:
-        return [pruefungsleistung.student_id,pruefungsleistung.veranstaltung_id,pruefungsleistung.punkte_gesamt,pruefungsleistung.punkte_erreicht]
-    else:
-        return 'Es existiert keine Prüfungsleistung von diesem Studenten in dieser Veranstaltung!'
-
-@app.route('/getAdmin/<int:kurs_id>', methods=["GET"])
+@app.route('/getAdmin/<int:admin_id>', methods=["GET"])
 def getAdmin(admin_id: int):
-    admin = db.session.execute(Admin).filter_by(admin_id=admin_id).first()
-
-    if admin:
-        return [admin.admin_id,admin.vorname,admin.nachname,admin.nutzername,admin.passwort]
-    else:
-        return 'Es existiert kein Admin mit dieser ID!'
+    return db.get_admin_by_id(my_connect, admin_id)
 
 @app.route('/getPruefungsleistungenByStudent/<int:student_id>', methods=["GET"])
 def getPruefungsleistungenByStudent(student_id: int):
-    student = db.session.execute(Student).filter_by(student_id=student_id).first()
+    return db.get_all_pruefungsleistung_by_student(my_connect, student_id)
 
-    if student:
-        pruefungsleistungen_query = db.session.execute(Pruefungsleistung).filter_by(student_id=student_id)
-        pruefungsleistungen = pruefungsleistungen_query.statement.execute().fetchall()
-        counter = 0
-        return_values = []
-        for pruefungsleistung in pruefungsleistungen:
-            pl = db.session.execute(Pruefungsleistung).filter_by(pruefungsleistung.student_id).first()
-            return_values[counter] = [pl.student_id,pl.veranstaltung_id,pl.punkte_gesamt,pl.punke_erreicht]
-            counter += counter
-        return return_values
-    else:
-        return 'Es existiert kein Student mit dieser ID!'
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0")
+    db.database_setup(my_connect)
+    db.fill_testdatabase(my_connect)
+    app.run(debug=True)
