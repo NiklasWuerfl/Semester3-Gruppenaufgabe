@@ -46,7 +46,7 @@ def create_database_connection(database_path: str):
     """
     conn = None
     try:
-        conn = sqlite3.connect(database_path)
+        conn = sqlite3.connect(database_path, check_same_thread=False)
     except Error as connection_error:
         print(connection_error)
     return conn
@@ -426,7 +426,7 @@ def get_student_by_id(conn: Connection, student_id: int) -> list:
         student = cur.fetchall()
     except Error as get_student_by_id_error:
         print(get_student_by_id_error)
-    return student[0]
+    return [student[0]]
 
 
 def get_kurs_by_id(conn: Connection, kurs_id: int) -> list:
@@ -493,7 +493,7 @@ def get_modul_by_id(conn: Connection, modul_id: int) -> list:
             *
             *
     """
-    sql = '''SELECT * FROM Modul WHERE student_id=?'''
+    sql = '''SELECT * FROM Modul WHERE modul_id=?'''
     modul = None
     try:
         cur = conn.cursor()
@@ -501,7 +501,7 @@ def get_modul_by_id(conn: Connection, modul_id: int) -> list:
         modul = cur.fetchall()
     except Error as get_modul_by_id_error:
         print(get_modul_by_id_error)
-    return modul[0]
+    return modul
 
 
 def get_veranstaltung_by_id(conn: Connection, veranstaltung_id: int) -> list:
