@@ -93,7 +93,6 @@ def StudierendenAnsichtAllgemein():
         *
     """
 
-    Nutzer= "Studi"
     modul_information_array=[
         ['Programmierung', 5.0, 120, 100, 1.6, True],
         ['Mathe 1', 5.0, 120, 75, 2.5, True]]
@@ -124,22 +123,19 @@ def StudierendenAnsichtAllgemein():
             Studi_window.close()
             ErfolgreicherLogout()
         elif event== "-Table-":
-            Studi_window.close()
-            print(values['-Table-'][0])
             selected_row_index= values['-Table-'][0]
             Modul_information= modul_information_array[selected_row_index]
-            StudierendenAnsichtModul(Modul_information, Nutzer)
+            StudierendenAnsichtModul(Modul_information)
 
     Studi_window.close()
 
 
 
-def StudierendenAnsichtModul(Modul_info, Nutzer: str):
+def StudierendenAnsichtModul(Modul_info):
     """ Informationen über Veranstaltungen eines Moduls mit Noten und Punkten
 
     Args:
         Modul_info (_type_): _description_
-        Nutzer (str): _description_
 
     Test:
         *
@@ -168,16 +164,14 @@ def StudierendenAnsichtModul(Modul_info, Nutzer: str):
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout)
+    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
     
     while True:
         event, values= window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            if Nutzer== "Studi":
-                window.close()
-                StudierendenAnsichtAllgemein()
+            window.close()
     
     window.close()
 
@@ -198,8 +192,8 @@ def PasswortAendernSeite():
           [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
           [sg.Button('Ändern')]]
 
-    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout)
-
+    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    
     while True:
         event, values= Passwort_window.read()
         if event == sg.WIN_CLOSED:
