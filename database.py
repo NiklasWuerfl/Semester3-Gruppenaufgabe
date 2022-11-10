@@ -22,8 +22,8 @@
         * am Ende: Konformität mit PEP 8 Richtlinien überprüfen (https://legacy.python.org/dev/peps/pep-0008/#function-and-method-arguments)
 
     author: Emma Müller
-    date: 30.10.2022
-    version: 1.0.3
+    date: 09.11.2022
+    version: 1.0.4
     licence: free (open source)
 """
 
@@ -793,7 +793,7 @@ def database_setup(conn: Connection):
         * im Moment: bei neuem Start der Applikation Datenbank komplett zurückgesetzt
 
         Args:
-            database_path (str): Quellpfad zur Datenbank-Datei
+            conn (Connection): Connection-Objekt für Verbindung zur Datenbank
 
         Returns:
             None
@@ -873,7 +873,7 @@ def database_setup(conn: Connection):
                                     admin_id integer PRIMARY KEY,
                                     vorname text,
                                     nachname text,
-                                    nutername text,
+                                    nutzername text,
                                     passwort text
                             );'''
 
@@ -907,16 +907,89 @@ def database_setup(conn: Connection):
     else:
         print("error! cannot create the database connection")
 
+def fill_testdatabase(conn: Connection):
+    """ alle Tabellen in Datenbank mit ersten Daten füllen (Student, Kurs, Dozent, Veranstaltung, Modul, Pruefungsleistung, Admin)
+        * im Moment: bei neuem Start der Applikation Datenbank komplett zurückgesetzt
 
-if __name__ == '__main__':
-    #kurzfristige Main-Funktion des Moduls
-    #   wenn Modul nur als Auslagerung der Datenbankfunktionen dient:
-    #       Verbindung zur Datenbank in anderer Funktion erstellen (Connection-Objekt)
-    #       Konstante DATABASE_FILE in dieser Funktion speichern
+        Args:
+            conn (Connection): Connection-Objekt für Verbindung zur Datenbank
 
-    # create a database connection
-    DATABASE_FILE = "data.db"
-    my_connect = create_database_connection(DATABASE_FILE)
-    my_cursor = my_connect.cursor()
+        Returns:
+            None
 
-    database_setup(my_connect)
+        Test:
+            *
+            *
+    """
+    sql_fill_students='''INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (1000,'s1000','Lastname10',23,'Stud10','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (2000,'s2000','Lastname20',23,'Stud20','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (3000,'s3000','Lastname30',23,'Stud30','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (4000,'s4000','Lastname40',23,'Stud40','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (1100,'s1100','Lastname11',56,'Stud11','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (2100,'s2100','Lastname21',56,'Stud21','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (3100,'s3100','Lastname31',56,'Stud31','passwort');
+                            INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort) VALUES (4100,'s4100','Lastname41',56,'Stud41','passwort');'''
+    sql_fill_kurs='''INSERT INTO Kurs(kurs_id,name,dozent_id) VALUES (23,'WWI2021E',555);
+                        INSERT INTO Kurs(kurs_id,name,dozent_id) VALUES (56,'BWL1999U',666);'''
+    sql_fill_dozent='''INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (110,'Peter','Kurz','PKurz','KURZpeter');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (120,'Sebastian','Fichtner','SFichtner','FICHTNERsebastian');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (310,'Andrea','Schlauer','ASchlauer','SCHLAUERandrea');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (810,'Johannes','Unkreativ','JUnkreativ','UNKREATIVjohannes');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (900,'Jochen','Grewatsch','JGrewatsch','GREWATSCHjochen');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (555,'Marcus','Vogt','MVogt','VOGTmarcus');
+                            INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (666,'Alter','Sgleiter','ASgleiter','SGLEITERalter');'''
+    sql_fill_modul='''INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (1200,'Mathematik II',8,23);
+                        INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (3000,'IT Konzepte',5,23);
+                        INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (9980,'Finanz- und Rechnungslehre',5,23);
+                        INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (1201,'Mathematik II',8,56);
+                        INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (3001,'IT Konzepte',5,56);
+                        INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (9981,'Finanz- und Rechnungslehre',5,56);'''
+    sql_fill_veranstaltung='''INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (1000,'Statistik',110,1200);
+                                INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (1001,'Operations Research',120,1200);
+                                INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (2000,'Kommunikationssysteme',310,3000);
+                                INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (2001,'Grundlagen IT',810,3000);
+                                INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (3000,'Finanzierung',900,9980);'''
+    sql_fill_pruefungsleistung='''INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,1000,60,52);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,1001,60,58);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,2000,80,75);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,2001,40,36);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,3000,120,108);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,1000,60,32);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,1001,60,41);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,2000,80,52);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,2001,40,20);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,3000,120,64);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,1000,60,45);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,1001,60,50);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,2000,80,57);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,2001,40,34);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,3000,120,98);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,1000,60,52);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,1001,60,48);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,2000,80,66);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,2001,40,31);
+                                    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,3000,120,null);'''
+    sql_fill_admin='''INSERT INTO Admin(admin_id,vorname,nachname,nutzername,passwort) VALUES (99,'Power','Admin','AdminUser','AdminPW')'''
+
+    # fill tables
+    if conn is not None:
+        try:
+            cur = conn.cursor()
+            # fill student table
+            cur.executescript(sql_fill_students)
+            # fill kurs table
+            cur.executescript(sql_fill_kurs)
+            # fill dozent table
+            cur.executescript(sql_fill_dozent)
+            # fill modul table
+            cur.executescript(sql_fill_modul)
+            # fill veranstaltung table
+            cur.executescript(sql_fill_veranstaltung)
+            # fill pruefungsleitung table
+            cur.executescript(sql_fill_pruefungsleistung)
+            # fill admin table
+            cur.executescript(sql_fill_admin)
+        except Error as fill_testdatabase_error:
+            print(fill_testdatabase_error)
+    else:
+        print("error! cannot create the database connection")

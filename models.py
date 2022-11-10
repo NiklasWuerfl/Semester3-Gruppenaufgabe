@@ -4,8 +4,8 @@
     * Dozent-Kurs (Studiengansleiter) relationship
 
     author: Emma Müller
-    date: 02.11.2022
-    version: 1.0.0
+    date: 09.11.2022
+    version: 1.0.1
     licence: free (open source)
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, Table   # help to define model attributes
@@ -14,6 +14,7 @@ from sqlalchemy.ext.declarative import declarative_base             # connects t
 
 # creates Base class (what all models inherit from & how they get SQLAlcheny ORM functionality)
 Base = declarative_base()
+
 
 class Student(Base):
     __tablename__ = "student"
@@ -55,7 +56,6 @@ class Modul(Base):
 class Veranstaltung(Base):
     __tablename__ = "veranstaltung"
     veranstaltung_id = Column(Integer,primary_key=True)
-    vorname = Column(String)
     name = Column(String)
     dozent_id = Column(Integer, ForeignKey("dozent.dozent_id"))
     dozent = relationship("Dozent", backref="veranstaltungen")
