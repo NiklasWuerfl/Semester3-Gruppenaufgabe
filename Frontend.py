@@ -92,11 +92,13 @@ def StudierendenAnsichtAllgemein():
         *
         *
     """
-    modul_information_array=[
-        ['Programmierung', 1, 5.0, 120, 100, 1.6, True],
-        ['Mathe 1', 1, 5.0, 120, 75, 2.5, True]]
 
-    headings=['Modul', 'Versuch', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
+    Nutzer= "Studi"
+    modul_information_array=[
+        ['Programmierung', 5.0, 120, 100, 1.6, True],
+        ['Mathe 1', 5.0, 120, 75, 2.5, True]]
+
+    headings=['Modul', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
     
     layout = [[sg.Text('Herzlich Willkommen!'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
           [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
@@ -117,16 +119,16 @@ def StudierendenAnsichtAllgemein():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            PasswortAendernSeite
+            PasswortAendernSeite()
         elif event == "Abmelden":
             Studi_window.close()
-            ErfolgreicherLogout
+            ErfolgreicherLogout()
         elif event== "-Table-":
             Studi_window.close()
             print(values['-Table-'][0])
             selected_row_index= values['-Table-'][0]
             Modul_information= modul_information_array[selected_row_index]
-            StudierendenAnsichtModul(Modul_information)
+            StudierendenAnsichtModul(Modul_information, Nutzer)
 
     Studi_window.close()
 
@@ -148,10 +150,10 @@ def StudierendenAnsichtModul(Modul_info, Nutzer: str):
     Modul_pg= str(Modul_info[3])
     Modul_pe= str(Modul_info[4])
     Modul_Note= str(Modul_info[5])
-    Modulinhalt=[['Java', 1, 5.0, 60, 45, 2.6, True],
-    ['Python', 1, 5.0, 60, 55, 1.8, True]]
+    Modulinhalt=[['Java', 60, 45, 2.6, True],
+    ['Python', 60, 55, 1.8, True]]
 
-    headings=['Veranstaltung', 'Versuch', 'Cedits', 'P. g.', 'P. e.', 'Note', 'best.']
+    headings=['Veranstaltung', 'P. g.', 'P. e.', 'Note', 'best.']
 
     layout = [[sg.Text(Modul_name)],
             [sg.Table(values=Modulinhalt, headings=headings, max_col_width=35,
@@ -193,7 +195,7 @@ def PasswortAendernSeite():
           [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
           [sg.Text('Passwort *'), sg.InputText(key='-passwort-', do_not_clear=False)],
           [sg.Text('neues Passwort *'), sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
-          [sg.Text('Psswort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
+          [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
           [sg.Button('Ändern')]]
 
     Passwort_window=sg.Window('Studierendenverwaltungssystem', layout)
@@ -217,7 +219,7 @@ def VeranstaltungsnotenEintragenDoz():
     *
     """
     
-    Anzahl_Versuche= ('1', '2') 
+ 
     Bestanden= (True, False)
     Prüfungsinfo_Veranstaltung_Array= []
 
@@ -225,7 +227,6 @@ def VeranstaltungsnotenEintragenDoz():
           [sg.Text('Veranstaltungsnoten eintragen', font=('any', 12, 'bold'))],
           [sg.Text('Veranstaltungs Id:'), sg.InputText(key= '-Veran_id-', do_not_clear=True)],
           [sg.Text('Matrikelnummer:'), sg.InputText(key='-Matrikelnummer-', do_not_clear=False)],
-          [sg.Text('Versuch:'), sg.Combo(Anzahl_Versuche, enable_events=True, key='-Versuch-')],
           [sg.Text('Punkte gesamt'), sg.InputText(key= '-Punkte_gesamt-', do_not_clear=True), sg.Text('Punkte erreicht'), sg.InputText(key= '-Punkte_erreicht-', do_not_clear=False)], 
           [sg.Text('Note'), sg.InputText(key= '-Note-', do_not_clear=False)],
           [sg.Text('Bestanden'), sg.Combo(Bestanden, enable_events=True, key='-Bestanden-')],
@@ -288,5 +289,8 @@ def AdministationAllgemein():
             break
 
     Admin_window.close()
+
+if __name__ == "__main__":
+    main()
 
 
