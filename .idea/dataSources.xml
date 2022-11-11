@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:D:\DHBW\Programmieren\Semester3 Gruppenaufgabe\Semester3-Gruppenaufgabe\test.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="data" uuid="ac3fcc46-0fc5-42f3-a76b-c32ff35bc3ee">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\DHBW\Programmieren\Semester3 Gruppenaufgabe\Semester3-Gruppenaufgabe\data.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
