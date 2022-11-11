@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from models import *
 import models as my_data
 import database as db
+import test_frontend as tf
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///data.db/?check_same_thread=False"
 
@@ -31,6 +32,7 @@ my_data.Base.metadata.create_all(engine)
 @app.route('/')
 def hello():
     return 'hello :)'
+
 
 #@app.route('/signup/<string:nutzername>/<string:passwort>', methods=['GET'])
 #def anmeldung(username: str, passwort: str):
@@ -397,3 +399,4 @@ def getPruefungsleistungenByStudent(student_id: int):
 if __name__ == '__main__':
     db.fill_testdatabase(db.create_database_connection("data.db"))
     app.run(debug=True)
+    

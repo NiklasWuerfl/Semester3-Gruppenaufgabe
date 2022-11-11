@@ -85,7 +85,7 @@ def ErfolgreicherLogout():
 
 
 
-def StudierendenAnsichtAllgemein():
+def main():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
     Tests:
