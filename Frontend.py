@@ -8,7 +8,7 @@ licence: free
 
 import PySimpleGUI as sg
 
-def LoginSeite():
+def AnmeldeSeite():
     """Implimentierung der Login Seite
 
     Tests:
@@ -17,8 +17,8 @@ def LoginSeite():
     """
     
     layout = [[sg.Text('Login', font=('any', 12, 'bold'))],
-          [sg.Text('Username:'), sg.InputText(key='-name-', do_not_clear=False)],
-          [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
+          [sg.Text('Username: *'), sg.InputText(key='-name-', do_not_clear=False)],
+          [sg.Text('Passwort: *'), sg.InputText(key='-passwort-', do_not_clear=False)],
           [sg.Button('Anmelden')]]
 
     Login_window=sg.Window('Studierendenverwaltungssystem', layout)
@@ -85,7 +85,7 @@ def ErfolgreicherLogout():
 
 
 
-def StudierendenAnsichtAllgemein():
+def main():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
     Tests:
@@ -105,7 +105,7 @@ def StudierendenAnsichtAllgemein():
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='left',
-                    num_rows= 5,
+                    num_rows= 10,
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)],
