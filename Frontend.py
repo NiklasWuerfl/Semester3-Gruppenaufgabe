@@ -1,27 +1,28 @@
 """Modul für Frontend
 
 author: Daniela Mayer
-date: 27.10.2022
-version: 1.0.0
+date: 13.11.2022
+version: 2.0.0
 licence: free
 """
 
 import PySimpleGUI as sg
 
-def AnmeldeSeite():
+def LoginSeite():
     """Implimentierung der Login Seite
 
     Tests:
         *
         *
     """
-    
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Login', font=('any', 12, 'bold'))],
           [sg.Text('Username: *'), sg.InputText(key='-name-', do_not_clear=False)],
-          [sg.Text('Passwort: *'), sg.InputText(key='-passwort-', do_not_clear=False)],
+          [sg.Text('Passwort: * '), sg.InputText(key='-passwort-', do_not_clear=False)],
           [sg.Button('Anmelden')]]
 
-    Login_window=sg.Window('Studierendenverwaltungssystem', layout)
+    Login_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500))
 
     while True:
         event, values= Login_window.read()
@@ -42,6 +43,8 @@ def FalseLoginSeite():
         *
     """
     
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Login', font=('any', 12, 'bold'))],
         [sg.Text('Username oder Passwort falsch', text_color= 'red')],
         [sg.Text('Username:'), sg.InputText(key='-name-', do_not_clear=False)],
@@ -49,7 +52,7 @@ def FalseLoginSeite():
         [sg.Button('Anmelden')],
         [sg.Text('Falls Sie das Passwort vergessen haben, wenden Sie sich an den Administrator!')]]
 
-    FalseLogin_window=sg.Window('Studierendenverwaltungssystem', layout)
+    FalseLogin_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500))
 
     while True:
         event, values= FalseLogin_window.read()
@@ -70,22 +73,26 @@ def ErfolgreicherLogout():
         *
     """
 
-    layout = [[sg.Text('Sie haben sich erfolgreich abgemeldet!')]]
+    sg.theme('TanBlue')
 
-    Logout_window=sg.Window('Studierendenverwaltungssystem', layout)
+    layout = [[sg.Text('Sie haben sich erfolgreich abgemeldet!')],
+            [sg.Button('neu Anmelden', font=('any', 9, 'underline'))]]
+
+    Logout_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500))
 
     while True:
         event, values= Logout_window.read()
         if event == sg.WIN_CLOSED:
             break
-        elif event == "Anmelden":
-            break
+        elif event == "neu Anmelden":
+            Logout_window.close()
+            LoginSeite()
 
     Logout_window.close()
 
 
 
-def main():
+def StudierendeAllgemein():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
     Tests:
@@ -93,13 +100,18 @@ def main():
         *
     """
 
+    sg.theme('TanBlue')
+
     modul_information_array=[
         [87392345, 'Programmierung', 5.0, 1.6, True],
         [72934982, 'Mathe 1', 5.0, 2.5, True]]
 
     headings=['Modul ID','Modul', 'Cedits', 'Note', 'best.']
+
+    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
     
-    layout = [[sg.Text('Herzlich Willkommen!'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
+    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
+            [sg.HorizontalSeparator()],
           [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
           [sg.Table(values=modul_information_array, headings=headings, max_col_width=35,
                     auto_size_columns=True,
@@ -111,7 +123,7 @@ def main():
                     enable_events= True)],
           [sg.Text('Gesamt', font=('any', 12, 'bold')), sg.Text('Cedits gesamt'), sg.Text('GPA')]]
           
-    Studi_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Studi_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Studi_window.read()
@@ -131,6 +143,7 @@ def main():
 
 
 
+
 def StudierendenAnsichtModul(Modul_info):
     """ Informationen über Veranstaltungen eines Moduls mit Noten und Punkten
 
@@ -141,6 +154,8 @@ def StudierendenAnsichtModul(Modul_info):
         *
         *
     """
+
+    sg.theme('TanBlue')
 
     Modul_name= Modul_info[1]
     Modul_Note= str(Modul_info[3])
@@ -158,11 +173,11 @@ def StudierendenAnsichtModul(Modul_info):
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)],
-            [sg.Text(Modul_name + ", Note " + Modul_Note)],
+            [sg.Text("Note " + Modul_Note)],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= window.read()
@@ -183,6 +198,8 @@ def PasswortAendernSeite():
         *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
           [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
           [sg.Text('Passwort *'), sg.InputText(key='-passwort-', do_not_clear=False)],
@@ -190,7 +207,7 @@ def PasswortAendernSeite():
           [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
           [sg.Button('Ändern')]]
 
-    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Passwort_window.read()
@@ -211,6 +228,8 @@ def PasswortAendernSeiteFalse():
         *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
           [sg.Text('Eine der Angaben ist nicht korrekt. Versuchen Sie es noch einmal!', text_color='red')],
           [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
@@ -219,7 +238,7 @@ def PasswortAendernSeiteFalse():
           [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
           [sg.Button('Ändern')]]
 
-    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Passwort_window.read()
@@ -240,12 +259,17 @@ def DozierendenVeranstaltungsansicht():
     *
     """
 
+    sg.theme('TanBlue')
+
     Veranstaltung_array=[[239847, 'Statistik', 'BWL'],
                     [837945, 'Mathe', 'Informatik']]
     
     headings=['Veranstaltungs ID', 'Veranstaltungsname', 'Kurs']
 
-    layout = [[sg.Text('Herzlich Willkommen'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
+    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
+
+    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
+            [sg.HorizontalSeparator()],
           [sg.Text('Veranstaltungen', font=('any', 12, 'bold')), sg.Button('neue Veranstaltungsnoten eintragen', font=('any', 9, 'underline'))],
           [sg.Table(values=Veranstaltung_array, headings=headings, max_col_width=35,
                     auto_size_columns=True,
@@ -257,7 +281,7 @@ def DozierendenVeranstaltungsansicht():
                     enable_events= True)]
           ]
           
-    Veran_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Veran_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Veran_window.read()
@@ -289,6 +313,8 @@ def VeranstaltungKursAnsicht(info):
     *
     """
 
+    sg.theme('TanBlue')
+
     Veranstaltung_name= info[1]
     Kurs_info=[[9823057, 'nach1', 'Vor1', 2.6],
                 [2739474, 'nach2', 'Vor2', 1.8]]
@@ -307,7 +333,7 @@ def VeranstaltungKursAnsicht(info):
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Verankurs_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Verankurs_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Verankurs_window.read()
@@ -327,8 +353,9 @@ def VeranstaltungsnotenEintragenDoz():
     *
     *
     """
+
+    sg.theme('TanBlue')
     
- 
     Bestanden= (True, False)
     Prüfungsinfo_Veranstaltung_Array= []
 
@@ -340,7 +367,7 @@ def VeranstaltungsnotenEintragenDoz():
           [sg.Text('Bestanden'), sg.Combo(Bestanden, enable_events=True, key='-Bestanden-')],
           [sg.Button('OK', font=('any', 9, 'underline'))]]
           
-    VeranNoten_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    VeranNoten_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= VeranNoten_window.read()
@@ -364,12 +391,17 @@ def AdministrationAllgemein():
     * 
     """
 
-    layout = [[sg.Text('Administration'), sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))],
+    sg.theme('TanBlue')
+
+    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
+
+    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
+            [sg.HorizontalSeparator()],
           [sg.Text('Was möchten Sie bearbeiten/ anlegen oder löschen?')],
           [sg.Button('Studierende', font=('any', 9, 'underline')), sg.Button('Dozierende', font=('any', 9, 'underline')), sg.Button('Kurse', font=('any', 9, 'underline'))],
           [sg.Button('Veranstaltung', font=('any', 9, 'underline')), sg.Button('Modul', font=('any', 9, 'underline'))]]
           
-    Admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Admin_window.read()
@@ -401,12 +433,14 @@ def StudiAdmin():
     *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Studierenden Administration'), sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Matrikelnummer:'), sg.InputText(key= '-Matrikelnummer-', do_not_clear=False), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Studiadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Studiadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Studiadmin_window.read()
@@ -432,12 +466,14 @@ def DozAdmin():
     *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Dozierenden Administration'), sg.Button('neuen Dozierenden anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Dozierenden ID:'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Dozadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Dozadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Dozadmin_window.read()
@@ -464,12 +500,14 @@ def KursAdmin():
     *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Kurs Administration'), sg.Button('neuen Kurs anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Kurs ID:'), sg.InputText(key= '-kurs_id-', do_not_clear=False), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Kursadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Kursadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Kursadmin_window.read()
@@ -496,12 +534,14 @@ def VeranstaltungAdmin():
     *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Veranstaltung Administration'), sg.Button('neuen Veranstaltung anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Veranstaltung ID:'), sg.InputText(key= '-veranstaltung_id-', do_not_clear=False), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Veranadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Veranadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Veranadmin_window.read()
@@ -528,12 +568,14 @@ def ModulAdmin():
     *
     """
 
+    sg.theme('TanBlue')
+
     layout = [[sg.Text('Modul Administration'), sg.Button('neuen Modul anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Modul ID:'), sg.InputText(key= '-modul_id-', do_not_clear=False), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
           
-    Moduladmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Moduladmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
     
     while True:
         event, values= Moduladmin_window.read()
@@ -559,6 +601,8 @@ def Studianlegen():
     *
     *
     """
+
+    sg.theme('TanBlue')
     
     Studierenden_Info_Array= []
 
@@ -569,7 +613,7 @@ def Studianlegen():
           [sg.Text('Kurs ID: *'), sg.InputText(key= '-Kurs_id-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
-    Studianle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Studianle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Studianle_window.read()
@@ -593,6 +637,8 @@ def Dozanlegen():
     *
     """
 
+    sg.theme('TanBlue')
+
     Dozierenden_Info_Array= []
 
     layout = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
@@ -601,7 +647,7 @@ def Dozanlegen():
           [sg.Text('Vorname: *'), sg.InputText(key= '-Vorname-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
-    Dozanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Dozanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Dozanle_window.read()
@@ -626,6 +672,8 @@ def Kursanlegen():
     *
     """
 
+    sg.theme('TanBlue')
+
     Kurs_Info_Array= []
 
     layout = [[sg.Text('Kurs anlegen', font=('any', 12, 'bold'))],
@@ -634,7 +682,7 @@ def Kursanlegen():
           [sg.Text('Dozierenden ID: *'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
-    Kursanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Kursanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Kursanle_window.read()
@@ -659,6 +707,8 @@ def Veranstaltunganlegen():
     *
     """
 
+    sg.theme('TanBlue')
+
     Veran_Info_Array= []
 
     layout = [[sg.Text('Veranstaltung anlegen', font=('any', 12, 'bold'))],
@@ -668,7 +718,7 @@ def Veranstaltunganlegen():
           [sg.Text('Modul ID: *'), sg.InputText(key= '-modul_id-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
-    Verananle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Verananle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Verananle_window.read()
@@ -693,6 +743,8 @@ def Modulanlegen():
     *
     """
 
+    sg.theme('TanBlue')
+
     Modul_Info_Array= []
 
     layout = [[sg.Text('Modul anlegen', font=('any', 12, 'bold'))],
@@ -702,7 +754,7 @@ def Modulanlegen():
           [sg.Text('Credits: *'), sg.InputText(key= '-credits-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
-    Modulanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True)
+    Modulanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
         event, values= Modulanle_window.read()
@@ -730,6 +782,8 @@ def Studibearbeiten(Matrikelnummer: int):
     *
     """
 
+    sg.theme('TanBlue')
+
     Studi_Array=[2983642, 'Vorname', 'Nachname', 238404]
 
 
@@ -744,6 +798,8 @@ def Dozbearbeiten(Dozierenden_id: int):
     *
     """
 
+    sg.theme('TanBlue')
+
 
 def Kursbearbeiten(Kurs_id :int):
     """Informationen über einen Kurs können verändert werden 
@@ -755,6 +811,8 @@ def Kursbearbeiten(Kurs_id :int):
     *
     *
     """
+
+    sg.theme('TanBlue')
 
 
 def Veranstaltungbearbeiten(Veran_id: int):
@@ -768,6 +826,8 @@ def Veranstaltungbearbeiten(Veran_id: int):
     *
     """
 
+    sg.theme('TanBlue')
+
 
 
 def Modulbearbeiten(Modul_id: int):
@@ -780,6 +840,9 @@ def Modulbearbeiten(Modul_id: int):
     *
     *
     """
+
+    sg.theme('TanBlue')
+    
 
 
 if __name__ == "__main__":
