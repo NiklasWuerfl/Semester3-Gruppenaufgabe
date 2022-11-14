@@ -1,11 +1,8 @@
 """ Modelle für Datenbank-Objekte
 
-    fehlende Sachverhalte:
-    * Dozent-Kurs (Studiengansleiter) relationship
-
     author: Emma Müller
-    date: 09.11.2022
-    version: 1.0.1
+    date: 14.11.2022
+    version: 1.1.0
     licence: free (open source)
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, Table   # help to define model attributes
@@ -23,7 +20,6 @@ class Student(Base):
     nachname = Column(String)
     kurs_id = Column(Integer, ForeignKey("kurs.kurs_id"))
     kurs = relationship("Kurs", backref="studenten")
-    nutzername = Column(String)
     passwort = Column(String)
     pruefungsleistungen = relationship("Veranstaltung", back_populates="student")
 
@@ -40,7 +36,6 @@ class Dozent(Base):
     dozent_id = Column(Integer,primary_key=True)
     vorname = Column(String)
     nachname = Column(String)
-    nutzername = Column(String)
     passwort = Column(String)
     veranstaltungen = relationship("Veranstaltung", back_populates="dozent")
 
@@ -68,7 +63,6 @@ class Admin(Base):
     admin_id = Column(Integer,primary_key=True)
     vorname = Column(String)
     nachname = Column(String)
-    nutzername = Column(String)
     passwort = Column(String)
 
 

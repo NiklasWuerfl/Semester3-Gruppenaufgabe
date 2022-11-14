@@ -1,8 +1,8 @@
 """ Modul für API
 
     author: Emma Müller
-    date: 09.11.2022
-    version: 1.1.0
+    date: 14.11.2022
+    version: 1.1.1
     licence: free (open source)
 """
 
@@ -32,21 +32,41 @@ my_data.Base.metadata.create_all(engine)
 def hello():
     return 'hello :)'
 
-#@app.route('/signup/<string:nutzername>/<string:passwort>', methods=['GET'])
-#def anmeldung(username: str, passwort: str):
+@app.route('/signInStudent/<string:student_id>/<string:passwort>', methods=['GET'])
+def signInStudent(student_id: int, passwort: str):
+    student = session.execute(Student).filter_by(student_id=student_id).first()
 
-#@app.route('/logout/')
-#def abmeldung():
-#    return1
+    if passwort == student.passwort:
+        return True
+    else:
+        return False
 
-@app.route('/createStudent/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def createStudent(student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
+@app.route('/signInDozent/<string:dozent_id>/<string:passwort>', methods=['GET'])
+def signInDozent(dozent_id: int, passwort: str):
+    dozent = session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
+
+    if passwort == dozent.passwort:
+        return True
+    else:
+        return False
+
+@app.route('/signInAdmin/<string:student_id>/<string:passwort>', methods=['GET'])
+def signInAdmin(admin_id: int, passwort: str):
+    admin = session.execute(Admin).filter_by(admin_id=admin_id).first()
+
+    if passwort == admin.passwort:
+        return True
+    else:
+        return False
+
+@app.route('/createStudent/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:passwort>', methods=['GET'])
+def createStudent(student_id: int, vorname: str, nachname: str, kurs_id: int, passwort:str):
     student = session.execute(Student).filter_by(student_id=student_id).first()
 
     if student:
         return 'Es existiert bereits ein Student mit dieser ID!'
     else:
-        neuerStudent = Student(student_id=student_id,vorname=vorname,nachname=nachname,kurs_id=kurs_id,nutzername=nutzername,passwort=passwort)
+        neuerStudent = Student(student_id=student_id,vorname=vorname,nachname=nachname,kurs_id=kurs_id,passwort=passwort)
         session.add(neuerStudent)
         session.commit()
         return 'Student wurde erfolgreich angelegt!'
@@ -63,14 +83,14 @@ def createKurs(kurs_id: int, name: str, dozent_id: int):
         session.commit()
         return 'Kurs wurde erfolgreich angelegt!'
 
-@app.route('/createDozent/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def createDozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
+@app.route('/createDozent/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:passwort>', methods=['GET'])
+def createDozent(dozent_id: int, vorname: str, nachname: str, passwort: str):
     dozent = session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
 
     if dozent:
         return 'Es existiert bereits ein Dozent mit dieser ID!'
     else:
-        neuerDozent = Dozent(dozent_id=dozent_id,vorname=vorname,nachname=nachname,nutzername=nutzername,passwort=passwort)
+        neuerDozent = Dozent(dozent_id=dozent_id,vorname=vorname,nachname=nachname,passwort=passwort)
         session.add(neuerDozent)
         session.commit()
         return 'Dozent wurde erfolgreich angelegt!'
@@ -111,14 +131,14 @@ def createPruefungsleistung(student_id: int, veranstaltung_id: int, punkte_gesam
         session.commit()
         return 'Prüfungsleistung wurde erfolgreich angelegt!'
 
-@app.route('/createAdmin/<int:admin_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def createAdmin(admin_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
+@app.route('/createAdmin/<int:admin_id>/<string:vorname>/<string:nachname>/<string:passwort>', methods=['GET'])
+def createAdmin(admin_id: int, vorname: str, nachname: str, passwort: str):
     admin = session.execute(Admin).filter_by(admin_id=admin_id).first()
 
     if admin:
         return 'Es existiert bereits ein Admin mit dieser ID!'
     else:
-        neuerAdmin = Admin(admin_id=admin_id,vorname=vorname,nachname=nachname,nutzername=nutzername,passwort=passwort)
+        neuerAdmin = Admin(admin_id=admin_id,vorname=vorname,nachname=nachname,passwort=passwort)
         session.add(neuerAdmin)
         session.commit()
         return 'Admin wurde erfolgreich angelegt!'
@@ -212,17 +232,21 @@ def deleteAdmin(admin_id: int):
     else:
         return 'Dieser Admin existiert nicht!'
 
-@app.route('/changeStudent/<int:student_id_old>/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def changeStudent(student_id_old: int, student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
+@app.route('/changeStudent/<int:student_id_old>/<int:student_id>/<string:vorname>/<string:nachname>/<int:kurs_id>/<string:passwort>', methods=['GET'])
+def changeStudent(student_id_old: int, student_id: int, vorname: str, nachname: str, kurs_id: int, passwort:str):
     student = session.execute(Student).filter_by(student_id=student_id_old).first()
 
     if student:
-        student.student_id = student_id
-        student.vorname = vorname
-        student.nachname = nachname
-        student.kurs_id = kurs_id
-        student.nutzername = nutzername
-        student.passwort = passwort
+        if student_id:
+            student.student_id = student_id
+        if vorname:
+            student.vorname = vorname
+        if nachname:
+            student.nachname = nachname
+        if kurs_id:
+            student.kurs_id = kurs_id
+        if passwort:
+            student.passwort = passwort
         session.commit()
         return 'Student wurde bearbeitet!'
     else:
@@ -233,24 +257,30 @@ def changeKurs(kurs_id_old: int,kurs_id: int, name: str, dozent_id: int):
     kurs = session.execute(Kurs).filter_by(kurs_id=kurs_id_old).first()
 
     if kurs:
-        kurs.kurs_id = kurs_id
-        kurs.name = name
-        kurs.dozent_id = dozent_id
+        if kurs_id:
+            kurs.kurs_id = kurs_id
+        if name:
+            kurs.name = name
+        if dozent_id:
+            kurs.dozent_id = dozent_id
         session.commit()
         return 'Kurs wurde bearbeitet!'
     else:
         return 'Es existiert kein Kurs mit dieser ID!'
 
-@app.route('/changeDozent/<int:dozent_id_old>/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def changeDozent(dozent_id_old: int,dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
+@app.route('/changeDozent/<int:dozent_id_old>/<int:dozent_id>/<string:vorname>/<string:nachname>/<string:passwort>', methods=['GET'])
+def changeDozent(dozent_id_old: int,dozent_id: int, vorname: str, nachname: str, passwort: str):
     dozent = session.execute(Dozent).filter_by(dozent_id=dozent_id_old).first()
 
     if dozent:
-        dozent.dozent_id = dozent_id
-        dozent.vorname = vorname
-        dozent.nachname = nachname
-        dozent.nutzername = nutzername
-        dozent.passwort = passwort
+        if dozent_id:
+            dozent.dozent_id = dozent_id
+        if vorname:
+            dozent.vorname = vorname
+        if nachname:
+            dozent.nachname = nachname
+        if passwort:
+            dozent.passwort = passwort
         session.commit()
         return 'Dozent wurde bearbeitet!'
     else:
@@ -261,10 +291,14 @@ def changeModul(modul_id_old: int, modul_id: int, modulname: str, credits: int, 
     modul = session.execute(Modul).filter_by(modul_id=modul_id_old).first()
 
     if modul:
-        modul.modul_id = modul_id
-        modul.modulname = modulname
-        modul.credits = credits
-        modul.kurs_id = kurs_id
+        if modul_id:
+            modul.modul_id = modul_id
+        if modulname:
+            modul.modulname = modulname
+        if credits:
+            modul.credits = credits
+        if kurs_id:
+            modul.kurs_id = kurs_id
         session.commit()
         return 'Modul wurde bearbeitet!'
     else:
@@ -275,10 +309,14 @@ def changeVeranstaltung(veranstaltung_id_old: int, veranstaltung_id: int, name: 
     veranstaltung = session.execute(Veranstaltung).filter_by(veranstaltung_id=veranstaltung_id_old).first()
 
     if veranstaltung:
-        veranstaltung.veranstaltung_id = veranstaltung_id
-        veranstaltung.name = name
-        veranstaltung.dozent_id = dozent_id
-        veranstaltung.modul_id = modul_id
+        if veranstaltung_id:
+            veranstaltung.veranstaltung_id = veranstaltung_id
+        if name:
+            veranstaltung.name = name
+        if dozent_id:
+            veranstaltung.dozent_id = dozent_id
+        if modul_id:
+            veranstaltung.modul_id = modul_id
         session.commit()
         return 'Veranstaltung wurde bearbeitet!'
     else:
@@ -289,25 +327,32 @@ def changePruefungsleistung(student_id_old: int, veranstaltung_id_old: int, stud
     pruefungsleistung = session.execute(Pruefungsleistung).filter_by(student_id=student_id_old,veranstaltung_id=veranstaltung_id_old).first()
 
     if pruefungsleistung:
-        pruefungsleistung.student_id = student_id
-        pruefungsleistung.veranstaltung_id = veranstaltung_id
-        pruefungsleistung.punkte_gesamt = punkte_gesamt
-        pruefungsleistung.punkte_erreicht = punkte_erreicht
+        if student_id:
+            pruefungsleistung.student_id = student_id
+        if veranstaltung_id:
+            pruefungsleistung.veranstaltung_id = veranstaltung_id
+        if punkte_gesamt:
+            pruefungsleistung.punkte_gesamt = punkte_gesamt
+        if punkte_erreicht:
+            pruefungsleistung.punkte_erreicht = punkte_erreicht
         session.commit()
         return 'Prüfungsleistung wurde bearbeitet!'
     else:
         return 'Es existiert keine Prüfungsleistung von diesem Studenten in dieser Veranstaltung!'
 
-@app.route('/changeAdmin/<int:admin_id_old>/<int:admin_id>/<string:vorname>/<string:nachname>/<string:nutzername>/<string:passwort>', methods=['GET'])
-def changeAdmin(admin_id_old: int, admin_id: int, vorname: str, nachname: str, nutzername: str, passwort: str):
+@app.route('/changeAdmin/<int:admin_id_old>/<int:admin_id>/<string:vorname>/<string:nachname>/<string:passwort>', methods=['GET'])
+def changeAdmin(admin_id_old: int, admin_id: int, vorname: str, nachname: str, passwort: str):
     admin = session.execute(Admin).filter_by(admin_id=admin_id_old).first()
 
     if admin:
-        admin.admin_id = admin_id
-        admin.vorname = vorname
-        admin.nachname = nachname
-        admin.nutzername = nutzername
-        admin.passwort = passwort
+        if admin_id:
+            admin.admin_id = admin_id
+        if vorname:
+            admin.vorname = vorname
+        if nachname:
+            admin.nachname = nachname
+        if passwort:
+            admin.passwort = passwort
         session.commit()
         return 'Admin wurde bearbeitet!'
     else:
@@ -318,7 +363,7 @@ def getStudent(student_id: int):
     student = session.execute(Student).filter_by(student_id=student_id).first()
 
     if student:
-        return [student.student_id,student.vorname,student.nachname,student.kurs_id,student.nutzername,student.passwort]
+        return [student.student_id,student.vorname,student.nachname,student.kurs_id,student.passwort]
     else:
         return 'Es existiert kein Student mit dieser ID!'
 
@@ -336,7 +381,7 @@ def getDozent(dozent_id: int):
     dozent = session.execute(Dozent).filter_by(dozent_id=dozent_id).first()
 
     if dozent:
-        return [dozent.dozent_id,dozent.vorname,dozent.nachname,dozent.nutzername,dozent.passwort]
+        return [dozent.dozent_id,dozent.vorname,dozent.nachname,dozent.passwort]
     else:
         return 'Es existiert kein Dozent mit dieser ID!'
 
@@ -372,7 +417,7 @@ def getAdmin(admin_id: int):
     admin = session.execute(Admin).filter_by(admin_id=admin_id).first()
 
     if admin:
-        return [admin.admin_id,admin.vorname,admin.nachname,admin.nutzername,admin.passwort]
+        return [admin.admin_id,admin.vorname,admin.nachname,admin.passwort]
     else:
         return 'Es existiert kein Admin mit dieser ID!'
 
