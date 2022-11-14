@@ -9,7 +9,7 @@ licence: free
 import PySimpleGUI as sg
 import Student_be as sb
 
-def LoginSeite():
+def Login():
     """Implimentierung der Login Seite
 
     Tests:
@@ -24,7 +24,7 @@ def LoginSeite():
           [sg.Combo(Nutzer, enable_events=True, key='-nutzer-')],
           [sg.Text('ID: *'), sg.InputText(key='-name-', do_not_clear=False)],
           [sg.Text('Passwort: * '), sg.InputText(key='-passwort-', do_not_clear=False)],
-          [sg.Button('Anmelden')]]
+          [sg.Button('Anmelden', font=('any', 9, 'underline'))]]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
@@ -53,7 +53,7 @@ def LoginSeite():
 
 
 
-def FalseLoginSeite():
+def FalseLogin():
     """Implimentierung der Seite nach falschem einloggen
 
     Tests:
@@ -63,12 +63,15 @@ def FalseLoginSeite():
     
     sg.theme('TanBlue')
 
+    Nutzer= ("Studierender", "Dozierender", "Admin")
+
     FalseLoginColumn = [[sg.Text('Login', font=('any', 12, 'bold'))],
         [sg.Text('ID oder Passwort falsch', text_color= 'red')],
+        [sg.Combo(Nutzer, enable_events=True, key='-nutzer-')],
         [sg.Text('ID:'), sg.InputText(key='-name-', do_not_clear=False)],
         [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
-        [sg.Button('Anmelden')],
-        [sg.Text('Falls Sie das Passwort vergessen haben, wenden Sie sich an den Administrator!')]]
+        [sg.Button('Anmelden', font=('any', 9, 'underline'))],
+        [sg.Text('Bei vergessenem Passwort, wenden Sie sich an den Administrator!')]]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
@@ -119,7 +122,7 @@ def ErfolgreicherLogout():
             break
         elif event == "neu Anmelden":
             Logout_window.close()
-            LoginSeite()
+            Login()
 
     Logout_window.close()
 
@@ -135,7 +138,7 @@ def StudierendeAllgemein():
 
     sg.theme('TanBlue')
 
-    modul_information_array=sb.get_raw_pruefung_data
+    modul_information_array=[9308504, 'Programmieren', 5.0, 2.6, True ]
 
     headings=['Modul ID','Modul', 'Cedits', 'Note', 'best.']
 
@@ -950,7 +953,7 @@ def VeranstaltungBearbeiten(Veran_id: int):
           [sg.Text('Veranstaltungs ID:'), sg.Text(Veran[0]), sg.InputText(key='-veran_id-', do_not_clear=False)],
           [sg.Text('Veranstaltungsname:'), sg.Text(Veran[1]), sg.InputText(key= '-veranname-', do_not_clear=False)], 
           [sg.Text('Dozierenden ID:'), sg.Text(Veran[2]), sg.InputText(key= '-doz_id-', do_not_clear=False)],
-          [sg.Text('Modul ID:'), sg.Text(Veran[3]), sg.InputText(key= '-modul_id-', do_not_clear=False)]
+          [sg.Text('Modul ID:'), sg.Text(Veran[3]), sg.InputText(key= '-modul_id-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
     Veranbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
@@ -991,7 +994,7 @@ def ModulBearbeiten(Modul_id: int):
           [sg.Text('Modul ID:'), sg.Text(Modul[0]), sg.InputText(key='-modul_id-', do_not_clear=False)],
           [sg.Text('Modulname:'), sg.Text(Modul[1]), sg.InputText(key= '-modulname-', do_not_clear=False)], 
           [sg.Text('Kurs ID:'), sg.Text(Modul[2]), sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-          [sg.Text('Credits:'), sg.Text(Modul[3]), sg.InputText(key= '-credits-', do_not_clear=False)]
+          [sg.Text('Credits:'), sg.Text(Modul[3]), sg.InputText(key= '-credits-', do_not_clear=False)],
           [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
           
     Modulbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
