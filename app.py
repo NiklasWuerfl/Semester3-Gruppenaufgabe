@@ -26,10 +26,6 @@ my_cursor = my_connect.cursor()
 def index():
     return 'hello my friends :)'
 
-
-#@app.route('/signup/<string:nutzername>/<string:passwort>', methods=['GET'])
-#def anmeldung(username: str, passwort: str):
-
 @app.route('/logout/')
 def abmeldung():
    return 'du bist abgemeldet'
