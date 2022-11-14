@@ -7,6 +7,8 @@
 """
 
 from flask import Flask
+
+import Student_be
 import database as db
 
 # create the Flask application object
@@ -150,7 +152,25 @@ def getAdmin(admin_id: int):
 def getPruefungsleistungenByStudent(student_id: int):
     return db.get_all_pruefungsleistung_by_student(my_connect, student_id)
 
+@app.route('/ModuleStudent/<int:student_id>', methods= ["GET"])
+def getModuleStudent(student_id: int):
+    return Student_be.print_student_module(student_id)
 
+@app.route('/PruefungenInModulStudent/<int:student_id>/<int:modul_id>', methods= ["GET"])
+def getPruefungenInModulStudent(student_id: int, modul_id):
+    return Student_be.print_pruefungen_in_modul(student_id, modul_id)
+
+@app.route('/CreditsStudent/<int:student_id>', methods= ["GET"])
+def getCreditsStudent(student_id: int):
+    return Student_be.get_credits_erreicht(student_id)
+
+@app.route('/GPAStudent/<int:student_id>', methods= ["GET"])
+def getGPAStudent(student_id: int):
+    return Student_be.get_gpa_by_student(student_id)
+
+@app.route('/StudentName/<int:student_id>', methods= ["GET"])
+def getStudentName(student_id: int):
+    return Student_be.get_student_name(student_id)
 
 if __name__ == '__main__':
     db.database_setup(my_connect)

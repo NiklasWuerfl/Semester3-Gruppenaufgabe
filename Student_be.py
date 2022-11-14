@@ -9,6 +9,7 @@ noch mit Modul "DATABASE" implementiert
 """
 import database as db
 import app
+import app_extra as extra
 
 
 def get_student_name(student_id):
@@ -22,8 +23,8 @@ def get_student_name(student_id):
     * ungültige Student_id eingeben
     *
     """
-    vorname = db.get_student_by_id(my_connect, student_id)[0][1]
-    nachname = db.get_student_by_id(my_connect, student_id)[0][2]
+    vorname = extra.getStudent(student_id)[0][1]
+    nachname = extra.getStudent(student_id)[0][2]
     name = nachname + ", " + vorname
     return name
 
@@ -122,14 +123,17 @@ def get_raw_modul_data (student_id):
     module_raw = []
     module_raw.append(m_ids)
     m_namen = []
+    m_bestanden = []
     for m in m_ids:
         modul = db.get_modul_by_id(my_connect, m)[0]
         m_namen.append(modul[1])
         m_credits.append(modul[2])
         m_note.append(note_dict.get(m))
+        m_bestanden.append(note_dict.get(m)<=4.0)
     module_raw.append(m_namen)
     module_raw.append(m_credits)
     module_raw.append(m_note)
+    module_raw.append(m_bestanden)
 
     return module_raw
 
@@ -138,6 +142,11 @@ def print_student_module(student_id):
     """
     Redundante Methode. get_raw_modul_data() gibt das gleiche aus (andersrum tabelliert)
     Methode zum Erlangen des Dataframes mit allen relevanten Modulen und Noten für die Tabelle in der Startseite
+
+    Return:
+    [modul_id, modul_name, credits, note, bestanden]
+    [[1200, 'Mathematik II', 8, 3.3], [9980, 'Finanz- und Rechnungslehre', 5, 3.8], [3000, 'IT Konzepte', 5, 3.4]]
+
     :param student_id:
     :return: module_df: Dataframe mit allen Modul-Namen, deren Veranstaltungen, Teilpunkten, Credits und Gesamtnoten
 
@@ -146,7 +155,7 @@ def print_student_module(student_id):
     *
     """
     # noch nicht gelöst: Veranstaltungen in ein Modul einbauen
-    raw_modul_data = get_raw_modul_data(student_id)[1:4]
+    raw_modul_data = get_raw_modul_data(student_id)
 
     module = []
     for i in range(len(raw_modul_data[0])):
@@ -227,6 +236,7 @@ def print_pruefungen_in_modul (student_id, modul_id):
     for p in pruefungen:
         details = []
         veranstaltung = db.get_veranstaltung_by_id(my_connect, p[1])
+        details.append(p[1])
         details.append(veranstaltung[1]) # Veranstaltungsname
         details.append(p[2]) # gesamte Punkte
         details.append(p[3]) # erreichte Punkte
@@ -236,36 +246,40 @@ def print_pruefungen_in_modul (student_id, modul_id):
 
 
 # database elements
-my_connect = app.my_connect
+my_connect = db.create_database_connection("data.db")
 # DATABASE_FILE = "data.db"
 # my_connect = db.create_database_connection(DATABASE_FILE)
 # my_cursor = my_connect.cursor()
+# url = "http://localhost:5000"
 
+# in Frontend einfügen:
+#     link = url + f"/ModuleStudent/{student_id}"
+#     response = requests.get(link)
+#     modul_information_array = response.json()
+# if __name__ == '__main__':
+  #   print(extra.getPruefungsleistungenByStudent(2000))
+#   print("_______________TEST START:________________")
+#     print(print_student_module(2000))
+#     print(' ')
+#   print(print_pruefungen_in_modul(1000, 1200))
+#   print(internal_pruefungen_in_modul(1000, 1200))
+#   print(get_gpa_by_student(2000))
+#
+#   print(get_student_name(2000))
+#   # print(notenberechnung(99,100))
+#   print(db.get_modul_by_id(my_connect, 9980))
+#   print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
+#   print(get_raw_pruefung_data(2000))
+#   print(get_raw_modul_data(2000))
+#   print("relevante Zeile")
+#   print(print_student_module(2000))
+#   print(get_credits_erreicht(2000))
 
-if __name__ == '__main__':
-    print("_______________TEST START:________________")
-    print(print_student_module(2000))
-    print(' ')
-    print(print_pruefungen_in_modul(1000, 1200))
-    print(internal_pruefungen_in_modul(1000, 1200))
-    print(get_gpa_by_student(2000))
-
-    print(get_student_name(2000))
-    # print(notenberechnung(99,100))
-    print(db.get_modul_by_id(my_connect, 9980))
-    print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
-    print(get_raw_pruefung_data(2000))
-    print(get_raw_modul_data(2000))
-    print("relevante Zeile")
-    print(print_student_module(2000))
-    print(get_credits_erreicht(2000))
-
-    print("\n bis hier funktioniert alles\n")
-    print(db.get_student_by_id(my_connect, 2000))
-    print(app.abmeldung())
-    test = app.getPruefungsleistungenByStudent(2000)
+#   print("\n bis hier funktioniert alles\n")
+#   print(db.get_student_by_id(my_connect, 2000))
+#   print(app.abmeldung())
+#   test = app.getPruefungsleistungenByStudent(2000)
     # print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
     # print(get_credits_erreicht(1000))
-    print (test)
-    print("_______________TEST ENDE:________________")
-    
+#   print (test)
+#   print("_______________TEST ENDE:________________")

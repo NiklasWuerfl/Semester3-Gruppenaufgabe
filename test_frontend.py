@@ -21,7 +21,7 @@ def start():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
-            StudierendenAnsichtAllgemein([(tb.get_student_name(1000))])
+            StudierendenAnsichtAllgemein(tb.get_student_name(1000))
 
     Login_window.close()
 
