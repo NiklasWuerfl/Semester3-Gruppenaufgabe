@@ -122,11 +122,11 @@ def ErfolgreicherLogout():
             break
         elif event == "neu Anmelden":
             Logout_window.close()
-            Login()
+            Login() 
 
     Logout_window.close()
 
-
+    
 
 def StudierendeAllgemein():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
@@ -322,10 +322,10 @@ def DozierendenVeranstaltungsansicht():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            PasswortAendernSeite
+            PasswortAendernSeite()
         elif event == "Abmelden":
             Veran_window.close()
-            ErfolgreicherLogout
+            ErfolgreicherLogout()
         elif event == "neue Veranstaltungsnoten eintragen":
             VeranstaltungsnotenEintragenDoz()
         elif event== "-Table-":
@@ -467,7 +467,7 @@ def AdministrationAllgemein():
 
     Admin_window.close()
 
-def StudiAdmin():
+def main():
     """Einen Studierenden bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -477,12 +477,19 @@ def StudiAdmin():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Studierenden Administration'), sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
+    StudiAdminColumn = [[sg.Text('Studierenden Administration'), sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Matrikelnummer:'), sg.InputText(key= '-Matrikelnummer-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(StudiAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
           
-    Studiadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    Studiadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    Studiadmin_window['-C-'].expand(True, True, True)
+    Studiadmin_window['-1-'].expand(True, True, True)
+    Studiadmin_window['-2-'].expand(True, False, True)
     
     while True:
         event, values= Studiadmin_window.read()
