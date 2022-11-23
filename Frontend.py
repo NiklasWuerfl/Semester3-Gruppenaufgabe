@@ -13,8 +13,8 @@ def Login():
     """Implimentierung der Login Seite
 
     Tests:
-        *
-        *
+        * richtige Logindaten als Dozierender/ Studierender/ Admin eintragen
+        * falsche Logindaten eingeben
     """
     sg.theme('TanBlue')
 
@@ -57,8 +57,8 @@ def FalseLogin():
     """Implimentierung der Seite nach falschem einloggen
 
     Tests:
-        *
-        *
+        * richtige Logindaten als Dozierender/ Studierender/ Admin eintragen
+        * falsche Logindaten eingeben
     """
     
     sg.theme('TanBlue')
@@ -97,8 +97,8 @@ def ErfolgreicherLogout():
     """Seite nach dem Logout
 
     Tests:
-        *
-        *
+        * 'neu Anmelden' ausprobieren
+        * Fenster schließen
     """
 
     sg.theme('TanBlue')
@@ -132,8 +132,8 @@ def StudierendeAllgemein():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
     Tests:
-        *
-        *
+        * Zeile in Tabelle anklicken
+        * auf 'Passwort ändern' und 'Abmelden'-Button klicken
     """
 
     sg.theme('TanBlue')
@@ -185,7 +185,7 @@ def StudierendenAnsichtModul(Modul_info):
         Modul_info (_type_): _description_
 
     Test:
-        *
+        * 'zurück'-Button klicken
         *
     """
 
@@ -228,8 +228,8 @@ def PasswortAendernSeite():
     """Seite zum ändern des Passwortes
 
     Tests:
-        *
-        *
+        * Daten korrekt eingeben
+        * Daten nicht korrekt eingeben
     """
 
     sg.theme('TanBlue')
@@ -255,11 +255,11 @@ def PasswortAendernSeite():
 
 
 def PasswortAendernSeiteFalse():
-    """Seite zum ändern des Passwortes
+    """Seite zum ändern des Passwortes nachdem Daten schon einmal falscch eingegeben wurden
 
     Tests:
-        *
-        *
+        * Daten korrekt eingeben
+        * Daten nicht korrekt eingeben
     """
 
     sg.theme('TanBlue')
@@ -289,8 +289,8 @@ def DozierendenVeranstaltungsansicht():
     """Alle Veranstaltungen eines Dozenten können eingesehen werden
 
     Tests: 
-    *
-    *
+    * auf Zeile mit einer Veranstaltung klicken
+    * auf 'Passwort ändern' und 'Abmelden'-Button klicken
     """
 
     sg.theme('TanBlue')
@@ -343,7 +343,7 @@ def VeranstaltungKursAnsicht(info):
         info (Array): Informationen über die Veranstaltung
 
     Tests:
-    *
+    * Funktion von 'zurück'-Button testen
     *
     """
 
@@ -384,8 +384,8 @@ def VeranstaltungsnotenEintragenDoz():
     """Dozenten können hier die Noten ihrer Studierenden eintragen
 
     Tests:
-    *
-    *
+    * Daten korrekt in die Eingabefelder eintragen
+    * Daten inkorrekt in die Eingabefelder eintragen
     """
 
     sg.theme('TanBlue')
@@ -421,8 +421,8 @@ def AdministrationAllgemein():
     * sollen Studierende, Dozierende, Studiengangsleitung, Veranstaltungen oder Module bearbeitet, neu angelet oder gelöscht werden
 
     Tests:
-    *
-    * 
+    * Buttons für Studoerende, Dozierende, Kurse, Veranstaltungen und Module ausprobieren
+    * auf 'Passwort ändern' und 'Abmelden'-Button klicken 
     """
 
     sg.theme('TanBlue')
@@ -467,18 +467,18 @@ def AdministrationAllgemein():
 
     Admin_window.close()
 
-def main():
+def StudiAdmin():
     """Einen Studierenden bearbeiten/ anlegen oder löschen
 
     Tests:
-    *
-    *
+    * Button für Studierenden neu anlegen anklicken
+    * Studierenden ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
 
     StudiAdminColumn = [[sg.Text('Studierenden Administration'), sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Matrikelnummer:'), sg.InputText(key= '-Matrikelnummer-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
+            [sg.Text('Studierenden ID:'), sg.InputText(key= '-studi_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
 
@@ -500,9 +500,9 @@ def main():
         elif event == 'neuen Studierenden anlegen':
             StudiAnlegen()
         elif event == 'bearbeiten':
-            StudiBearbeiten(values['-Matrikelnummer-'])
+            StudiBearbeiten(values['-studi_id-'])
         elif event == 'löschen':
-            StudiLoeschen(values['-Matrikelnummer-'])
+            StudiLoeschen(values['-studi_id-'])
     
     Studiadmin_window.close()
 
@@ -511,18 +511,25 @@ def DozAdmin():
     """Einen Dozierenden bearbeiten/ anlegen oder löschen
 
     Tests:
-    *
-    *
+    * Button für Dozierenden neu anlegen anklicken
+    * Dozierenden ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Dozierenden Administration'), sg.Button('neuen Dozierenden anlegen', font=('any', 9, 'underline'))],
+    DozAdminColumn = [[sg.Text('Dozierenden Administration'), sg.Button('neuen Dozierenden anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Dozierenden ID:'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(DozAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
           
-    Dozadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    Dozadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    Dozadmin_window['-C-'].expand(True, True, True)
+    Dozadmin_window['-1-'].expand(True, True, True)
+    Dozadmin_window['-2-'].expand(True, False, True)
     
     while True:
         event, values= Dozadmin_window.read()
@@ -542,21 +549,28 @@ def DozAdmin():
 
 
 def KursAdmin():
-    """Einen Studierenden bearbeiten/ anlegen oder löschen
+    """Einen Kurs bearbeiten/ anlegen oder löschen
 
     Tests:
-    *
-    *
+    * Button für Kurs neu anlegen anklicken
+    * Kurs ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Kurs Administration'), sg.Button('neuen Kurs anlegen', font=('any', 9, 'underline'))],
+    KursAdminColumn = [[sg.Text('Kurs Administration'), sg.Button('neuen Kurs anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Kurs ID:'), sg.InputText(key= '-kurs_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(KursAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
           
-    Kursadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    Kursadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    Kursadmin_window['-C-'].expand(True, True, True)
+    Kursadmin_window['-1-'].expand(True, True, True)
+    Kursadmin_window['-2-'].expand(True, False, True)
     
     while True:
         event, values= Kursadmin_window.read()
@@ -576,21 +590,28 @@ def KursAdmin():
 
 
 def VeranstaltungAdmin():
-    """Einen Studierenden bearbeiten/ anlegen oder löschen
+    """Eine Veranstaltung bearbeiten/ anlegen oder löschen
 
     Tests:
-    *
-    *
+    * Button für Veranstaltung neu anlegen anklicken
+    * Veranstaltung ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Veranstaltung Administration'), sg.Button('neuen Veranstaltung anlegen', font=('any', 9, 'underline'))],
+    VeranAdminColumn = [[sg.Text('Veranstaltung Administration'), sg.Button('neuen Veranstaltung anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Veranstaltung ID:'), sg.InputText(key= '-veranstaltung_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(VeranAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
           
-    Veranadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    Veranadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    Veranadmin_window['-C-'].expand(True, True, True)
+    Veranadmin_window['-1-'].expand(True, True, True)
+    Veranadmin_window['-2-'].expand(True, False, True)
     
     while True:
         event, values= Veranadmin_window.read()
@@ -609,22 +630,29 @@ def VeranstaltungAdmin():
 
 
 
-def ModulAdmin():
-    """Einen Studierenden bearbeiten/ anlegen oder löschen
+def main():
+    """Einen Modul bearbeiten/ anlegen oder löschen
 
     Tests:
-    *
-    *
+    * Button für Modul neu anlegen anklicken
+    * Modul ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Modul Administration'), sg.Button('neuen Modul anlegen', font=('any', 9, 'underline'))],
+    ModulAdminColumn = [[sg.Text('Modul Administration'), sg.Button('neuen Modul anlegen', font=('any', 9, 'underline'))],
             [sg.Text('Modul ID:'), sg.InputText(key= '-modul_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
             [sg.Button('zurück', font=('any', 9, 'underline'))]
           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(ModulAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
           
-    Moduladmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    Moduladmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    Moduladmin_window['-C-'].expand(True, True, True)
+    Moduladmin_window['-1-'].expand(True, True, True)
+    Moduladmin_window['-2-'].expand(True, False, True)
     
     while True:
         event, values= Moduladmin_window.read()
@@ -637,7 +665,7 @@ def ModulAdmin():
         elif event == 'bearbeiten':
             ModulBearbeiten(values['-modul_id-'])
         elif event == 'löschen':
-            break
+            sg.popup("hallo")
     
     Moduladmin_window.close()
 
@@ -647,8 +675,8 @@ def StudiAnlegen():
     """Einen neuen Studierenden anlegen
 
     Tests:
-    *
-    *
+        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -682,8 +710,8 @@ def DozAnlegen():
     """Ein neuer Dozierender angelegt
 
     Tests:
-    *
-    *
+        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -717,8 +745,8 @@ def KursAnlegen():
     """Ein neuer Kurs angelegt
 
     Tests:
-    *
-    *
+        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -752,8 +780,8 @@ def VeranstaltungAnlegen():
     """Eine neue Veranstaltung angelegt
 
     Tests:
-    *
-    *
+        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -788,8 +816,8 @@ def ModulAnlegen():
     """Ein neues Modul angelegt
 
     Tests:
-    *
-    *
+        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -824,11 +852,11 @@ def StudiBearbeiten(studi_id: int):
     """Informationen über einen Studierenden können verändert werden 
 
     Args:
-        studi_id (int): _description_
+        studi_id (int): Studierenden ID
 
     Tests:
-    *
-    *
+        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -865,11 +893,11 @@ def DozBearbeiten(Dozierenden_id: int):
     """Informationen über einen Dozendierenden können verändert werden 
 
     Args:
-        Dozierenden_id (int): _description_
+        Dozierenden_id (int): Dozierenden ID
 
     Tests:
-    *
-    *
+        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -904,11 +932,11 @@ def KursBearbeiten(Kurs_id :int):
     """Informationen über einen Kurs können verändert werden 
 
     Args:
-        Kurs_id (int): _description_
+        Kurs_id (int): Kurs ID
 
     Tests:
-    *
-    *
+        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -943,11 +971,11 @@ def VeranstaltungBearbeiten(Veran_id: int):
     """Informationen über eine Veranstaltung können verändert werden 
 
     Args:
-        Veran_id (int): _description_
+        Veran_id (int): Veranstaltung ID
 
     Tests:
-    *
-    *
+        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -984,11 +1012,11 @@ def ModulBearbeiten(Modul_id: int):
     """Die Informationen eines Moduls können verändert werden
 
     Args:
-        Modul_id (int): _description_
+        Modul_id (int): Modul ID
 
     Tests:
-    *
-    *
+        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * 'zurück'-Button anklicken
     """
 
     sg.theme('TanBlue')
@@ -1022,10 +1050,54 @@ def ModulBearbeiten(Modul_id: int):
 
 
 def StudiLoeschen(studi_id: int):
-    """_summary_
+    """ den Studieren mit der angegebenen ID löschen
 
     Args:
-        studi_id (int): _description_
+        studi_id (int): Studierenden ID
+    """
+
+    print()
+
+
+
+def DozLoeschen(doz_id: int):
+    """ den Dozierenden mit angegebenen ID löschen
+
+    Args:
+        doz_id (int): Dozierenden ID
+    """
+
+    print()
+
+
+
+def KursLoescchen(kurs_id: int):
+    """den Kurs mit angegebenen ID löschen
+
+    Args:
+        kurs_id (int): Kurs ID
+    """
+
+    print()
+
+
+
+def VeranstaltungLoeschen(veran_id: int):
+    """den Veranstaltung mit angegebenen ID löschen
+
+    Args:
+        veran_id (int): Veranstaltung ID
+    """
+
+    print()
+
+
+
+def ModulLoeschen(modul_id: int):
+    """den Modul mit angegebenen ID löschen
+
+    Args:
+        modul_id (int): Modul ID
     """
 
     print()
