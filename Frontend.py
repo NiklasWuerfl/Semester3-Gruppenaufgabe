@@ -467,6 +467,8 @@ def AdministrationAllgemein():
 
     Admin_window.close()
 
+    
+
 def StudiAdmin():
     """Einen Studierenden bearbeiten/ anlegen oder löschen
 
@@ -502,7 +504,7 @@ def StudiAdmin():
         elif event == 'bearbeiten':
             StudiBearbeiten(values['-studi_id-'])
         elif event == 'löschen':
-            StudiLoeschen(values['-studi_id-'])
+            sg.popup()
     
     Studiadmin_window.close()
 
@@ -542,7 +544,7 @@ def DozAdmin():
         elif event == 'bearbeiten':
             DozBearbeiten(values['-dozierenden_id-'])
         elif event == 'löschen':
-            break
+            sg.popup()
     
     Dozadmin_window.close()
 
@@ -583,7 +585,7 @@ def KursAdmin():
         elif event == 'bearbeiten':
             KursBearbeiten(values['-kurs_id-'])
         elif event == 'löschen':
-            break
+            sg.popup()
     
     Kursadmin_window.close()
 
@@ -624,13 +626,13 @@ def VeranstaltungAdmin():
         elif event == 'bearbeiten':
             VeranstaltungBearbeiten(values['-veranstaltung_id-'])
         elif event == 'löschen':
-            break
+            sg.popup()
     
     Veranadmin_window.close()
 
 
 
-def main():
+def ModulAdmin():
     """Einen Modul bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -665,7 +667,7 @@ def main():
         elif event == 'bearbeiten':
             ModulBearbeiten(values['-modul_id-'])
         elif event == 'löschen':
-            sg.popup("hallo")
+            sg.popup()
     
     Moduladmin_window.close()
 
@@ -1046,61 +1048,6 @@ def ModulBearbeiten(Modul_id: int):
             break
 
     Modulbear_window.close()
-
-
-
-def StudiLoeschen(studi_id: int):
-    """ den Studieren mit der angegebenen ID löschen
-
-    Args:
-        studi_id (int): Studierenden ID
-    """
-
-    print()
-
-
-
-def DozLoeschen(doz_id: int):
-    """ den Dozierenden mit angegebenen ID löschen
-
-    Args:
-        doz_id (int): Dozierenden ID
-    """
-
-    print()
-
-
-
-def KursLoescchen(kurs_id: int):
-    """den Kurs mit angegebenen ID löschen
-
-    Args:
-        kurs_id (int): Kurs ID
-    """
-
-    print()
-
-
-
-def VeranstaltungLoeschen(veran_id: int):
-    """den Veranstaltung mit angegebenen ID löschen
-
-    Args:
-        veran_id (int): Veranstaltung ID
-    """
-
-    print()
-
-
-
-def ModulLoeschen(modul_id: int):
-    """den Modul mit angegebenen ID löschen
-
-    Args:
-        modul_id (int): Modul ID
-    """
-
-    print()
 
     
 
