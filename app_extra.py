@@ -9,7 +9,7 @@
 from flask import Flask
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import *
+from models import Student, Kurs, Dozent, Modul, Veranstaltung, Pruefungsleistung, Admin
 import models as my_data
 import database as db
 
