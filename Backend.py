@@ -41,6 +41,7 @@
     licence: free (open source)
 """
 import Student_be
+import app
 import database as db
 from flask import Flask
 import requests as r
@@ -147,7 +148,7 @@ def get_modul_id_namen_student(student_id):
     return Student_be.get_modul_id_namen_student(student_id)
 
 
-def internal_pruefungen_in_modul (student_id, modul_id):
+def internal_pruefungen_in_modul (student_id: int, modul_id: int):
     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
     data_raw = getValues(querystring)
     if type(data_raw) is Exception:
@@ -163,7 +164,7 @@ def internal_pruefungen_in_modul (student_id, modul_id):
         if m_id == modul_id:
             result.append(p)
     return result
-def print_pruefungen_in_modul (student_id, modul_id):
+def print_all_pruefungen_student (student_id, modul_id):
     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
     result = []
     for p in pruefungen:
@@ -171,7 +172,7 @@ def print_pruefungen_in_modul (student_id, modul_id):
         v_id = p[1]
         querystring = url + f"/getVeranstaltung/{v_id}"
         data_raw = getValues(querystring)
-        veranstaltung = data_raw
+        veranstaltung = data_raw[0]
         details.append(veranstaltung[1])  # Veranstaltungsname
         details.append(p[2])  # gesamte Punkte
         details.append(p[3])  # erreichte Punkte
@@ -179,5 +180,35 @@ def print_pruefungen_in_modul (student_id, modul_id):
         result.append(details)
     return result
 
+def print_pruefungen_in_modul(student_id, modul_id):
+    pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
+    result = []
+    for p in pruefungen:
+        details = []
+        v_id = p[1]
+        querystring = url + f"/getVeranstaltung/{v_id}"
+        data_raw = getValues(querystring)
+        veranstaltung = data_raw[0]
+        if veranstaltung[3] == modul_id:
+            details.append(veranstaltung[1])  # Veranstaltungsname
+            details.append(p[2])  # gesamte Punkte
+            details.append(p[3])  # erreichte Punkte
+            details.append(Student_be.notenberechnung(p[3], p[2]))
+            result.append(details)
+    return result
+
 if __name__ == "__main__":
+    # print(get_student_name(1000))
+    # print(get_dozent_name(110))
+      #  print(app.getStudent(1000))
+      #  print(app.getDozent(110))
+      #  print(db.get_dozent_by_id(db.create_database_connection("data.db"),110))
+    # print(get_admin_name(99))
+    # print(access_pruefung_data(1000))
+    # print(get_student_module(1000))
+    # print(get_credits_erreicht(1000))
+    # print(get_gpa_by_student(1000))
+    # print(get_modul_id_namen_student(1000))
+    print(internal_pruefungen_in_modul(1000,1200))
+    print(print_all_pruefungen_student(1000,1200))
     print(print_pruefungen_in_modul(1000,1200))
