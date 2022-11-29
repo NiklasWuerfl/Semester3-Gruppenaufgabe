@@ -9,7 +9,7 @@ licence: free
 import PySimpleGUI as sg
 import Student_be as sb
 
-def Login():
+def login():
     """Implimentierung der Login Seite
 
     Tests:
@@ -18,117 +18,83 @@ def Login():
     """
     sg.theme('TanBlue')
 
-    Nutzer= ('Studierender', 'Dozierender', 'Admin')
+    nutzer = ('Studierender', 'Dozierender', 'Admin')
 
-    LoginColumn = [[sg.Text('Login', font=('any', 12, 'bold'))],
-          [sg.Combo(Nutzer, enable_events=True, key='-nutzer-')],
-          [sg.Text('ID: *'), sg.InputText(key='-name-', do_not_clear=False)],
-          [sg.Text('Passwort: * '), sg.InputText(key='-passwort-', do_not_clear=False)],
-          [sg.Button('Anmelden', font=('any', 9, 'underline'))]]
+    login_column = [[sg.Text('Login', font=('any', 12, 'bold'))],
+                   [sg.Combo(nutzer, enable_events=True, key='-nutzer-')],
+                   [sg.Text('ID: *'), 
+                    sg.InputText(key='-name-', do_not_clear=False)],
+                   [sg.Text('Passwort: * '), 
+                    sg.InputText(key='-passwort-', do_not_clear=False)],
+                   [sg.Button('Anmelden', font=('any', 9, 'underline'))]
+                   ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
-              [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(LoginColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+              [sg.Text('', pad=(0,0), key='-2-'),              
+               sg.Column(login_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
 
-    Login_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500), finalize=True)
-    Login_window['-C-'].expand(True, True, True)
-    Login_window['-1-'].expand(True, True, True)
-    Login_window['-2-'].expand(True, False, True)
+    login_window=sg.Window('Studierendenverwaltungssystem',
+                           layout, size=(500, 500), finalize=True)
+    login_window['-C-'].expand(True, True, True)
+    login_window['-1-'].expand(True, True, True)
+    login_window['-2-'].expand(True, False, True)
 
     while True:
-        event, values= Login_window.read()
+        event, values= login_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
-            Login_window.close()
+            login_window.close()
             AnmeldeDaten= values['-name-'], values['-passwort-']
-            if values['-nutzer-']== 'Studierender':
-                StudierendeAllgemein()
+            if values['-nutzer-'] == 'Studierender':
+                studierende_allgemein()
             elif values['-nutzer-'] == 'Dozierender':
-                DozierendenVeranstaltungsansicht()
-            elif values['-nutzer-']== 'Admin':
-                AdministrationAllgemein()
+                dozierende_veranstaltung()
+            elif values['-nutzer-'] == 'Admin':
+                administration_allgemein()
             
-    Login_window.close()
+    login_window.close()
 
 
-
-def FalseLogin():
-    """Implimentierung der Seite nach falschem einloggen
-
-    Tests:
-        * richtige Logindaten als Dozierender/ Studierender/ Admin eintragen
-        * falsche Logindaten eingeben
-    """
-    
-    sg.theme('TanBlue')
-
-    Nutzer= ("Studierender", "Dozierender", "Admin")
-
-    FalseLoginColumn = [[sg.Text('Login', font=('any', 12, 'bold'))],
-        [sg.Text('ID oder Passwort falsch', text_color= 'red')],
-        [sg.Combo(Nutzer, enable_events=True, key='-nutzer-')],
-        [sg.Text('ID:'), sg.InputText(key='-name-', do_not_clear=False)],
-        [sg.Text('Passwort:'), sg.InputText(key='-passwort-', do_not_clear=False)],
-        [sg.Button('Anmelden', font=('any', 9, 'underline'))],
-        [sg.Text('Bei vergessenem Passwort, wenden Sie sich an den Administrator!')]]
-
-    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
-              [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(FalseLoginColumn, vertical_alignment='center', justification='center',  k='-C-')]]
-
-    FalseLogin_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500), finalize=True)
-    FalseLogin_window['-C-'].expand(True, True, True)
-    FalseLogin_window['-1-'].expand(True, True, True)
-    FalseLogin_window['-2-'].expand(True, False, True)
-
-    while True:
-        event, values= FalseLogin_window.read()
-        if event == sg.WIN_CLOSED:
-            break
-        elif event == "Anmelden":
-             AnmeldeDaten= values['-name-'], values['-passwort-']
-
-    FalseLogin_window.close()
-
-
-
-def ErfolgreicherLogout():
+def erfolgreicher_logout():
     """Seite nach dem Logout
 
     Tests:
-        * 'neu Anmelden' ausprobieren
+        * Button 'neu Anmelden' ausprobieren
         * Fenster schließen
     """
 
     sg.theme('TanBlue')
 
-    LogoutColumn = [[sg.Text('Sie haben sich erfolgreich abgemeldet!', font=('any', 15))],
-                [sg.Text('   ')],
-                [sg.Button('neu Anmelden', font=('any', 9, 'underline'))]]
+    logout_column = [[sg.Text('Sie haben sich erfolgreich abgemeldet!', font=('any', 15))],
+                    [sg.Text('   ')],
+                    [sg.Button('neu Anmelden', font=('any', 9, 'underline'))]
+                    ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(LogoutColumn, vertical_alignment='center', justification='right',  k='-C-')]]
+               sg.Column(logout_column, vertical_alignment='center', justification='right',  k='-C-')]
+               ]
 
-    Logout_window=sg.Window('Studierendenverwaltungssystem', layout, size=(500, 500), finalize=True)
-    Logout_window['-C-'].expand(True, True, True)
-    Logout_window['-1-'].expand(True, True, True)
-    Logout_window['-2-'].expand(True, False, True)
+    logout_window=sg.Window('Studierendenverwaltungssystem',
+                            layout, size=(500, 500), finalize=True)
+    logout_window['-C-'].expand(True, True, True)
+    logout_window['-1-'].expand(True, True, True)
+    logout_window['-2-'].expand(True, False, True)
 
     while True:
-        event, values= Logout_window.read()
+        event = logout_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "neu Anmelden":
-            Logout_window.close()
-            Login() 
+            logout_window.close()
+            login() 
 
-    Logout_window.close()
+    logout_window.close()
+   
 
-    
-
-def StudierendeAllgemein():
+def studierende_allgemein():
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
 
     Tests:
@@ -138,47 +104,50 @@ def StudierendeAllgemein():
 
     sg.theme('TanBlue')
 
-    modul_information_array=[9308504, 'Programmieren', 5.0, 2.6, True ]
+    modul_information_array = [9308504, 'Programmieren', 5.0, 2.6, True ]
 
-    headings=['Modul ID','Modul', 'Cedits', 'Note', 'best.']
+    headings = ['Modul ID','Modul', 'Cedits', 'Note', 'best.']
 
-    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
+    buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')),
+               sg.Button('Abmelden', font=('any', 9, 'underline'))]]
     
-    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
-            [sg.HorizontalSeparator()],
-          [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
-          [sg.Table(values=modul_information_array, headings=headings, max_col_width=35,
-                    auto_size_columns=True,
-                    display_row_numbers=False,
-                    justification='left',
-                    num_rows= 10,
-                    key= '-Table-',
-                    row_height=35,
-                    enable_events= True)],
-          [sg.Text('Gesamt', font=('any', 12, 'bold')), sg.Text('Cedits gesamt'), sg.Text('GPA')]]
+    layout = [[sg.Text('Herzlich Willkommen!'), 
+               sg.Column(buttons, element_justification='right', expand_x=True)],
+              [sg.HorizontalSeparator()],
+              [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
+              [sg.Table(values=modul_information_array, headings=headings, max_col_width=35,
+                        auto_size_columns=True,
+                        display_row_numbers=False,
+                        justification='left',
+                        num_rows= 10,
+                        key= '-Table-',
+                        row_height=35,
+                        enable_events= True)],
+              [sg.Text('Gesamt', font=('any', 12, 'bold')), 
+               sg.Text('Cedits gesamt'), sg.Text('GPA')]
+              ]
           
-    Studi_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    studi_window = sg.Window('Studierendenverwaltungssystem',
+                           layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Studi_window.read()
+        event, values= studi_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            PasswortAendernSeite()
+            passwort_aendern()
         elif event == "Abmelden":
-            Studi_window.close()
-            ErfolgreicherLogout()
-        elif event== "-Table-":
-            selected_row_index= values['-Table-'][0]
-            Modul_information= modul_information_array[selected_row_index]
-            StudierendenAnsichtModul(Modul_information)
+            studi_window.close()
+            erfolgreicher_logout()
+        elif event == "-Table-":
+            selected_row_index = values['-Table-'][0]
+            modul_information = modul_information_array[selected_row_index]
+            studierende_modul(modul_information)
 
-    Studi_window.close()
-
-
+    studi_window.close()
 
 
-def StudierendenAnsichtModul(Modul_info):
+def studierende_modul(modul_info):
     """ Informationen über Veranstaltungen eines Moduls mit Noten und Punkten
 
     Args:
@@ -191,15 +160,16 @@ def StudierendenAnsichtModul(Modul_info):
 
     sg.theme('TanBlue')
 
-    Modul_name= Modul_info[1]
-    Modul_Note= str(Modul_info[3])
-    Modulinhalt=[[9823057, 'Java', 60, 45, 2.6],
-                [2739474, 'Python', 60, 55, 1.8]]
+    modul_name = modul_info[1]
+    modul_Note = str(modul_info[3])
+    modulinhalt = [[9823057, 'Java', 60, 45, 2.6],
+                   [2739474, 'Python', 60, 55, 1.8]
+                   ]
 
     headings=['Veranstalungs ID','Veranstaltung', 'P. g.', 'P. e.', 'Note']
 
-    layout = [[sg.Text(Modul_name)],
-            [sg.Table(values=Modulinhalt, headings=headings, max_col_width=35,
+    layout = [[sg.Text(modul_name)],
+              [sg.Table(values=modulinhalt, headings=headings, max_col_width=35,
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='left',
@@ -207,14 +177,15 @@ def StudierendenAnsichtModul(Modul_info):
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)],
-            [sg.Text("Note " + Modul_Note)],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+              [sg.Text("Note " + modul_Note)],
+              [sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    window=sg.Window('Studierendenverwaltungssystem',
+                     layout, modal=True, size=(500, 500))
     
     while True:
-        event, values= window.read()
+        event= window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
@@ -223,8 +194,7 @@ def StudierendenAnsichtModul(Modul_info):
     window.close()
 
 
-
-def PasswortAendernSeite():
+def passwort_aendern():
     """Seite zum ändern des Passwortes
 
     Tests:
@@ -235,57 +205,33 @@ def PasswortAendernSeite():
     sg.theme('TanBlue')
 
     layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
-          [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
-          [sg.Text('Passwort *'), sg.InputText(key='-passwort-', do_not_clear=False)],
-          [sg.Text('neues Passwort *'), sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
-          [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
-          [sg.Button('Ändern')]]
+              [sg.Text('Username *'),
+               sg.InputText(key='-name-', do_not_clear=False)],
+              [sg.Text('Passwort *'),
+               sg.InputText(key='-passwort-', do_not_clear=False)],
+              [sg.Text('neues Passwort *'),
+               sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
+              [sg.Text('Passwort wiederholen *'), 
+               sg.InputText(key='-wiPasswort-', do_not_clear=False)],
+              [sg.Button('Ändern')]
+              ]
 
-    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    passwort_window=sg.Window('Studierendenverwaltungssystem',
+                              layout, modal=True, size=(500, 500))
     
     while True:
-        event, values= Passwort_window.read()
+        event, values= passwort_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Ändern":
-            ÄnderungsDaten= values['-name-'], values['-passwort-'], values['-neuesPasswort-'], values['-wiPasswort-']
-            Passwort_window.close()
-
-    Passwort_window.close()
-
-
-def PasswortAendernSeiteFalse():
-    """Seite zum ändern des Passwortes nachdem Daten schon einmal falscch eingegeben wurden
-
-    Tests:
-        * Daten korrekt eingeben
-        * Daten nicht korrekt eingeben
-    """
-
-    sg.theme('TanBlue')
-
-    layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
-          [sg.Text('Eine der Angaben ist nicht korrekt. Versuchen Sie es noch einmal!', text_color='red')],
-          [sg.Text('Username *'), sg.InputText(key='-name-', do_not_clear=False)],
-          [sg.Text('Passwort *'), sg.InputText(key='-passwort-', do_not_clear=False)],
-          [sg.Text('neues Passwort *'), sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
-          [sg.Text('Passwort wiederholen *'), sg.InputText(key='-wiPasswort-', do_not_clear=False)],
-          [sg.Button('Ändern')]]
-
-    Passwort_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
-    
-    while True:
-        event, values= Passwort_window.read()
-        if event == sg.WIN_CLOSED:
+            aenderungs_daten= values['-name-'], values['-passwort-'],
+            values['-neuesPasswort-'], values['-wiPasswort-']
             break
-        elif event == "Ändern":
-            ÄnderungsDaten= values['-name-'], values['-passwort-'], values['-neuesPasswort-'], values['-wiPasswort-']
-            Passwort_window.close()
 
-    Passwort_window.close()
+    passwort_window.close()
 
 
-def DozierendenVeranstaltungsansicht():
+def dozierende_veranstaltung():
     """Alle Veranstaltungen eines Dozenten können eingesehen werden
 
     Tests: 
@@ -295,17 +241,22 @@ def DozierendenVeranstaltungsansicht():
 
     sg.theme('TanBlue')
 
-    Veranstaltung_array=[[239847, 'Statistik', 'BWL'],
-                    [837945, 'Mathe', 'Informatik']]
+    veranstaltung_array = [[239847, 'Statistik', 'BWL'],
+                           [837945, 'Mathe', 'Informatik']
+                           ]
     
-    headings=['Veranstaltungs ID', 'Veranstaltungsname', 'Kurs']
+    headings = ['Veranstaltungs ID', 'Veranstaltungsname', 'Kurs']
 
-    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
+    buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')),
+                sg.Button('Abmelden', font=('any', 9, 'underline'))]
+                ]
 
-    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
-            [sg.HorizontalSeparator()],
-          [sg.Text('Veranstaltungen', font=('any', 12, 'bold')), sg.Button('neue Veranstaltungsnoten eintragen', font=('any', 9, 'underline'))],
-          [sg.Table(values=Veranstaltung_array, headings=headings, max_col_width=35,
+    layout = [[sg.Text('Herzlich Willkommen!'),
+               sg.Column(buttons, element_justification='right', expand_x=True)],
+              [sg.HorizontalSeparator()],
+              [sg.Text('Veranstaltungen', font=('any', 12, 'bold')),
+               sg.Button('neue Veranstaltungsnoten eintragen', font=('any', 9, 'underline'))],
+              [sg.Table(values=veranstaltung_array, headings=headings, max_col_width=35,
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='left',
@@ -313,30 +264,31 @@ def DozierendenVeranstaltungsansicht():
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)]
-          ]
+                    ]
           
-    Veran_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    veran_window=sg.Window('Studierendenverwaltungssystem',
+                           layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Veran_window.read()
+        event, values= veran_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            PasswortAendernSeite()
+            passwort_aendern()
         elif event == "Abmelden":
-            Veran_window.close()
-            ErfolgreicherLogout()
+            veran_window.close()
+            erfolgreicher_logout()
         elif event == "neue Veranstaltungsnoten eintragen":
-            VeranstaltungsnotenEintragenDoz()
+            veranstaltungsnoten_eintragen()
         elif event== "-Table-":
             selected_row_index= values['-Table-'][0]
-            Veranstaltungs_information= Veranstaltung_array[selected_row_index]
-            VeranstaltungKursAnsicht(Veranstaltungs_information)
+            veranstaltungs_information= veranstaltung_array[selected_row_index]
+            veranstaltung_kurs(veranstaltungs_information)
 
-    Veran_window.close()
+    veran_window.close()
 
 
-def VeranstaltungKursAnsicht(info):
+def veranstaltung_kurs(info):
     """Jeder der teilnehmenden Studierenden wird in einer Tabelle mit seiner Note aufgeführt
 
     Args:
@@ -349,14 +301,14 @@ def VeranstaltungKursAnsicht(info):
 
     sg.theme('TanBlue')
 
-    Veranstaltung_name= info[1]
-    Kurs_info=[[9823057, 'nach1', 'Vor1', 2.6],
-                [2739474, 'nach2', 'Vor2', 1.8]]
+    veranstaltung_name= info[1]
+    kurs_info=[[9823057, 'nach1', 'Vor1', 2.6],
+               [2739474, 'nach2', 'Vor2', 1.8]]
 
     headings=['Matrikelnummer','Nachname', 'Vorname', 'Note']
 
-    layout = [[sg.Text(Veranstaltung_name)],
-            [sg.Table(values=Kurs_info, headings=headings, max_col_width=35,
+    layout = [[sg.Text(veranstaltung_name)],
+              [sg.Table(values=kurs_info, headings=headings, max_col_width=35,
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='left',
@@ -364,23 +316,23 @@ def VeranstaltungKursAnsicht(info):
                     key= '-Table-',
                     row_height=35,
                     enable_events= True)],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+              [sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Verankurs_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    verankurs_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500))
     
     while True:
-        event, values= Verankurs_window.read()
+        event= verankurs_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Verankurs_window.close()
+            verankurs_window.close()
     
-    Verankurs_window.close()
+    verankurs_window.close()
 
 
-
-def VeranstaltungsnotenEintragenDoz():
+def veranstaltungsnoten_eintragen():
     """Dozenten können hier die Noten ihrer Studierenden eintragen
 
     Tests:
@@ -390,35 +342,45 @@ def VeranstaltungsnotenEintragenDoz():
 
     sg.theme('TanBlue')
     
-    Bestanden= (True, False)
-    Prüfungsinfo_Veranstaltung_Array= []
+    bestanden= (True, False)
+    prüfungsinfo_veranstaltung_array= []
 
     layout = [[sg.Text('Veranstaltungsnoten eintragen', font=('any', 12, 'bold'))],
-          [sg.Text('Veranstaltungs Id:'), sg.InputText(key= '-Veran_id-', do_not_clear=True)],
-          [sg.Text('Matrikelnummer:'), sg.InputText(key='-Matrikelnummer-', do_not_clear=False)],
-          [sg.Text('Punkte gesamt'), sg.InputText(key= '-Punkte_gesamt-', do_not_clear=True), sg.Text('Punkte erreicht'), sg.InputText(key= '-Punkte_erreicht-', do_not_clear=False)], 
-          [sg.Text('Note'), sg.InputText(key= '-Note-', do_not_clear=False)],
-          [sg.Text('Bestanden'), sg.Combo(Bestanden, enable_events=True, key='-Bestanden-')],
-          [sg.Button('OK', font=('any', 9, 'underline'))]]
+              [sg.Text('Veranstaltungs Id:'), 
+               sg.InputText(key= '-Veran_id-', do_not_clear=True)],
+              [sg.Text('Matrikelnummer:'), 
+               sg.InputText(key='-Matrikelnummer-', do_not_clear=False)],
+              [sg.Text('Punkte gesamt'), 
+               sg.InputText(key= '-Punkte_gesamt-', do_not_clear=True),
+               sg.Text('Punkte erreicht'), 
+               sg.InputText(key= '-Punkte_erreicht-', do_not_clear=False)], 
+              [sg.Text('Note'), 
+               sg.InputText(key= '-Note-', do_not_clear=False)],
+              [sg.Text('Bestanden'), 
+               sg.Combo(bestanden, enable_events=True, key='-Bestanden-')],
+              [sg.Button('OK', font=('any', 9, 'underline'))]
+              ]
           
-    VeranNoten_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    veran_noten_window=sg.Window('Studierendenverwaltungssystem',
+                                layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= VeranNoten_window.read()
+        event, values= veran_noten_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            Prüfungsinfo_Veranstaltung= values['-Veran_id-'], values['-Matrikelnummer-'], values['-Versuch-'], 
-            values['-Punkte_gesamt-'], values['-Punkte_erreicht-'], values['-Note-'], values['-Bestanden-']
-            Prüfungsinfo_Veranstaltung_Array.append(Prüfungsinfo_Veranstaltung)
+            prüfungsinfo_veranstaltung= values['-Veran_id-'], values['-Matrikelnummer-'],
+            values['-Versuch-'], values['-Punkte_gesamt-'], values['-Punkte_erreicht-'],
+            values['-Note-'], values['-Bestanden-']
+            prüfungsinfo_veranstaltung_array.append(prüfungsinfo_veranstaltung)
 
-    VeranNoten_window.close()
+    veran_noten_window.close()
 
 
-
-def AdministrationAllgemein():
+def administration_allgemein():
     """Erste Seite des Administrators
-    * sollen Studierende, Dozierende, Studiengangsleitung, Veranstaltungen oder Module bearbeitet, neu angelet oder gelöscht werden
+    * sollen Studierende, Dozierende, Studiengangsleitung, Veranstaltungen 
+      oder Module bearbeitet, neu angelet oder gelöscht werden
 
     Tests:
     * Buttons für Studoerende, Dozierende, Kurse, Veranstaltungen und Module ausprobieren
@@ -427,49 +389,53 @@ def AdministrationAllgemein():
 
     sg.theme('TanBlue')
 
-    Buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
+    buttons= [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), sg.Button('Abmelden', font=('any', 9, 'underline'))]]
 
-    AdminColumn = [
-          [sg.Text('Was möchten Sie bearbeiten/ anlegen oder löschen?')],
-          [sg.Button('Studierende', font=('any', 9, 'underline'), size=(15, 3)), sg.Button('Dozierende', font=('any', 9, 'underline'), size=(15, 3)), sg.Button('Kurse', font=('any', 9, 'underline'), size=(15, 3))],
-          [sg.Button('Veranstaltung', font=('any', 9, 'underline'), size=(15, 3)), sg.Button('Modul', font=('any', 9, 'underline'), size=(15, 3))]]
+    admin_column = [[sg.Text('Was möchten Sie bearbeiten/ anlegen oder löschen?')],
+                   [sg.Button('Studierende', font=('any', 9, 'underline'), size=(15, 3)),
+                    sg.Button('Dozierende', font=('any', 9, 'underline'), size=(15, 3)),
+                    sg.Button('Kurse', font=('any', 9, 'underline'), size=(15, 3))],
+                   [sg.Button('Veranstaltung', font=('any', 9, 'underline'), size=(15, 3)),
+                    sg.Button('Modul', font=('any', 9, 'underline'), size=(15, 3))]
+                   ]
 
-    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(Buttons, element_justification='right', expand_x=True)],
-            [sg.HorizontalSeparator()],
-        [sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+    layout = [[sg.Text('Herzlich Willkommen!'), sg.Column(buttons, element_justification='right', expand_x=True)],
+              [sg.HorizontalSeparator()],
+              [sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(AdminColumn, vertical_alignment='center', k='-C-')]]
+               sg.Column(admin_column, vertical_alignment='center', k='-C-')]
+               ]
           
-    Admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Admin_window['-C-'].expand(True, True, True)
-    Admin_window['-1-'].expand(True, True, True)
-    Admin_window['-2-'].expand(True, False, True)
+    admin_window=sg.Window('Studierendenverwaltungssystem',
+                           layout, modal=True, size=(500, 500), finalize=True)
+    admin_window['-C-'].expand(True, True, True)
+    admin_window['-1-'].expand(True, True, True)
+    admin_window['-2-'].expand(True, False, True)
 
     while True:
-        event, values= Admin_window.read()
+        event= admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            PasswortAendernSeite()
+            passwort_aendern()
         elif event == "Abmelden":
-            Admin_window.close()
-            ErfolgreicherLogout()
+            admin_window.close()
+            erfolgreicher_logout()
         elif event == 'Studierende':
-            StudiAdmin()
+            studi_admin()
         elif event == 'Dozierende':
-            DozAdmin()
+            doz_admin()
         elif event == 'Kurse':
-            KursAdmin()
+            kurs_admin()
         elif event == 'Veranstaltung':
-            VeranstaltungAdmin()
+            veranstaltung_admin()
         elif event == 'Modul':
-            ModulAdmin()
+            modul_admin()
 
-    Admin_window.close()
+    admin_window.close()
 
     
-
-def StudiAdmin():
+def studi_admin():
     """Einen Studierenden bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -479,37 +445,43 @@ def StudiAdmin():
 
     sg.theme('TanBlue')
 
-    StudiAdminColumn = [[sg.Text('Studierenden Administration'), sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Studierenden ID:'), sg.InputText(key= '-studi_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+    studi_admin_column = [[sg.Text('Studierenden Administration'),
+                         sg.Button('neuen Studierenden anlegen', font=('any', 9, 'underline'))],
+                        [sg.Text('Studierenden ID:'),
+                         sg.InputText(key= '-studi_id-', do_not_clear=False, size=(20, 2)),
+                         sg.Button('bearbeiten', font=('any', 9, 'underline')),
+                         sg.Button('löschen', font=('any', 9, 'underline'))],
+                        [sg.Button('zurück', font=('any', 9, 'underline'))]
+                        ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(StudiAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+               sg.Column(studi_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
           
-    Studiadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Studiadmin_window['-C-'].expand(True, True, True)
-    Studiadmin_window['-1-'].expand(True, True, True)
-    Studiadmin_window['-2-'].expand(True, False, True)
+    studi_admin_window=sg.Window('Studierendenverwaltungssystem',
+                                layout, modal=True, size=(500, 500), finalize=True)
+    studi_admin_window['-C-'].expand(True, True, True)
+    studi_admin_window['-1-'].expand(True, True, True)
+    studi_admin_window['-2-'].expand(True, False, True)
     
     while True:
-        event, values= Studiadmin_window.read()
+        event, values= studi_admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Studiadmin_window.close()
+            studi_admin_window.close()
         elif event == 'neuen Studierenden anlegen':
-            StudiAnlegen()
+            studi_anlegen()
         elif event == 'bearbeiten':
-            StudiBearbeiten(values['-studi_id-'])
+            studi_bearbeiten(values['-studi_id-'])
         elif event == 'löschen':
             sg.popup()
     
-    Studiadmin_window.close()
+    studi_admin_window.close()
 
 
-def DozAdmin():
+def doz_admin():
     """Einen Dozierenden bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -519,38 +491,42 @@ def DozAdmin():
 
     sg.theme('TanBlue')
 
-    DozAdminColumn = [[sg.Text('Dozierenden Administration'), sg.Button('neuen Dozierenden anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Dozierenden ID:'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+    doz_admin_column = [[sg.Text('Dozierenden Administration'),
+                       sg.Button('neuen Dozierenden anlegen', font=('any', 9, 'underline'))],
+                      [sg.Text('Dozierenden ID:'),
+                       sg.InputText(key= '-dozierenden_id-', do_not_clear=False, size=(20, 2)),
+                       sg.Button('bearbeiten', font=('any', 9, 'underline')),
+                       sg.Button('löschen', font=('any', 9, 'underline'))],
+                      [sg.Button('zurück', font=('any', 9, 'underline'))]
+                      ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(DozAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+               sg.Column(doz_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
           
-    Dozadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Dozadmin_window['-C-'].expand(True, True, True)
-    Dozadmin_window['-1-'].expand(True, True, True)
-    Dozadmin_window['-2-'].expand(True, False, True)
+    doz_admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    doz_admin_window['-C-'].expand(True, True, True)
+    doz_admin_window['-1-'].expand(True, True, True)
+    doz_admin_window['-2-'].expand(True, False, True)
     
     while True:
-        event, values= Dozadmin_window.read()
+        event, values= doz_admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Dozadmin_window.close()
+            doz_admin_window.close()
         elif event == 'neuen Dozierenden anlegen':
-            DozAnlegen()
+            doz_anlegen()
         elif event == 'bearbeiten':
-            DozBearbeiten(values['-dozierenden_id-'])
+            doz_bearbeiten(values['-dozierenden_id-'])
         elif event == 'löschen':
             sg.popup()
     
-    Dozadmin_window.close()
+    doz_admin_window.close()
 
 
-
-def KursAdmin():
+def kurs_admin():
     """Einen Kurs bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -560,38 +536,42 @@ def KursAdmin():
 
     sg.theme('TanBlue')
 
-    KursAdminColumn = [[sg.Text('Kurs Administration'), sg.Button('neuen Kurs anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Kurs ID:'), sg.InputText(key= '-kurs_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+    kurs_admin_column = [[sg.Text('Kurs Administration'), 
+                        sg.Button('neuen Kurs anlegen', font=('any', 9, 'underline'))],
+                       [sg.Text('Kurs ID:'), sg.InputText(key= '-kurs_id-', do_not_clear=False, size=(20, 2)), 
+                        sg.Button('bearbeiten', font=('any', 9, 'underline')), 
+                        sg.Button('löschen', font=('any', 9, 'underline'))],
+                       [sg.Button('zurück', font=('any', 9, 'underline'))]
+                       ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(KursAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+               sg.Column(kurs_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
           
-    Kursadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Kursadmin_window['-C-'].expand(True, True, True)
-    Kursadmin_window['-1-'].expand(True, True, True)
-    Kursadmin_window['-2-'].expand(True, False, True)
+    kurs_admin_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500), finalize=True)
+    kurs_admin_window['-C-'].expand(True, True, True)
+    kurs_admin_window['-1-'].expand(True, True, True)
+    kurs_admin_window['-2-'].expand(True, False, True)
     
     while True:
-        event, values= Kursadmin_window.read()
+        event, values= kurs_admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Kursadmin_window.close()
+            kurs_admin_window.close()
         elif event == 'neuen Kurs anlegen':
-            KursAnlegen()
+            kurs_anlegen()
         elif event == 'bearbeiten':
-            KursBearbeiten(values['-kurs_id-'])
+            kurs_bearbeiten(values['-kurs_id-'])
         elif event == 'löschen':
             sg.popup()
     
-    Kursadmin_window.close()
+    kurs_admin_window.close()
 
 
-
-def VeranstaltungAdmin():
+def veranstaltung_admin():
     """Eine Veranstaltung bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -601,38 +581,43 @@ def VeranstaltungAdmin():
 
     sg.theme('TanBlue')
 
-    VeranAdminColumn = [[sg.Text('Veranstaltung Administration'), sg.Button('neuen Veranstaltung anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Veranstaltung ID:'), sg.InputText(key= '-veranstaltung_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+    veran_admin_column = [[sg.Text('Veranstaltung Administration'), 
+                         sg.Button('neuen Veranstaltung anlegen', font=('any', 9, 'underline'))],
+                        [sg.Text('Veranstaltung ID:'), 
+                         sg.InputText(key= '-veranstaltung_id-', do_not_clear=False, size=(20, 2)), 
+                         sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
+                        [sg.Button('zurück', font=('any', 9, 'underline'))]
+                        ]
+          
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(VeranAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+               sg.Column(veran_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
           
-    Veranadmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Veranadmin_window['-C-'].expand(True, True, True)
-    Veranadmin_window['-1-'].expand(True, True, True)
-    Veranadmin_window['-2-'].expand(True, False, True)
+    veran_admin_window=sg.Window('Studierendenverwaltungssystem',
+                                layout, modal=True, size=(500, 500), finalize=True)
+    veran_admin_window['-C-'].expand(True, True, True)
+    veran_admin_window['-1-'].expand(True, True, True)
+    veran_admin_window['-2-'].expand(True, False, True)
     
     while True:
-        event, values= Veranadmin_window.read()
+        event, values= veran_admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Veranadmin_window.close()
+            veran_admin_window.close()
         elif event == 'neuen Veranstaltung anlegen':
-            VeranstaltungAnlegen()
+            veranstaltung_anlegen()
         elif event == 'bearbeiten':
-            VeranstaltungBearbeiten(values['-veranstaltung_id-'])
+            veranstaltung_bearbeiten(values['-veranstaltung_id-'])
         elif event == 'löschen':
             sg.popup()
     
-    Veranadmin_window.close()
+    veran_admin_window.close()
 
 
-
-def ModulAdmin():
+def modul_admin():
     """Einen Modul bearbeiten/ anlegen oder löschen
 
     Tests:
@@ -642,38 +627,41 @@ def ModulAdmin():
 
     sg.theme('TanBlue')
 
-    ModulAdminColumn = [[sg.Text('Modul Administration'), sg.Button('neuen Modul anlegen', font=('any', 9, 'underline'))],
-            [sg.Text('Modul ID:'), sg.InputText(key= '-modul_id-', do_not_clear=False, size=(20, 2)), sg.Button('bearbeiten', font=('any', 9, 'underline')), sg.Button('löschen', font=('any', 9, 'underline'))],
-            [sg.Button('zurück', font=('any', 9, 'underline'))]
-          ]
+    modul_admin_column = [[sg.Text('Modul Administration'), 
+                         sg.Button('neuen Modul anlegen', font=('any', 9, 'underline'))],
+                        [sg.Text('Modul ID:'), sg.InputText(key= '-modul_id-', do_not_clear=False, size=(20, 2)), 
+                         sg.Button('bearbeiten', font=('any', 9, 'underline')), 
+                         sg.Button('löschen', font=('any', 9, 'underline'))],
+                        [sg.Button('zurück', font=('any', 9, 'underline'))]
+                        ]
 
     layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
               [sg.Text('', pad=(0,0),key='-2-'),              
-               sg.Column(ModulAdminColumn, vertical_alignment='center', justification='center',  k='-C-')]]
+               sg.Column(modul_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
           
-    Moduladmin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
-    Moduladmin_window['-C-'].expand(True, True, True)
-    Moduladmin_window['-1-'].expand(True, True, True)
-    Moduladmin_window['-2-'].expand(True, False, True)
+    modul_admin_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500), finalize=True)
+    modul_admin_window['-C-'].expand(True, True, True)
+    modul_admin_window['-1-'].expand(True, True, True)
+    modul_admin_window['-2-'].expand(True, False, True)
     
     while True:
-        event, values= Moduladmin_window.read()
+        event, values= modul_admin_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == 'zurück':
-            Moduladmin_window.close()
+            modul_admin_window.close()
         elif event == 'neuen Modul anlegen':
-            ModulAnlegen()
+            modul_anlegen()
         elif event == 'bearbeiten':
-            ModulBearbeiten(values['-modul_id-'])
+            modul_bearbeiten(values['-modul_id-'])
         elif event == 'löschen':
             sg.popup()
     
-    Moduladmin_window.close()
+    modul_admin_window.close()
 
 
-
-def StudiAnlegen():
+def studi_anlegen():
     """Einen neuen Studierenden anlegen
 
     Tests:
@@ -683,32 +671,33 @@ def StudiAnlegen():
 
     sg.theme('TanBlue')
     
-    Studierenden_Info_Array= []
+    studierenden_info_array= []
 
     layout = [[sg.Text('Studierende anlegen', font=('any', 12, 'bold'))],
-          [sg.Text('Matrikelnummer: *'), sg.InputText(key='-Matrikelnummer-', do_not_clear=False)],
-          [sg.Text('Nachname: *'), sg.InputText(key= '-Nachname-', do_not_clear=False)], 
-          [sg.Text('Vorname: *'), sg.InputText(key= '-Vorname-', do_not_clear=False)],
-          [sg.Text('Kurs ID: *'), sg.InputText(key= '-Kurs_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Matrikelnummer: *'), sg.InputText(key='-matrikelnummer-', do_not_clear=False)],
+              [sg.Text('Nachname: *'), sg.InputText(key= '-nachname-', do_not_clear=False)], 
+              [sg.Text('Vorname: *'), sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Text('Kurs ID: *'), sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Studianle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    studi_anle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Studianle_window.read()
+        event, values= studi_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            StudierendenInfo= values['-Matrikelnummer-'], values['-Nachname-'], 
-            values['-Vorname-'], values['-Kurs_id-']
-            Studierenden_Info_Array.append(StudierendenInfo)
+            studierenden_info= values['-matrikelnummer-'], values['-nachname-'], 
+            values['-vorname-'], values['-kurs_id-']
+            studierenden_info_array.append(studierenden_info)
         elif event == 'zurück':
             break
 
-    Studianle_window.close()
+    studi_anle_window.close()
 
 
-def DozAnlegen():
+def doz_anlegen():
     """Ein neuer Dozierender angelegt
 
     Tests:
@@ -718,32 +707,34 @@ def DozAnlegen():
 
     sg.theme('TanBlue')
 
-    Dozierenden_Info_Array= []
+    dozierenden_info_array= []
 
     layout = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
-          [sg.Text('Dozierenden ID: *'), sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
-          [sg.Text('Nachname: *'), sg.InputText(key= '-Nachname-', do_not_clear=False)], 
-          [sg.Text('Vorname: *'), sg.InputText(key= '-Vorname-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Dozierenden ID: *'), sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
+              [sg.Text('Nachname: *'), sg.InputText(key= '-nachname-', do_not_clear=False)], 
+              [sg.Text('Vorname: *'), sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Dozanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    doz_anle_window=sg.Window('Studierendenverwaltungssystem',
+                             layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Dozanle_window.read()
+        event, values= doz_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            DozierendenInfo= values['-dozierenden_id-'], values['-Nachname-'], 
-            values['-Vorname-']
-            Dozierenden_Info_Array.append(DozierendenInfo)
+            dozierenden_info= values['-dozierenden_id-'], 
+            values['-nachname-'], values['-vorname-']
+            dozierenden_info_array.append(dozierenden_info)
         elif event == 'zurück':
             break
 
-    Dozanle_window.close()
+    doz_anle_window.close()
 
 
-
-def KursAnlegen():
+def kurs_anlegen():
     """Ein neuer Kurs angelegt
 
     Tests:
@@ -753,32 +744,36 @@ def KursAnlegen():
 
     sg.theme('TanBlue')
 
-    Kurs_Info_Array= []
+    kurs_info_array= []
 
     layout = [[sg.Text('Kurs anlegen', font=('any', 12, 'bold'))],
-          [sg.Text('Kurs ID: *'), sg.InputText(key='-kurs_id-', do_not_clear=False)],
-          [sg.Text('Kurs Name: *'), sg.InputText(key= '-kurs_name-', do_not_clear=False)], 
-          [sg.Text('Dozierenden ID: *'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Kurs ID: *'), 
+               sg.InputText(key='-kurs_id-', do_not_clear=False)],
+              [sg.Text('Kurs Name: *'), 
+               sg.InputText(key= '-kurs_name-', do_not_clear=False)], 
+              [sg.Text('Dozierenden ID: *'), 
+               sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')),
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Kursanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    kurs_anle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Kursanle_window.read()
+        event, values= kurs_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            KursInfo= values['-kurs_id-'], values['-kurs_name-'], 
+            kurs_info= values['-kurs_id-'], values['-kurs_name-'], 
             values['-dozierenden_id-']
-            Kurs_Info_Array.append(KursInfo)
+            kurs_info_array.append(kurs_info)
         elif event == 'zurück':
             break
 
-    Kursanle_window.close()
+    kurs_anle_window.close()
 
 
-
-def VeranstaltungAnlegen():
+def veranstaltung_anlegen():
     """Eine neue Veranstaltung angelegt
 
     Tests:
@@ -788,33 +783,39 @@ def VeranstaltungAnlegen():
 
     sg.theme('TanBlue')
 
-    Veran_Info_Array= []
+    veran_info_array= []
 
     layout = [[sg.Text('Veranstaltung anlegen', font=('any', 12, 'bold'))],
-          [sg.Text('Veranstaltung ID: *'), sg.InputText(key='-Veranstaltung_id-', do_not_clear=False)],
-          [sg.Text('Veranstaltungsname: *'), sg.InputText(key= '-veranstaltungsname-', do_not_clear=False)], 
-          [sg.Text('Dozierenden ID: *'), sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
-          [sg.Text('Modul ID: *'), sg.InputText(key= '-modul_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Veranstaltung ID: *'), 
+               sg.InputText(key='-veranstaltung_id-', do_not_clear=False)],
+              [sg.Text('Veranstaltungsname: *'), 
+               sg.InputText(key= '-veranstaltungsname-', do_not_clear=False)], 
+              [sg.Text('Dozierenden ID: *'), 
+               sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
+              [sg.Text('Modul ID: *'), 
+               sg.InputText(key= '-modul_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Verananle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    veran_anle_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Verananle_window.read()
+        event, values= veran_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            VeranInfo= values['-Veranstaltung_id-'], values['-veranstaltungsname-'], 
+            veran_info= values['-veranstaltung_id-'], values['-veranstaltungsname-'], 
             values['-dozierenden_id-'], values['-modul_id-']
-            Veran_Info_Array.append(VeranInfo)
+            veran_info_array.append(veran_info)
         elif event == 'zurück':
             break
 
-    Verananle_window.close()
+    veran_anle_window.close()
 
 
-
-def ModulAnlegen():
+def modul_anlegen():
     """Ein neues Modul angelegt
 
     Tests:
@@ -824,33 +825,39 @@ def ModulAnlegen():
 
     sg.theme('TanBlue')
 
-    Modul_Info_Array= []
+    modul_info_array= []
 
     layout = [[sg.Text('Modul anlegen', font=('any', 12, 'bold'))],
-          [sg.Text('Modul ID: *'), sg.InputText(key='-modul_id-', do_not_clear=False)],
-          [sg.Text('Modulname: *'), sg.InputText(key= '-modulname-', do_not_clear=False)], 
-          [sg.Text('Kurs ID: *'), sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-          [sg.Text('Credits: *'), sg.InputText(key= '-credits-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Modul ID: *'), 
+               sg.InputText(key='-modul_id-', do_not_clear=False)],
+              [sg.Text('Modulname: *'), 
+               sg.InputText(key= '-modulname-', do_not_clear=False)], 
+              [sg.Text('Kurs ID: *'), 
+               sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Text('Credits: *'), 
+               sg.InputText(key= '-credits-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Modulanle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    modul_anle_window=sg.Window('Studierendenverwaltungssystem', 
+                               layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Modulanle_window.read()
+        event, values= modul_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            ModulInfo= values['-modul_id-'], values['-modulname-'], 
+            modul_info= values['-modul_id-'], values['-modulname-'], 
             values['-kurs_id-'], values['-credits-']
-            Modul_Info_Array.append(ModulInfo)
+            modul_info_array.append(modul_info)
         elif event == 'zurück':
             break
 
-    Modulanle_window.close()
+    modul_anle_window.close()
 
 
-
-def StudiBearbeiten(studi_id: int):
+def studi_bearbeiten(studi_id: int):
     """Informationen über einen Studierenden können verändert werden 
 
     Args:
@@ -863,35 +870,41 @@ def StudiBearbeiten(studi_id: int):
 
     sg.theme('TanBlue')
     
-    Studi= [839287, 'Vor', 'nach', 2384789]
+    studi= [839287, 'Vor', 'nach', 2384789]
 
-    Studi_Info_Array= []
+    studi_info_array= []
 
     layout = [[sg.Text('Studierenden bearbeiten', font=('any', 12, 'bold'))],
-          [sg.Text('Studierenden ID:'), sg.Text(Studi[0]), sg.InputText(key='-studi_id-', do_not_clear=False)],
-          [sg.Text('Vorname:'), sg.Text(Studi[1]), sg.InputText(key= '-vorname-', do_not_clear=False)], 
-          [sg.Text('Nachname:'), sg.Text(Studi[2]), sg.InputText(key= '-nachname-', do_not_clear=False)],
-          [sg.Text('Kurs ID:'), sg.Text(Studi[3]), sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Studierenden ID:'), sg.Text(studi[0]), 
+               sg.InputText(key='-studi_id-', do_not_clear=False)],
+              [sg.Text('Vorname:'), sg.Text(studi[1]), 
+               sg.InputText(key= '-vorname-', do_not_clear=False)], 
+              [sg.Text('Nachname:'), sg.Text(studi[2]), 
+               sg.InputText(key= '-nachname-', do_not_clear=False)],
+              [sg.Text('Kurs ID:'), sg.Text(studi[3]), 
+               sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Studibear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    studi_bear_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Studibear_window.read()
+        event, values= studi_bear_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            StudiInfo= Studi[0], values['-studi_id-'], values['-vorname-'], 
+            studi_info=studi[0], values['-studi_id-'], values['-vorname-'], 
             values['-nachname-'], values['-kurs_id-']
-            Studi_Info_Array.append(StudiInfo)
+            studi_info_array.append(studi_info)
         elif event == 'zurück':
             break
 
-    Studibear_window.close()
+    studi_bear_window.close()
 
 
-
-def DozBearbeiten(Dozierenden_id: int):
+def doz_bearbeiten(dozierenden_id: int):
     """Informationen über einen Dozendierenden können verändert werden 
 
     Args:
@@ -904,33 +917,39 @@ def DozBearbeiten(Dozierenden_id: int):
 
     sg.theme('TanBlue')
     
-    Doz= [839287, 'Vor', 'nach']
+    doz= [839287, 'Vor', 'nach']
 
-    Doz_Info_Array= []
+    doz_info_array= []
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
-          [sg.Text('Dozierenden ID:'), sg.Text(Doz[0]), sg.InputText(key='-doz_id-', do_not_clear=False)],
-          [sg.Text('Nachname:'), sg.Text(Doz[1]), sg.InputText(key= '-nachname-', do_not_clear=False)], 
-          [sg.Text('Vorname:'), sg.Text(Doz[2]), sg.InputText(key= '-vorname-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Dozierenden ID:'), sg.Text(doz[0]), 
+               sg.InputText(key='-doz_id-', do_not_clear=False)],
+              [sg.Text('Nachname:'), sg.Text(doz[1]), 
+               sg.InputText(key= '-nachname-', do_not_clear=False)], 
+              [sg.Text('Vorname:'), sg.Text(doz[2]), 
+               sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Dozbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    doz_bear_window=sg.Window('Studierendenverwaltungssystem',
+                             layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Dozbear_window.read()
+        event, values= doz_bear_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            DozInfo= Doz[0], values['-doz_id-'], values['-nachname-'], 
+            doz_info= doz[0], values['-doz_id-'], values['-nachname-'], 
             values['-vorname-']
-            Doz_Info_Array.append(DozInfo)
+            doz_info_array.append(doz_info)
         elif event == 'zurück':
             break
 
-    Dozbear_window.close()
+    doz_bear_window.close()
 
 
-def KursBearbeiten(Kurs_id :int):
+def kurs_bearbeiten(kurs_id :int):
     """Informationen über einen Kurs können verändert werden 
 
     Args:
@@ -943,33 +962,39 @@ def KursBearbeiten(Kurs_id :int):
 
     sg.theme('TanBlue')
         
-    Kurs= [839287, 'Vor', 'nach', 2384789]
+    kurs= [839287, 'Vor', 'nach', 2384789]
 
-    Kurs_Info_Array= []
+    kurs_info_array= []
 
     layout = [[sg.Text('Kurs bearbeiten', font=('any', 12, 'bold'))],
-          [sg.Text('Kurs ID:'), sg.Text(Kurs[0]), sg.InputText(key='-kurs_id-', do_not_clear=False)],
-          [sg.Text('Kursname:'), sg.Text(Kurs[1]), sg.InputText(key= '-kursname-', do_not_clear=False)], 
-          [sg.Text('Dozierenden ID:'), sg.Text(Kurs[2]), sg.InputText(key= '-doz_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Kurs ID:'), sg.Text(kurs[0]), 
+               sg.InputText(key='-kurs_id-', do_not_clear=False)],
+              [sg.Text('Kursname:'), sg.Text(kurs[1]), 
+               sg.InputText(key= '-kursname-', do_not_clear=False)], 
+              [sg.Text('Dozierenden ID:'), sg.Text(kurs[2]), 
+               sg.InputText(key= '-doz_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Kursbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    kurs_bear_window=sg.Window('Studierendenverwaltungssystem',
+                              layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Kursbear_window.read()
+        event, values= kurs_bear_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            KursInfo= Kurs[0], values['-kurs_id-'], values['-kursname-'], 
+            kurs_info= kurs[0], values['-kurs_id-'], values['-kursname-'], 
             values['-doz_id-']
-            Kurs_Info_Array.append(KursInfo)
+            kurs_info_array.append(kurs_info)
         elif event == 'zurück':
             break
 
-    Kursbear_window.close()
+    kurs_bear_window.close()
 
 
-def VeranstaltungBearbeiten(Veran_id: int):
+def veranstaltung_bearbeiten(veran_id: int):
     """Informationen über eine Veranstaltung können verändert werden 
 
     Args:
@@ -982,35 +1007,41 @@ def VeranstaltungBearbeiten(Veran_id: int):
 
     sg.theme('TanBlue')
         
-    Veran= [839287, 'Vor', 'nach', 2384789]
+    veran= [839287, 'Vor', 'nach', 2384789]
 
-    Veran_Info_Array= []
+    veran_info_array= []
 
     layout = [[sg.Text('Veranstaltung bearbeiten', font=('any', 12, 'bold'))],
-          [sg.Text('Veranstaltungs ID:'), sg.Text(Veran[0]), sg.InputText(key='-veran_id-', do_not_clear=False)],
-          [sg.Text('Veranstaltungsname:'), sg.Text(Veran[1]), sg.InputText(key= '-veranname-', do_not_clear=False)], 
-          [sg.Text('Dozierenden ID:'), sg.Text(Veran[2]), sg.InputText(key= '-doz_id-', do_not_clear=False)],
-          [sg.Text('Modul ID:'), sg.Text(Veran[3]), sg.InputText(key= '-modul_id-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Veranstaltungs ID:'), sg.Text(veran[0]), 
+               sg.InputText(key='-veran_id-', do_not_clear=False)],
+              [sg.Text('Veranstaltungsname:'), sg.Text(veran[1]), 
+               sg.InputText(key= '-veranname-', do_not_clear=False)], 
+              [sg.Text('Dozierenden ID:'), sg.Text(veran[2]), 
+               sg.InputText(key= '-doz_id-', do_not_clear=False)],
+              [sg.Text('Modul ID:'), sg.Text(veran[3]), 
+               sg.InputText(key= '-modul_id-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Veranbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    veran_bear_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Veranbear_window.read()
+        event, values= veran_bear_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            VeranInfo= Veran[0], values['-veran_id-'], values['-veranname-'], 
+            veran_info= veran[0], values['-veran_id-'], values['-veranname-'], 
             values['-doz_id-'], values['-modul_id-']
-            Veran_Info_Array.append(VeranInfo)
+            veran_info_array.append(veran_info)
         elif event == 'zurück':
             break
 
-    Veranbear_window.close()
+    veran_bear_window.close()
 
 
-
-def ModulBearbeiten(Modul_id: int):
+def modul_bearbeiten(modul_id: int):
     """Die Informationen eines Moduls können verändert werden
 
     Args:
@@ -1023,33 +1054,38 @@ def ModulBearbeiten(Modul_id: int):
 
     sg.theme('TanBlue')
         
-    Modul= [839287, 'Vor', 'nach', 2384789]
+    modul= [839287, 'Vor', 'nach', 2384789]
 
-    Modul_Info_Array= []
+    modul_info_array= []
 
     layout = [[sg.Text('Modul bearbeiten', font=('any', 12, 'bold'))],
-          [sg.Text('Modul ID:'), sg.Text(Modul[0]), sg.InputText(key='-modul_id-', do_not_clear=False)],
-          [sg.Text('Modulname:'), sg.Text(Modul[1]), sg.InputText(key= '-modulname-', do_not_clear=False)], 
-          [sg.Text('Kurs ID:'), sg.Text(Modul[2]), sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-          [sg.Text('Credits:'), sg.Text(Modul[3]), sg.InputText(key= '-credits-', do_not_clear=False)],
-          [sg.Button('OK', font=('any', 9, 'underline')), sg.Button('zurück', font=('any', 9, 'underline'))]]
+              [sg.Text('Modul ID:'), sg.Text(modul[0]), 
+               sg.InputText(key='-modul_id-', do_not_clear=False)],
+              [sg.Text('Modulname:'), sg.Text(modul[1]), 
+               sg.InputText(key= '-modulname-', do_not_clear=False)], 
+              [sg.Text('Kurs ID:'), sg.Text(modul[2]), 
+               sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Text('Credits:'), sg.Text(modul[3]), 
+               sg.InputText(key= '-credits-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
           
-    Modulbear_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    modul_bear_window=sg.Window('Studierendenverwaltungssystem',
+                               layout, modal=True, size=(500, 500))
 
     while True:
-        event, values= Modulbear_window.read()
+        event, values= modul_bear_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            ModulInfo= Modul[0], values['-modul_id-'], values['-modulname-'], 
+            modul_info= modul[0], values['-modul_id-'], values['-modulname-'], 
             values['-kurs_id-'], values['-credits-']
-            Modul_Info_Array.append(ModulInfo)
+            modul_info_array.append(modul_info)
         elif event == 'zurück':
             break
 
-    Modulbear_window.close()
-
-    
+    modul_bear_window.close()
 
 
 if __name__ == "__main__":
