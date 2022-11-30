@@ -476,7 +476,7 @@ def get_dozent_by_id(conn: Connection, dozent_id: int) -> list:
         dozent = cur.fetchall()
     except Error as get_dozent_by_id_error:
         print(get_dozent_by_id_error)
-    return dozent[0]
+    return [dozent[0]]
 
 
 def get_modul_by_id(conn: Connection, modul_id: int) -> list:
@@ -526,7 +526,7 @@ def get_veranstaltung_by_id(conn: Connection, veranstaltung_id: int) -> list:
         veranstaltung = cur.fetchall()
     except Error as get_veranstaltung_by_id_error:
         print(get_veranstaltung_by_id_error)
-    return veranstaltung[0]
+    return [veranstaltung[0]]
 
 
 def get_pruefungsleistung_by_id(conn: Connection, pruefungsleistung_student_id: int, pruefungsleistung_veranstaltung_id: int) -> list:
@@ -577,7 +577,7 @@ def get_admin_by_id(conn: Connection, admin_id: int) -> list:
         admin = cur.fetchall()
     except Error as get_admin_by_id_error:
         print(get_admin_by_id_error)
-    return admin[0]
+    return [admin[0]]
 
 
 def edit_student_by_id(conn: Connection, student_id: int, student: tuple[int, str, str, int, str, str]):

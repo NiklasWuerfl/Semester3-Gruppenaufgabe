@@ -7,6 +7,7 @@ noch mit Modul "DATABASE" implementiert
     version: 1.1.1
     licence: free (open source)
 """
+import Backend
 import database as db
 import app
 
@@ -42,7 +43,7 @@ def notenberechnung(p_erreicht, p_gesamt):
 
 
 def get_raw_pruefung_data(student_id):
-    pruefungen = db.get_all_pruefungsleistung_by_student(my_connect, student_id)
+    pruefungen = Backend.access_pruefung_data(student_id)
     veranstaltung_ids = []
     modul_ids = []
     veranstaltung_namen =[]

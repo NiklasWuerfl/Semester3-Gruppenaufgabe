@@ -40,7 +40,175 @@
     version: 1.0.0
     licence: free (open source)
 """
-
+import Student_be
+import app
 import database as db
-import pandas as pd
-import fastapi as api
+from flask import Flask
+import requests as r
+
+url = "http://localhost:5000"
+
+# querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
+
+
+def getValues (querystring):
+    response = r.get(querystring) #.content.decode('UTF-8')
+    if (response.status_code == 200):
+        return response.json()
+    else:
+        raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten.\n\tError Code: {response.status_code}")
+
+
+def get_student_name(student_id):
+    """
+    Methode zum Erhalt des Namens des Students
+
+    :param student_id:
+    :return: name: String in Form: "Nachname, Vorname"
+
+    Tests:
+    * ungültige Student_id eingeben
+    *
+    """
+    querystring = url + f"/getStudent/{student_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    data = data_raw[0]
+    vorname = data[1]
+    nachname = data[2]
+    name = nachname + ", " + vorname
+    return name
+
+
+def get_dozent_name(dozent_id):
+    """
+    Methode zum Erhalt des Namens des Students
+
+    :param dozent_id:
+    :return: name: String in Form: "Nachname, Vorname"
+
+    Tests:
+    * ungültige Dozent_id eingeben
+    *
+    """
+    querystring = url + f"/getDozent/{dozent_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    data = data_raw[0]
+    vorname = data[1]
+    nachname = data[2]
+    name = nachname + ", " + vorname
+    return name
+
+
+def get_admin_name(admin_id):
+    """
+    Methode zum Erhalt des Namens des Students
+
+    :param admin_id:
+    :return: name: String in Form: "Nachname, Vorname"
+
+    Tests:
+    * ungültige Student_id eingeben
+    *
+    """
+    querystring = url + f"/getAdmin/{admin_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    data = data_raw[0]
+    vorname = data[1]
+    nachname = data[2]
+    name = nachname + ", " + vorname
+    return name
+
+def access_pruefung_data(student_id):
+    querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
+
+
+def get_student_module(student_id):
+    return Student_be.print_student_module(student_id)
+
+
+def get_credits_erreicht(student_id):
+    return Student_be.get_credits_erreicht(student_id)
+
+
+def get_gpa_by_student(student_id):
+    return Student_be.get_gpa_by_student(student_id)
+
+
+def get_modul_id_namen_student(student_id):
+    return Student_be.get_modul_id_namen_student(student_id)
+
+
+def internal_pruefungen_in_modul (student_id: int, modul_id: int):
+    querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    pruefungen = data_raw
+    return pruefungen
+    result = []
+    for p in pruefungen:
+        veranstaltung_id = p[1]
+        querystring2 = url + f"/getVeranstaltung/{veranstaltung_id}"
+        data_raw2 = getValues(querystring2)
+        m_id = data_raw2[3]
+        if m_id == modul_id:
+            result.append(p)
+    return result
+def print_all_pruefungen_student (student_id, modul_id):
+    pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
+    result = []
+    for p in pruefungen:
+        details = []
+        v_id = p[1]
+        querystring = url + f"/getVeranstaltung/{v_id}"
+        data_raw = getValues(querystring)
+        veranstaltung = data_raw[0]
+        details.append(veranstaltung[1])  # Veranstaltungsname
+        details.append(p[2])  # gesamte Punkte
+        details.append(p[3])  # erreichte Punkte
+        details.append(Student_be.notenberechnung(p[3], p[2]))
+        result.append(details)
+    return result
+
+def print_pruefungen_in_modul(student_id, modul_id):
+    pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
+    result = []
+    for p in pruefungen:
+        details = []
+        v_id = p[1]
+        querystring = url + f"/getVeranstaltung/{v_id}"
+        data_raw = getValues(querystring)
+        veranstaltung = data_raw[0]
+        if veranstaltung[3] == modul_id:
+            details.append(veranstaltung[1])  # Veranstaltungsname
+            details.append(p[2])  # gesamte Punkte
+            details.append(p[3])  # erreichte Punkte
+            details.append(Student_be.notenberechnung(p[3], p[2]))
+            result.append(details)
+    return result
+
+if __name__ == "__main__":
+    # print(get_student_name(1000))
+    # print(get_dozent_name(110))
+      #  print(app.getStudent(1000))
+      #  print(app.getDozent(110))
+      #  print(db.get_dozent_by_id(db.create_database_connection("data.db"),110))
+    # print(get_admin_name(99))
+    # print(access_pruefung_data(1000))
+    # print(get_student_module(1000))
+    # print(get_credits_erreicht(1000))
+    # print(get_gpa_by_student(1000))
+    # print(get_modul_id_namen_student(1000))
+    print(internal_pruefungen_in_modul(1000,1200))
+    print(print_all_pruefungen_student(1000,1200))
+    print(print_pruefungen_in_modul(1000,1200))
