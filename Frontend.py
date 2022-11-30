@@ -7,7 +7,7 @@ licence: free
 """
 
 import PySimpleGUI as sg
-import Student_be as sb
+import Backend as be
 
 def login():
     """Implimentierung der Login Seite
