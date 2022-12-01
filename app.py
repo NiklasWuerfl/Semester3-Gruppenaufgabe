@@ -2,8 +2,8 @@
     - arbeitet mit database.py um Zugriffe auf Datenbank auszuführen
 
     author: Emma Müller
-    date: 28.11.2022
-    version: 1.0.1
+    date: 01.12.2022
+    version: 1.0.2
     licence: free (open source)
 """
 
@@ -39,6 +39,7 @@ def index():
     """
     return 'Der Server für die Verbindung zur Datenbank ist jetzt live!'
 
+
 @app.route(
     '/createStudent/<int:student_id>/<string:vorname>/<string:nachname>/'
     '<int:kurs_id>/<string:nutzername>/<string:passwort>',
@@ -69,6 +70,7 @@ def create_student(
     """
     return db.create_student(my_connect,[student_id,vorname,nachname,kurs_id,nutzername,passwort])
 
+
 @app.route('/createKurs/<int:kurs_id>/<string:name>/<int:dozent_id>', methods=['GET'])
 def create_kurs(kurs_id: int, name: str, dozent_id: int):
     """neuen Kurs in Tabelle 'Kurs' einfügen
@@ -92,6 +94,7 @@ def create_kurs(kurs_id: int, name: str, dozent_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.create_kurs(my_connect, [kurs_id,name,dozent_id])
+
 
 @app.route(
     '/createDozent/<int:dozent_id>/<string:vorname>/<string:nachname>/'
@@ -121,6 +124,7 @@ def create_dozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, 
     """
     return db.create_dozent(my_connect, [dozent_id,vorname,nachname,nutzername,passwort])
 
+
 @app.route(
     '/createModul/<int:modul_id>/<string:modulname>/<int:credits>/<int:kurs_id>',
     methods=['GET'])
@@ -146,6 +150,7 @@ def create_modul(modul_id: int, modulname: str, module_credits: int, kurs_id: in
                 -> erwartetes Ergebnis:
     """
     return db.create_modul(my_connect, [modul_id,modulname,module_credits,kurs_id])
+
 
 @app.route(
     '/createVeranstaltung/<int:veranstaltung_id>/<string:name>/<int:dozent_id>/<int:modul_id>',
@@ -173,6 +178,7 @@ def create_veranstaltung(veranstaltung_id: int, name: str, dozent_id: int, modul
                 -> erwartetes Ergebnis:
     """
     return db.create_veranstaltung(my_connect, [veranstaltung_id,name,dozent_id,modul_id])
+
 
 @app.route(
     '/createPruefungsleistung/<int:student_id>/<int:veranstaltung_id>/'
@@ -207,6 +213,7 @@ def create_pruefungsleistung(
     return db.create_pruefungsleistung(
         my_connect, [student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht])
 
+
 @app.route(
     '/createAdmin/<int:admin_id>/<string:vorname>/<string:nachname>/'
     '<string:nutzername>/<string:passwort>',
@@ -235,6 +242,7 @@ def create_admin(admin_id: int, vorname: str, nachname: str, nutzername: str, pa
     """
     return db.create_admin(my_connect, [admin_id,vorname,nachname,nutzername,passwort])
 
+
 @app.route('/deleteStudent/<int:student_id>', methods=['GET'])
 def delete_student(student_id: int):
     """ Student aus Tabelle 'Student' entfernen
@@ -255,6 +263,7 @@ def delete_student(student_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.delete_student(my_connect, student_id)
+
 
 @app.route('/deleteKurs/<int:kurs_id>', methods=['GET'])
 def delete_kurs(kurs_id: int):
@@ -277,6 +286,7 @@ def delete_kurs(kurs_id: int):
     """
     return db.delete_kurs(my_connect, kurs_id)
 
+
 @app.route('/deleteDozent/<int:dozent_id>', methods=['GET'])
 def delete_dozent(dozent_id: int):
     """ Dozent aus Tabelle 'Dozent' entfernen
@@ -297,6 +307,7 @@ def delete_dozent(dozent_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.delete_dozent(my_connect, dozent_id)
+
 
 @app.route('/deleteModul/<int:modul_id>', methods=['GET'])
 def delete_modul(modul_id: int):
@@ -319,6 +330,7 @@ def delete_modul(modul_id: int):
     """
     return db.delete_modul(my_connect, modul_id)
 
+
 @app.route('/deleteVeranstaltung/<int:veranstaltung_id>', methods=['GET'])
 def delete_veranstaltung(veranstaltung_id: int):
     """ Veranstaltung aus Tabelle 'Veranstaltung' entfernen
@@ -339,6 +351,7 @@ def delete_veranstaltung(veranstaltung_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.delete_veranstaltung(my_connect, veranstaltung_id)
+
 
 @app.route('/deletePruefungsleistung/<int:student_id>/<int:veranstaltung_id>', methods=['GET'])
 def delete_pruefungsleistung(student_id: int, veranstaltung_id: int):
@@ -365,6 +378,7 @@ def delete_pruefungsleistung(student_id: int, veranstaltung_id: int):
     """
     return db.delete_pruefungsleistung(my_connect, student_id,veranstaltung_id)
 
+
 @app.route('/deleteAdmin/<int:admin_id>', methods=['GET'])
 def delete_admin(admin_id: int):
     """ Admin aus Tabelle 'Admin' entfernen
@@ -385,6 +399,7 @@ def delete_admin(admin_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.delete_admin(my_connect, admin_id)
+
 
 @app.route(
     '/changeStudent/<int:student_id_old>/<int:student_id>/<string:vorname>/<string:nachname>/'
@@ -421,6 +436,7 @@ def change_student(
     return db.edit_student_by_id(
         my_connect, student_id_old, [student_id,vorname,nachname,kurs_id,nutzername,passwort])
 
+
 @app.route(
     '/changeKurs/<int:kurs_id_old>/<int:kurs_id>/<string:name>/<int:dozent_id>',
     methods=['GET'])
@@ -448,6 +464,7 @@ def change_kurs(kurs_id_old: int,kurs_id: int, name: str, dozent_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.edit_kurs_by_id(my_connect, kurs_id_old, [kurs_id,name,dozent_id])
+
 
 @app.route(
     '/changeDozent/<int:dozent_id_old>/<int:dozent_id>/<string:vorname>/'
@@ -482,6 +499,7 @@ def change_dozent(
     return db.edit_dozent_by_id(
         my_connect, dozent_id_old, [dozent_id,vorname,nachname,nutzername,passwort])
 
+
 @app.route(
     '/changeModul/<int:modul_id_old>/<int:modul_id>/<string:modulname>/<int:credits>/<int:kurs_id>',
     methods=['GET'])
@@ -511,6 +529,7 @@ def change_modul(
     """
     return db.edit_modul_by_id(
         my_connect, modul_id_old, [modul_id,modulname,module_credits,kurs_id])
+
 
 @app.route(
     '/changeVeranstaltung/<int:veranstaltung_id_old>/<int:veranstaltung_id>/'
@@ -546,6 +565,7 @@ def change_veranstaltung(
     """
     return db.edit_veranstaltung_by_id(
         my_connect, veranstaltung_id_old, [veranstaltung_id,name,dozent_id,modul_id])
+
 
 @app.route(
     '/changePruefungsleistung/<int:student_id_old>/<int:veranstaltung_id_old>/'
@@ -588,6 +608,7 @@ def change_pruefungsleistung(
         my_connect, student_id_old, veranstaltung_id_old,
         [student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht])
 
+
 @app.route(
     '/changeAdmin/<int:admin_id_old>/<int:admin_id>/<string:vorname>/'
     '<string:nachname>/<string:nutzername>/<string:passwort>',
@@ -621,6 +642,7 @@ def change_admin(
     return db.edit_admin_by_id(
         my_connect, admin_id_old, [admin_id,vorname,nachname,nutzername,passwort])
 
+
 @app.route('/getStudent/<int:student_id>', methods=["GET"])
 def get_student(student_id: int):
     """ Attribute eines Studenten aus Tabelle 'Student' abfragen
@@ -641,6 +663,7 @@ def get_student(student_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.get_student_by_id(my_connect, student_id)
+
 
 @app.route('/getKurs/<int:kurs_id>', methods=["GET"])
 def get_kurs(kurs_id: int):
@@ -663,6 +686,7 @@ def get_kurs(kurs_id: int):
     """
     return db.get_kurs_by_id(my_connect, kurs_id)
 
+
 @app.route('/getDozent/<int:dozent_id>', methods=["GET"])
 def get_dozent(dozent_id: int):
     """ Attribute eines Dozenten aus Tabelle 'Dozent' abfragen
@@ -684,6 +708,7 @@ def get_dozent(dozent_id: int):
     """
     return db.get_dozent_by_id(my_connect, dozent_id)
 
+
 @app.route('/getModul/<int:modul_id>', methods=["GET"])
 def get_modul(modul_id: int):
     """ Attribute eines Moduls aus Tabelle 'Modul' abfragen
@@ -704,6 +729,7 @@ def get_modul(modul_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.get_modul_by_id(my_connect, modul_id)
+
 
 @app.route('/getVeranstaltung/<int:veranstaltung_id>', methods=["GET"])
 def get_veranstaltung(veranstaltung_id: int):
@@ -727,6 +753,7 @@ def get_veranstaltung(veranstaltung_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.get_veranstaltung_by_id(my_connect, veranstaltung_id)
+
 
 @app.route('/getPruefungsleistung/<int:student_id>/<int:veranstaltung_id>', methods=["GET"])
 def get_pruefungsleistung(student_id: int, veranstaltung_id: int):
@@ -753,6 +780,7 @@ def get_pruefungsleistung(student_id: int, veranstaltung_id: int):
     """
     return db.get_pruefungsleistung_by_id(my_connect, student_id, veranstaltung_id)
 
+
 @app.route('/getAdmin/<int:admin_id>', methods=["GET"])
 def get_admin(admin_id: int):
     """ Attribute eines Admins aus Tabelle 'Admin' abfragen
@@ -773,6 +801,7 @@ def get_admin(admin_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.get_admin_by_id(my_connect, admin_id)
+
 
 @app.route('/getPruefungsleistungenByStudent/<int:student_id>', methods=["GET"])
 def get_pruefungsleistungen_by_student(student_id: int):
@@ -796,7 +825,6 @@ def get_pruefungsleistungen_by_student(student_id: int):
                 -> erwartetes Ergebnis:
     """
     return db.get_all_pruefungsleistung_by_student(my_connect, student_id)
-
 
 
 if __name__ == '__main__':

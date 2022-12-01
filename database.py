@@ -1,26 +1,7 @@
 """Modul für Datenbankkommunikation
-    * bisher implementierte Funktionen/Funktionalitäten:
-        * Tabellen erstellen
-        * Entitäten in Tabellen einfügen
-        * Entitäten aus Tabellen löschen
-        * Attribute bestimmter Entitäten abfragen
-        * Attribute bestimmter Entitäten ändern
-        * Passwort & Nutzername an Personen gespeichert
-        * alle Prüfungsleistungen eines Studenten abfragen
-        * Sicherstellen des richtigen Datentyps der Paramter von Funktionen die mit Datenbank
-            interagieren
-        * Sicherstellen, dass punkte_gesamt >= punkte_erreicht
-        * Sicherstellen des richtigen Datentyps bei Übergabe einer Entität -> Übergabe als
-            Tupel mit festgelegten Typen
-
-    * andere TO DO's:
-        * existieren die Studenten & Veranstaltungs ID beim Anlegen einer neuen Prüfungsleistung
-
-    * weitere Anmerkungen bzw. zu Dokumentieren:
-        * welche Module müssen in Entwicklungsumgebung installiert sein?
 
     author: Emma Müller
-    date: 09.11.2022
+    date: 01.12.2022
     version: 1.0.4
     licence: free (open source)
 """
