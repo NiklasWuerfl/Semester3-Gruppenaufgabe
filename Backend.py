@@ -41,6 +41,7 @@
     licence: free (open source)
 """
 import Student_be
+import DozentB
 import app
 import database as db
 from flask import Flask
@@ -124,6 +125,20 @@ def get_admin_name(admin_id):
     name = nachname + ", " + vorname
     return name
 
+def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung):
+    querystring = url + f"/edit_pruefungsleistung_by_student_and_veranstaltung/{pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
+
+def create_pruefungsleistung(pruefungsleistung):
+    querystring = url + f"/create_pruefungsleistung/{pruefungsleistung}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
+
 def access_pruefung_data(student_id):
     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
     data_raw = getValues(querystring)
@@ -146,6 +161,22 @@ def get_gpa_by_student(student_id):
 
 def get_modul_id_namen_student(student_id):
     return Student_be.get_modul_id_namen_student(student_id)
+
+
+def get_best_note(student_id):
+    return DozentB.best_note(student_id)
+
+
+def get_worst_note(student_id):
+    return DozentB.worst_note(student_id)
+
+
+def get_mean(student_id):
+    return DozentB.get_mean(student_id)
+
+
+def get_median(student_id):
+    return DozentB.get_median(student_id)
 
 
 def internal_pruefungen_in_modul (student_id: int, modul_id: int):
