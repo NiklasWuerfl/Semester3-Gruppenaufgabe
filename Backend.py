@@ -125,6 +125,7 @@ def get_admin_name(admin_id):
     name = nachname + ", " + vorname
     return name
 
+
 def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung):
     querystring = url + f"/edit_pruefungsleistung_by_student_and_veranstaltung/{pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung}"
     data_raw = getValues(querystring)
@@ -132,12 +133,14 @@ def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltun
         raise Exception(data_raw)
     return data_raw
 
+
 def create_pruefungsleistung(pruefungsleistung):
     querystring = url + f"/create_pruefungsleistung/{pruefungsleistung}"
     data_raw = getValues(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return data_raw
+
 
 def access_pruefung_data(student_id):
     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
@@ -195,6 +198,8 @@ def internal_pruefungen_in_modul (student_id: int, modul_id: int):
         if m_id == modul_id:
             result.append(p)
     return result
+
+
 def print_all_pruefungen_student (student_id, modul_id):
     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
     result = []
@@ -210,6 +215,7 @@ def print_all_pruefungen_student (student_id, modul_id):
         details.append(Student_be.notenberechnung(p[3], p[2]))
         result.append(details)
     return result
+
 
 def print_pruefungen_in_modul(student_id, modul_id):
     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
@@ -228,7 +234,189 @@ def print_pruefungen_in_modul(student_id, modul_id):
             result.append(details)
     return result
 
+
+def create_student(student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
+    querystring = url + f"/createStudent/{student_id}/{vorname}/{nachname}/{kurs_id}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def create_dozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort:str):
+    querystring = url + f"/createDozent/{dozent_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def create_admin(admin_id: int, vorname: str, nachname: str, nutzername: str, passwort:str):
+    querystring = url + f"/createAdmin/{admin_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def create_kurs(kurs_id: int, name: str, dozent_id: int):
+    querystring = url + f"/createKurs/{kurs_id}/{name}/{dozent_id}"
+    r.get(querystring)
+    return None
+
+
+def create_modul(modul_id: int, modulname: str, module_credits: int, kurs_id: int):
+    querystring = url + f"/createModul/{modul_id}/{modulname}/{module_credits}"
+    r.get(querystring)
+    return None
+
+
+def create_veranstaltung(veranstaltung_id: int, name: str, dozent_id: int, modul_id: int):
+    querystring = url + f"/createVeranstaltung/{veranstaltung_id}/{name}/{dozent_id}/{modul_id}"
+    r.get(querystring)
+    return None
+
+
+def create_pruefungsleistung(
+        student_id: int, veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int):
+    querystring = url + f"/createPruefungsleistung/{student_id}/{veranstaltung_id}/{punkte_gesamt}/{punkte_erreicht}"
+    r.get(querystring)
+    return None
+
+
+def change_student(
+        student_id_old: int, student_id: int, vorname: str, nachname: str,
+        kurs_id: int, nutzername: str, passwort:str):
+    querystring = url + f"/changeStudent/{student_id_old}/{student_id}/{vorname}/{nachname}/{kurs_id}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def change_kurs(kurs_id_old: int,kurs_id: int, name: str, dozent_id: int):
+    querystring = url + f"/changeKurs/{kurs_id_old}/{kurs_id}/{name}/{dozent_id}"
+    r.get(querystring)
+    return None
+
+
+def change_dozent(
+        dozent_id_old: int,dozent_id: int, vorname: str,
+        nachname: str, nutzername: str, passwort: str):
+    querystring = url + f"/createDozent/{dozent_id_old}/{dozent_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def change_modul(
+        modul_id_old: int, modul_id: int, modulname: str, module_credits: int, kurs_id: int):
+    querystring = url + f"/changeModul/{modul_id_old}/{modul_id}/{modulname}/{module_credits}"
+    r.get(querystring)
+    return None
+
+
+def change_veranstaltung(
+        veranstaltung_id_old: int, veranstaltung_id: int, name: str, dozent_id: int, modul_id: int):
+    querystring = url + f"/changeVeranstaltung/{veranstaltung_id_old}/{veranstaltung_id}/{name}/{dozent_id}/{modul_id}"
+    r.get(querystring)
+    return None
+
+
+def change_pruefungsleistung(
+        student_id_old: int, veranstaltung_id_old: int, student_id: int,
+        veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int):
+    querystring = url + f"/changePruefungsleistung/{student_id_old}/{veranstaltung_id_old}/{student_id}/{veranstaltung_id}/{punkte_gesamt}/{punkte_erreicht}"
+    r.get(querystring)
+    return None
+
+
+def change_admin(
+        admin_id_old: int, admin_id: int, vorname: str,
+        nachname: str, nutzername: str, passwort: str):
+    querystring = url + f"/changeAdmin/{admin_id_old}/{admin_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
+    r.get(querystring)
+    return None
+
+
+def delete_student(student_id: int):
+    querystring = url + f"/deleteStudent/{student_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_dozent(dozent_id: int):
+    querystring = url + f"/deleteDozent/{dozent_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_admin(admin_id: int):
+    querystring = url + f"/deleteAdmin/{admin_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_kurs(kurs_id: int):
+    querystring = url + f"/deleteKurs/{kurs_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_modul(modul_id: int):
+    querystring = url + f"/deleteModul/{modul_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_veranstaltung(veranstaltung_id: int):
+    querystring = url + f"/deleteVeranstaltung/{veranstaltung_id}"
+    r.get(querystring)
+    return None
+
+
+def delete_pruefungsleistung(pruefungsleistung_id: int):
+    querystring = url + f"/deletePruefungsleistung/{pruefungsleistung_id}"
+    r.get(querystring)
+    return None
+
+
+def get_student(student_id: int):
+    querystring = url + f"/getStudent/{student_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_dozent(dozent_id: int):
+    querystring = url + f"/deleteDozent/{dozent_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_admin(admin_id: int):
+    querystring = url + f"/getAdmin/{admin_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_kurs(kurs_id: int):
+    querystring = url + f"/getKurs/{kurs_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_modul(modul_id: int):
+    querystring = url + f"/getModul/{modul_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_veranstaltung(veranstaltung_id: int):
+    querystring = url + f"/getVeranstaltung/{veranstaltung_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
+def get_pruefungsleistung(pruefungsleistung_id: int):
+    querystring = url + f"/getPruefungsleistung/{pruefungsleistung_id}"
+    response = getValues(querystring)
+    return response # als Array
+
+
 if __name__ == "__main__":
+    print(create_student(1456, "Niklas", "Würfl", 1400, "Nicube", "pässwör1"))
+    print((get_student_name(1459)))
     # print(get_student_name(1000))
     # print(get_dozent_name(110))
       #  print(app.getStudent(1000))
@@ -240,6 +428,6 @@ if __name__ == "__main__":
     # print(get_credits_erreicht(1000))
     # print(get_gpa_by_student(1000))
     # print(get_modul_id_namen_student(1000))
-    print(internal_pruefungen_in_modul(1000,1200))
-    print(print_all_pruefungen_student(1000,1200))
-    print(print_pruefungen_in_modul(1000,1200))
+    # print(internal_pruefungen_in_modul(1000,1200))
+    # print(print_all_pruefungen_student(1000,1200))
+    # print(print_pruefungen_in_modul(1000,1200))
