@@ -45,10 +45,10 @@ def login():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
+            anmelde_daten= values['-id-'], values['-passwort-']
             login_window.close()
-            AnmeldeDaten= values['-id-'], values['-passwort-']
             if values['-nutzer-'] == 'Studierender':
-                studierende_allgemein()
+                studierende_allgemein(values['-id-'])
             elif values['-nutzer-'] == 'Dozierender':
                 dozierende_veranstaltung()
             elif values['-nutzer-'] == 'Admin':
@@ -94,8 +94,11 @@ def erfolgreicher_logout():
     logout_window.close()
    
 
-def studierende_allgemein():
+def studierende_allgemein(studi_id: int):
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
+
+    Args:
+        studi_id (int): ID des angemeldeten Studierenden als Interger
 
     Tests:
         * Zeile in Tabelle anklicken
@@ -104,9 +107,7 @@ def studierende_allgemein():
 
     sg.theme('TanBlue')
 
-    modul_information_array = [[9308504, 'Programmieren', 5.0, 2.6, True],
-                               [2938407, 'Statistik', 5.0, 2.9, True]
-                               ]
+    modul_information_array = be.get_student_module(studi_id)
 
     headings = ['Modul ID','Modul', 'Cedits', 'Note', 'best.']
 
@@ -126,8 +127,9 @@ def studierende_allgemein():
                         row_height=35,
                         enable_events= True)],
               [sg.Text('Gesamt', font=('any', 12, 'bold')), 
-               sg.Text('Cedits gesamt'), sg.Text('GPA')]
-              ]
+               sg.Text('Cedits gesamt' + be.get_credits_erreicht(studi_id)), 
+               sg.Text('GPA' + be.get_gpa_by_student(studi_id))]
+               ]
           
     studi_window = sg.Window('Studierendenverwaltungssystem',
                            layout, modal=True, size=(500, 500))
@@ -144,15 +146,16 @@ def studierende_allgemein():
         elif event == "-table-":
             selected_row_index = values['-table-'][0]
             modul_information = modul_information_array[selected_row_index]
-            studierende_modul(modul_information)
+            studierende_modul(studi_id, modul_information)
 
     studi_window.close()
 
 
-def studierende_modul(modul_info):
+def studierende_modul(studi_id: int, modul_info):
     """ Informationen über Veranstaltungen eines Moduls mit Noten und Punkten
 
     Args:
+        studi_id (int): ID des angemeldeten Studierenden als Integer
         modul_info (array): alle Informationen über das Modul in einem Array
 
     Test:
@@ -164,9 +167,7 @@ def studierende_modul(modul_info):
 
     modul_name = modul_info[1]
     modul_Note = str(modul_info[3])
-    modulinhalt = [[9823057, 'Java', 60, 45, 2.6],
-                   [2739474, 'Python', 60, 55, 1.8]
-                   ]
+    modulinhalt = be.print_pruefungen_in_modul(studi_id, modul_info[0])
 
     headings=['Veranstalungs ID','Veranstaltung', 'P. g.', 'P. e.', 'Note']
 
