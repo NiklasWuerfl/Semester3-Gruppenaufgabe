@@ -133,7 +133,7 @@ def login_student(student_id, passwort):
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if student_id == True and passwort == True:
-        return data_raw
+        return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
 
@@ -144,7 +144,7 @@ def login_dozent(dozent_id, passwort):
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if dozent_id == True and passwort == True:
-        return data_raw
+        return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
 
@@ -155,7 +155,7 @@ def login_admin(admin_id, passwort):
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if admin_id == True and passwort == True:
-        return data_raw
+        return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
 
