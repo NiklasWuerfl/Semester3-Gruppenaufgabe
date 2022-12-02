@@ -339,7 +339,7 @@ def delete_student(conn: Connection, student_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Student WHERE student_id=?"""
+    sql = """DELETE FROM Student WHERE student_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (student_id,))
@@ -373,7 +373,7 @@ def delete_kurs(conn: Connection, kurs_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Kurs WHERE kurs_id=?"""
+    sql = """DELETE FROM Kurs WHERE kurs_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (kurs_id,))
@@ -407,7 +407,7 @@ def delete_dozent(conn: Connection, dozent_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Dozent WHERE dozent_id=?"""
+    sql = """DELETE FROM Dozent WHERE dozent_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (dozent_id,))
@@ -441,7 +441,7 @@ def delete_modul(conn: Connection, modul_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Modul WHERE modul_id=?"""
+    sql = """DELETE FROM Modul WHERE modul_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (modul_id,))
@@ -475,7 +475,7 @@ def delete_veranstaltung(conn: Connection, veranstaltung_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Veranstaltung WHERE veranstaltung_id=?"""
+    sql = """DELETE FROM Veranstaltung WHERE veranstaltung_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (veranstaltung_id,))
@@ -514,7 +514,7 @@ def delete_pruefungsleistung(
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Pruefungsleistung WHERE student_id=? and veranstaltung_id=?"""
+    sql = """DELETE FROM Pruefungsleistung WHERE student_id=? and veranstaltung_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (pruefungsleistung_student,pruefungsleistung_veranstaltung,))
@@ -550,7 +550,7 @@ def delete_admin(conn: Connection, admin_id: int):
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """DELETE CASCADE FROM Admin WHERE admin_id=?"""
+    sql = """DELETE FROM Admin WHERE admin_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (admin_id,))
@@ -834,7 +834,7 @@ def edit_student_by_id(
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Student SET student_id=?, vorname=?, nachname=?,
+    sql = """UPDATE Student SET student_id=?, vorname=?, nachname=?,
         kurs_id=?, nutzername=?, passwort=?
         WHERE student_id=?"""
     try:
@@ -875,7 +875,7 @@ def edit_kurs_by_id(conn: Connection, kurs_id: int, kurs: tuple[int, str, int]):
                     * beim Versuch Cursor zu erstellenwird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Kurs SET kurs_id=?, name=?, dozent_id=? WHERE kurs_id=?"""
+    sql = """UPDATE Kurs SET kurs_id=?, name=?, dozent_id=? WHERE kurs_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (kurs[0],kurs[1],kurs[2],kurs_id))
@@ -912,7 +912,7 @@ def edit_dozent_by_id(conn: Connection, dozent_id: int, dozent: tuple[int, str, 
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Dozent SET dozent_id=?, vorname=?, nachname=?, nutzername=?, passwort=?
+    sql = """UPDATE Dozent SET dozent_id=?, vorname=?, nachname=?, nutzername=?, passwort=?
         WHERE dozent_id=?"""
     try:
         cur = conn.cursor()
@@ -950,7 +950,7 @@ def edit_modul_by_id(conn: Connection, modul_id: int, modul: tuple[int, str, int
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Modul SET modul_id=?, modulname=?, credits=?, kurs_id=? WHERE modul_id=?"""
+    sql = """UPDATE Modul SET modul_id=?, modulname=?, credits=?, kurs_id=? WHERE modul_id=?"""
     try:
         cur = conn.cursor()
         cur.execute(sql, (modul[0],modul[1],modul[2],modul[3],modul_id))
@@ -989,7 +989,7 @@ def edit_veranstaltung_by_id(
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Veranstaltung SET veranstaltung_id=?, name=?, dozent_id=?, modul_id=?
+    sql = """UPDATE Veranstaltung SET veranstaltung_id=?, name=?, dozent_id=?, modul_id=?
         WHERE veranstaltung_id=?"""
     try:
         cur = conn.cursor()
@@ -1035,7 +1035,7 @@ def edit_pruefungsleistung_by_student_and_veranstaltung(
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Pruefungsleistung SET student_id=?, veranstaltung_id=?, punkte_gesamt=?,
+    sql = """UPDATE Pruefungsleistung SET student_id=?, veranstaltung_id=?, punkte_gesamt=?,
         punkte_erreicht=? WHERE student_id=? AND veranstaltung_id=?"""
     try:
         cur = conn.cursor()
@@ -1076,7 +1076,7 @@ def edit_admin_by_id(conn: Connection, admin_id: int, admin: tuple[int, str, str
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """UPDATE CASCADE Admin SET admin_id=?, vorname=?, nachname=?, nutzername=?, passwort=?
+    sql = """UPDATE Admin SET admin_id=?, vorname=?, nachname=?, nutzername=?, passwort=?
         WHERE admin_id=?"""
     try:
         cur = conn.cursor()

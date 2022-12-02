@@ -57,7 +57,8 @@ def getValues (querystring):
     if (response.status_code == 200):
         return response.json()
     else:
-        raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten.\n\tError Code: {response.status_code}")
+        raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten oder es besteht kein Objekt mit der "
+                        f"angefragten ID.\n\tError Code: {response.status_code}")
 
 
 def get_student_name(student_id):
@@ -448,8 +449,19 @@ def get_pruefungsleistung(pruefungsleistung_id: int):
 
 
 if __name__ == "__main__":
-    print(create_student(1456, "Niklas", "Würfl", 1400, "Nicube", "pässwör1"))
-    print((get_student_name(1459)))
+    print(get_modul(1200))
+    print(get_veranstaltung(1000))
+    print(get_veranstaltung(1001))
+    delete_modul(1200)
+    print(get_modul(1200))
+    print(get_veranstaltung(1000))
+    # print(get_student(2000))
+    # change_student(2000, 2001, "s2001", "Lastname21", 25, "Stud21", "pw")
+    # print(get_student(2001))
+    # delete_student(2001)
+    # print(get_student(2001))
+    # print(create_student(1456, "Niklas", "Würfl", 1400, "Nicube", "pässwör1"))
+    # print((get_student_name(1459)))
     # print(get_student_name(1000))
     # print(get_dozent_name(110))
       #  print(app.getStudent(1000))

@@ -6,42 +6,24 @@ noch mit Modul "DATABASE" implementiert
     version: 1.1.1
     licence: free (open source)
 """
-import app
 import database as db
-from flask import Flask
-import requests as r
+import app
 import Backend
-
-url = "http://localhost:5000"
-
-# querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
-
-
-def getValues (querystring):
-    response = r.get(querystring) #.content.decode('UTF-8')
-    if (response.status_code == 200):
-        return response.json()
-    else:
-        raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten.\n\tError Code: {response.status_code}")
 
 
 def get_dozent_name(dozent_id):
     """
-    Methode zum Erhalt des Namens des Dozenten
-    :param dozent_id:
+    Methode zum Erhalt des Namens des Students
+    :param student_id:
     :return: name: String in Form: "Nachname, Vorname"
     Tests:
-    * ungültige Dozent_id eingeben
+    * ungültige Student_id eingeben
     *
     """
-    querystring = url + f"/getDozent/{dozent_id}"
-    data_raw = getValues(querystring)
-    if type(data_raw) is Exception:
-        raise Exception(data_raw)
-    data = data_raw[0]
-    vorname = data[1]
-    nachname = data[2]
+    vorname = db.get_dozent_by_id(my_connect, dozent_id)[0][1]
+    nachname = db.get_dozent_by_id(my_connect, dozent_id)[0][2]
     name = nachname + ", " + vorname
+    
     return name
 
 
@@ -133,8 +115,7 @@ def best_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
     :return: bNote
     """
 
-    querystring = url + f"/get_pruefungsleistung_by_id/{pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id}"
-    pruefungen = getValues(querystring)
+    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     result = []
     bNote = []
     bestNote = 0
@@ -156,8 +137,7 @@ def worst_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     :return: wNote
     """
 
-    querystring = url + f"/get_pruefungsleistung_by_id/{pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id}"
-    pruefungen = getValues(querystring)
+    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     result = []
     wNote = []
     worstNote = 0
@@ -179,8 +159,7 @@ def get_mean(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
     :return: mean_list
     """
 
-    querystring = url + f"/get_pruefungsleistung_by_id/{pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id}"
-    pruefungen = getValues(querystring)
+    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     result = []
     mean_list = []
     mean = 0
@@ -202,8 +181,7 @@ def get_median(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     :return: mean_list
     """
 
-    querystring = url + f"/get_pruefungsleistung_by_id/{pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id}"
-    pruefungen = getValues(querystring)
+    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
     data = sorted(pruefungen)
     index = len(data) // 2
     
