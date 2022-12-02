@@ -79,7 +79,7 @@ def get_student_name(student_id):
     data = data_raw[0]
     vorname = data[1]
     nachname = data[2]
-    name = nachname + ", " + vorname
+    name = vorname + " " + nachname
     return name
 
 
@@ -101,7 +101,7 @@ def get_dozent_name(dozent_id):
     data = data_raw[0]
     vorname = data[1]
     nachname = data[2]
-    name = nachname + ", " + vorname
+    name = vorname + " " + nachname
     return name
 
 
@@ -123,16 +123,16 @@ def get_admin_name(admin_id):
     data = data_raw[0]
     vorname = data[1]
     nachname = data[2]
-    name = nachname + ", " + vorname
+    name = vorname + " " + nachname
     return name
 
 
 def login_student(student_id, passwort):
     querystring = url + f"/getStudent/{student_id}"
-    data_raw = getValues(querystring)
+    data_raw = getValues(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    if student_id == True and passwort == True:
+    if passwort == data_raw[5]:
         return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
@@ -143,7 +143,7 @@ def login_dozent(dozent_id, passwort):
     data_raw = getValues(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    if dozent_id == True and passwort == True:
+    if passwort == data_raw[4]:
         return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
@@ -154,7 +154,7 @@ def login_admin(admin_id, passwort):
     data_raw = getValues(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    if admin_id == True and passwort == True:
+    if passwort == data_raw[4]:
         return True
     else:
         raise Exception("Falsche Nutzer-ID oder Passwort")
@@ -185,6 +185,10 @@ def access_pruefung_data(student_id):
 
 
 def get_student_module(student_id):
+    # result = []
+    # result.append([1234, "Modul1", 5, 1.5])
+    # result.append([4234, "Modul2", 7, 2.7])
+    # return result
     return Student_be.print_student_module(student_id)
 
 
@@ -261,6 +265,7 @@ def print_pruefungen_in_modul(student_id, modul_id):
         data_raw = getValues(querystring)
         veranstaltung = data_raw[0]
         if veranstaltung[3] == modul_id:
+            details.append(veranstaltung[0])  # veranstaltung_id
             details.append(veranstaltung[1])  # Veranstaltungsname
             details.append(p[2])  # gesamte Punkte
             details.append(p[3])  # erreichte Punkte
@@ -310,6 +315,14 @@ def create_pruefungsleistung(
     querystring = url + f"/createPruefungsleistung/{student_id}/{veranstaltung_id}/{punkte_gesamt}/{punkte_erreicht}"
     r.get(querystring)
     return None
+
+def change_pw_student(student_id,old_password, new_password):
+    old_data = get_student(student_id)
+    if old_data[5] == old_password:
+        change_student(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
+        return "Das Passwort wurde erfolgreich geändert"
+    else:
+        raise Exception("Ihr Passwort ist nicht korrekt")
 
 
 def change_student(
