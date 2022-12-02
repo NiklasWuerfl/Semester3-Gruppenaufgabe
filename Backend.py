@@ -126,6 +126,39 @@ def get_admin_name(admin_id):
     return name
 
 
+def login_student(student_id, passwort):
+    querystring = url + f"/getStudent/{student_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    if student_id == True and passwort == True:
+        return data_raw
+    else:
+        raise Exception("Falsche Nutzer-ID oder Passwort")
+
+
+def login_dozent(dozent_id, passwort):
+    querystring = url + f"/getDozent/{dozent_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    if dozent_id == True and passwort == True:
+        return data_raw
+    else:
+        raise Exception("Falsche Nutzer-ID oder Passwort")
+
+
+def login_admin(admin_id, passwort):
+    querystring = url + f"/getAdmin/{admin_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    if admin_id == True and passwort == True:
+        return data_raw
+    else:
+        raise Exception("Falsche Nutzer-ID oder Passwort")
+
+
 def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung):
     querystring = url + f"/edit_pruefungsleistung_by_student_and_veranstaltung/{pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung}"
     data_raw = getValues(querystring)
