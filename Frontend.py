@@ -35,7 +35,8 @@ def login():
                ]
 
     login_window=sg.Window('Studierendenverwaltungssystem',
-                           layout, size=(500, 500), finalize=True)
+                           layout, size=(500, 500), finalize=True
+                           )
     login_window['-C-'].expand(True, True, True)
     login_window['-1-'].expand(True, True, True)
     login_window['-2-'].expand(True, False, True)
@@ -46,7 +47,7 @@ def login():
             break
         elif event == "Anmelden":
             anmelde_daten= values['-id-'], values['-passwort-']
-            login_window.close()
+            login_window.close() 
             if values['-nutzer-'] == 'Studierender':
                 studierende_allgemein(values['-id-'])
             elif values['-nutzer-'] == 'Dozierender':
@@ -92,7 +93,7 @@ def erfolgreicher_logout():
             login() 
 
     logout_window.close()
-   
+
 
 def studierende_allgemein(studi_id: int):
     """Seite für Studierende für die Einsicht der Modulnoten, sowie GPA 
@@ -132,7 +133,7 @@ def studierende_allgemein(studi_id: int):
                ]
           
     studi_window = sg.Window('Studierendenverwaltungssystem',
-                           layout, modal=True, size=(500, 500))
+                             layout, modal=True, size=(500, 500))
 
     while True:
         event, values= studi_window.read()
@@ -185,7 +186,8 @@ def studierende_modul(studi_id: int, modul_info):
               ]
           
     studi_modul_window=sg.Window('Studierendenverwaltungssystem',
-                     layout, modal=True, size=(500, 500))
+                                 layout, modal=True, size=(500, 500)
+                                 )
     
     while True:
         event, values= studi_modul_window.read()
@@ -344,23 +346,16 @@ def veranstaltungsnoten_eintragen():
     """
 
     sg.theme('TanBlue')
-    
-    bestanden= (True, False)
-    prüfungsinfo_veranstaltung_array= []
 
     layout = [[sg.Text('Veranstaltungsnoten eintragen', font=('any', 12, 'bold'))],
               [sg.Text('Veranstaltungs Id:'), 
                sg.InputText(key= '-veran_id-', do_not_clear=True)],
-              [sg.Text('Matrikelnummer:'), 
-               sg.InputText(key='-matrikelnummer-', do_not_clear=False)],
+              [sg.Text('Studierenden ID:'), 
+               sg.InputText(key='-studi_id-', do_not_clear=False)],
               [sg.Text('Punkte gesamt'), 
                sg.InputText(key= '-punkte_gesamt-', do_not_clear=True),
                sg.Text('Punkte erreicht'), 
                sg.InputText(key= '-punkte_erreicht-', do_not_clear=False)], 
-              [sg.Text('Note'), 
-               sg.InputText(key= '-note-', do_not_clear=False)],
-              [sg.Text('Bestanden'), 
-               sg.Combo(bestanden, enable_events=True, key='-bestanden-')],
               [sg.Button('OK', font=('any', 9, 'underline'))]
               ]
           
@@ -372,10 +367,9 @@ def veranstaltungsnoten_eintragen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            prüfungsinfo_veranstaltung= values['-veran_id-'], values['-matrikelnummer-'], 
-            values['-punkte_gesamt-'], values['-punkte_erreicht-'],
-            values['-note-'], values['-bestanden-']
-            prüfungsinfo_veranstaltung_array.append(prüfungsinfo_veranstaltung)
+            be.create_pruefungsleistung(values['-studi_id-'], values['-veran_id-'],
+            values['-punkte_gesamt-'], values['-punkte_erreicht-']
+            )
 
     veran_noten_window.close()
 
@@ -396,11 +390,12 @@ def administration_allgemein():
                ]
 
     admin_column = [[sg.Text('Was möchten Sie bearbeiten/ anlegen oder löschen?')],
-                   [sg.Button('Studierende', font=('any', 9, 'underline'), size=(15, 3)),
-                    sg.Button('Dozierende', font=('any', 9, 'underline'), size=(15, 3)),
-                    sg.Button('Kurse', font=('any', 9, 'underline'), size=(15, 3))],
-                   [sg.Button('Veranstaltung', font=('any', 9, 'underline'), size=(15, 3)),
-                    sg.Button('Modul', font=('any', 9, 'underline'), size=(15, 3))]
+                    [sg.Button('Studierende', font=('any', 9, 'underline'), size=(15, 3)),
+                     sg.Button('Dozierende', font=('any', 9, 'underline'), size=(15, 3)),
+                     sg.Button('Admin', font=('any', 9, 'underline'), size=(15, 3))],
+                    [sg.Button('Kurse', font=('any', 9, 'underline'), size=(15, 3)),
+                     sg.Button('Veranstaltung', font=('any', 9, 'underline'), size=(15, 3)),
+                     sg.Button('Modul', font=('any', 9, 'underline'), size=(15, 3))]
                    ]
 
     layout = [[sg.Text('Herzlich Willkommen!'), 
@@ -430,6 +425,8 @@ def administration_allgemein():
             studi_admin()
         elif event == 'Dozierende':
             doz_admin()
+        elif event == 'Admin':
+            admin_admin()
         elif event == 'Kurse':
             kurs_admin()
         elif event == 'Veranstaltung':
@@ -480,8 +477,8 @@ def studi_admin():
             studi_anlegen()
         elif event == 'bearbeiten':
             studi_bearbeiten(values['-studi_id-'])
-        elif event == 'löschen':
-            sg.popup()
+        elif event == 'löschen': 
+            sg.popup(be.delete_student(values['-studi_id_']))
     
     studi_admin_window.close()
 
@@ -527,9 +524,51 @@ def doz_admin():
         elif event == 'bearbeiten':
             doz_bearbeiten(values['-dozierenden_id-'])
         elif event == 'löschen':
-            sg.popup()
+            sg.popup(be.delete_dozent(values['-dozierenden_id-']))
     
     doz_admin_window.close()
+
+
+def admin_admin():
+    """
+    """
+
+    sg.theme('TanBlue')
+
+    doz_admin_column = [[sg.Text('Admin Administration'),
+                         sg.Button('neuen Administrator anlegen', font=('any', 9, 'underline'))],
+                        [sg.Text('Admin ID:'),
+                         sg.InputText(key= '-admin_id-', do_not_clear=False, size=(20, 2)),
+                         sg.Button('bearbeiten', font=('any', 9, 'underline')),
+                         sg.Button('löschen', font=('any', 9, 'underline'))],
+                        [sg.Button('zurück', font=('any', 9, 'underline'))]
+                        ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
+              [sg.Text('', pad=(0,0),key='-2-'),              
+               sg.Column(doz_admin_column, vertical_alignment='center', justification='center',  k='-C-')]
+               ]
+          
+    admin_admin_window=sg.Window('Studierendenverwaltungssystem', 
+                               layout, modal=True, size=(500, 500), finalize=True)
+    admin_admin_window['-C-'].expand(True, True, True)
+    admin_admin_window['-1-'].expand(True, True, True)
+    admin_admin_window['-2-'].expand(True, False, True)
+    
+    while True:
+        event, values= admin_admin_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == 'zurück':
+            admin_admin_window.close()
+        elif event == 'neuen Dozierenden anlegen':
+            admin_anlegen()
+        elif event == 'bearbeiten':
+            admin_bearbeiten(values['-admin_id-'])
+        elif event == 'löschen':
+            sg.popup(be.delete_admin(values['-admin_id-']))
+    
+    admin_admin_window.close()
 
 
 def kurs_admin():
@@ -573,7 +612,7 @@ def kurs_admin():
         elif event == 'bearbeiten':
             kurs_bearbeiten(values['-kurs_id-'])
         elif event == 'löschen':
-            sg.popup()
+            sg.popup(be.delete_kurs['-kurs_id-'])
     
     kurs_admin_window.close()
 
@@ -620,7 +659,7 @@ def veranstaltung_admin():
         elif event == 'bearbeiten':
             veranstaltung_bearbeiten(values['-veranstaltung_id-'])
         elif event == 'löschen':
-            sg.popup()
+            sg.popup(be.delete_veranstaltung(values['-veranstaltung_id-']))
     
     veran_admin_window.close()
 
@@ -666,7 +705,7 @@ def modul_admin():
         elif event == 'bearbeiten':
             modul_bearbeiten(values['-modul_id-'])
         elif event == 'löschen':
-            sg.popup()
+            sg.popup(be.delete_modul(values['-modul_id-']))
     
     modul_admin_window.close()
 
@@ -680,32 +719,36 @@ def studi_anlegen():
     """
 
     sg.theme('TanBlue')
-    
-    studierenden_info_array= []
 
     layout = [[sg.Text('Studierende anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Matrikelnummer: *'), 
-               sg.InputText(key='-matrikelnummer-', do_not_clear=False)],
-              [sg.Text('Nachname: *'), 
+              [sg.Text('Studierenden ID: '), 
+               sg.InputText(key='-studi_id-', do_not_clear=False)],
+              [sg.Text('Nachname: '), 
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: *'), 
+              [sg.Text('Vorname: '), 
                sg.InputText(key= '-vorname-', do_not_clear=False)],
-              [sg.Text('Kurs ID: *'), 
+              [sg.Text('Kurs ID: '), 
                sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Text('Username: '),
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort: '),
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
               [sg.Button('OK', font=('any', 9, 'underline')), 
                sg.Button('zurück', font=('any', 9, 'underline'))]
               ]
           
-    studi_anle_window=sg.Window('Studierendenverwaltungssystem', layout, modal=True, size=(500, 500))
+    studi_anle_window=sg.Window('Studierendenverwaltungssystem', 
+                                layout, modal=True, size=(500, 500))
 
     while True:
         event, values= studi_anle_window.read()
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            studierenden_info= values['-matrikelnummer-'], values['-nachname-'], 
-            values['-vorname-'], values['-kurs_id-']
-            studierenden_info_array.append(studierenden_info)
+            be.create_student(values['-studi_id-'], values['-vorname-'], 
+            values['-nachname-'], values['-kurs_id-'], values['-username-'],
+            values['-passwort']
+            )
         elif event == 'zurück':
             break
 
@@ -722,8 +765,6 @@ def doz_anlegen():
 
     sg.theme('TanBlue')
 
-    dozierenden_info_array= []
-
     layout = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
               [sg.Text('Dozierenden ID: *'), 
                sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
@@ -731,6 +772,10 @@ def doz_anlegen():
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
               [sg.Text('Vorname: *'), 
                sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Text('Username: '),
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort: '),
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
               [sg.Button('OK', font=('any', 9, 'underline')), 
                sg.Button('zurück', font=('any', 9, 'underline'))]
               ]
@@ -743,9 +788,49 @@ def doz_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            dozierenden_info= values['-dozierenden_id-'], 
-            values['-nachname-'], values['-vorname-']
-            dozierenden_info_array.append(dozierenden_info)
+            be.create_dozent(values['-dozierenden_id-'], values['-vorname-'], 
+            values['-nachname-'], values['-username-'],
+            values['-passwort']
+            )
+        elif event == 'zurück':
+            break
+
+    doz_anle_window.close()
+
+
+def admin_anlegen():
+    """_summary_
+    """
+
+    sg.theme('TanBlue')
+
+    layout = [[sg.Text('Administrator anlegen', font=('any', 12, 'bold'))],
+              [sg.Text('Admin ID: *'), 
+               sg.InputText(key='-admin_id-', do_not_clear=False)],
+              [sg.Text('Nachname: *'), 
+               sg.InputText(key= '-nachname-', do_not_clear=False)], 
+              [sg.Text('Vorname: *'), 
+               sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Text('Username: '),
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort: '),
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
+          
+    doz_anle_window=sg.Window('Studierendenverwaltungssystem',
+                              layout, modal=True, size=(500, 500))
+
+    while True:
+        event, values= doz_anle_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "OK":
+            be.create_admin(values['-admin_id-'], values['-vorname-'], 
+            values['-nachname-'], values['-username-'],
+            values['-passwort']
+            )
         elif event == 'zurück':
             break
 
@@ -761,8 +846,6 @@ def kurs_anlegen():
     """
 
     sg.theme('TanBlue')
-
-    kurs_info_array= []
 
     layout = [[sg.Text('Kurs anlegen', font=('any', 12, 'bold'))],
               [sg.Text('Kurs ID: *'), 
@@ -783,9 +866,9 @@ def kurs_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            kurs_info= values['-kurs_id-'], values['-kurs_name-'], 
-            values['-dozierenden_id-']
-            kurs_info_array.append(kurs_info)
+            be.create_kurs(values['-kurs_id-'], 
+            values['-kurs_name-'], values['-dozierenden_id-']
+            )
         elif event == 'zurück':
             break
 
@@ -801,8 +884,6 @@ def veranstaltung_anlegen():
     """
 
     sg.theme('TanBlue')
-
-    veran_info_array= []
 
     layout = [[sg.Text('Veranstaltung anlegen', font=('any', 12, 'bold'))],
               [sg.Text('Veranstaltung ID: *'), 
@@ -825,9 +906,9 @@ def veranstaltung_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            veran_info= values['-veranstaltung_id-'], values['-veranstaltungsname-'], 
+            be.create_veranstaltung(values['-veranstaltung_id-'], values['-veranstaltungsname-'], 
             values['-dozierenden_id-'], values['-modul_id-']
-            veran_info_array.append(veran_info)
+            )
         elif event == 'zurück':
             break
 
@@ -843,8 +924,6 @@ def modul_anlegen():
     """
 
     sg.theme('TanBlue')
-
-    modul_info_array= []
 
     layout = [[sg.Text('Modul anlegen', font=('any', 12, 'bold'))],
               [sg.Text('Modul ID: *'), 
@@ -867,9 +946,9 @@ def modul_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            modul_info= values['-modul_id-'], values['-modulname-'], 
+            be.create_modul(values['-modul_id-'], values['-modulname-'], 
             values['-kurs_id-'], values['-credits-']
-            modul_info_array.append(modul_info)
+            )
         elif event == 'zurück':
             break
 
@@ -889,9 +968,7 @@ def studi_bearbeiten(studi_id: int):
 
     sg.theme('TanBlue')
     
-    studi= [839287, 'Vor', 'nach', 2384789]
-
-    studi_info_array= []
+    studi= be.get_student(studi_id)
 
     layout = [[sg.Text('Studierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Studierenden ID:'), sg.Text(studi[0]), 
@@ -902,6 +979,10 @@ def studi_bearbeiten(studi_id: int):
                sg.InputText(key= '-nachname-', do_not_clear=False)],
               [sg.Text('Kurs ID:'), sg.Text(studi[3]), 
                sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+              [sg.Text('Username:'), sg.Text(studi[4]), 
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort:'), sg.Text(studi[5]), 
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
               [sg.Button('OK', font=('any', 9, 'underline')), 
                sg.Button('zurück', font=('any', 9, 'underline'))]
               ]
@@ -914,9 +995,10 @@ def studi_bearbeiten(studi_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            studi_info=studi[0], values['-studi_id-'], values['-vorname-'], 
-            values['-nachname-'], values['-kurs_id-']
-            studi_info_array.append(studi_info)
+            be.change_student(studi[0], values['-studi_id-'], values['-vorname-'], 
+            values['-nachname-'], values['-kurs_id-'], 
+            values['-username'], values['-passwort']
+            )
         elif event == 'zurück':
             break
 
@@ -936,9 +1018,7 @@ def doz_bearbeiten(dozierenden_id: int):
 
     sg.theme('TanBlue')
     
-    doz= [839287, 'Vor', 'nach']
-
-    doz_info_array= []
+    doz= be.get_dozent(dozierenden_id)
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Dozierenden ID:'), sg.Text(doz[0]), 
@@ -947,6 +1027,10 @@ def doz_bearbeiten(dozierenden_id: int):
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
               [sg.Text('Vorname:'), sg.Text(doz[2]), 
                sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Text('Username:'), sg.Text(doz[3]), 
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort:'), sg.Text(doz[4]), 
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
               [sg.Button('OK', font=('any', 9, 'underline')), 
                sg.Button('zurück', font=('any', 9, 'underline'))]
               ]
@@ -959,13 +1043,56 @@ def doz_bearbeiten(dozierenden_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            doz_info= doz[0], values['-doz_id-'], values['-nachname-'], 
-            values['-vorname-']
-            doz_info_array.append(doz_info)
+            be.change_dozent(doz[0], values['-doz_id-'], 
+            values['-vorname-'], values['-nachname-'], 
+            values['-username'], values['-passwort'])
         elif event == 'zurück':
             break
 
     doz_bear_window.close()
+
+
+def admin_bearbeiten(admin_id: int):
+    """_summary_
+
+    Args:
+        admin_id (int): _description_
+    """
+
+    sg.theme('TanBlue')
+    
+    admin= be.get_admin(admin_id)
+
+    layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Dozierenden ID:'), sg.Text(admin[0]), 
+               sg.InputText(key='-doz_id-', do_not_clear=False)],
+              [sg.Text('Nachname:'), sg.Text(admin[1]), 
+               sg.InputText(key= '-nachname-', do_not_clear=False)], 
+              [sg.Text('Vorname:'), sg.Text(admin[2]), 
+               sg.InputText(key= '-vorname-', do_not_clear=False)],
+              [sg.Text('Username:'), sg.Text(admin[3]), 
+               sg.InputText(key= '-username-', do_not_clear=False)],
+              [sg.Text('Passwort:'), sg.Text(admin[4]), 
+               sg.InputText(key= '-passwort-', do_not_clear=False)],
+              [sg.Button('OK', font=('any', 9, 'underline')), 
+               sg.Button('zurück', font=('any', 9, 'underline'))]
+              ]
+          
+    admin_bear_window=sg.Window('Studierendenverwaltungssystem',
+                             layout, modal=True, size=(500, 500))
+
+    while True:
+        event, values= admin_bear_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "OK":
+            be.change_admin(admin[0], values['-admin_id-'], 
+            values['-vorname-'], values['-nachname-'], 
+            values['-username'], values['-passwort'])
+        elif event == 'zurück':
+            break
+
+    admin_bear_window.close()
 
 
 def kurs_bearbeiten(kurs_id :int):
@@ -981,9 +1108,7 @@ def kurs_bearbeiten(kurs_id :int):
 
     sg.theme('TanBlue')
         
-    kurs= [839287, 'Vor', 'nach', 2384789]
-
-    kurs_info_array= []
+    kurs= be.get_kurs(kurs_id)
 
     layout = [[sg.Text('Kurs bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Kurs ID:'), sg.Text(kurs[0]), 
@@ -1004,9 +1129,9 @@ def kurs_bearbeiten(kurs_id :int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            kurs_info= kurs[0], values['-kurs_id-'], values['-kursname-'], 
-            values['-doz_id-']
-            kurs_info_array.append(kurs_info)
+            be.change_kurs(kurs[0], values['-kurs_id-'], 
+            values['-kursname-'], values['-doz_id-']
+            )
         elif event == 'zurück':
             break
 
@@ -1026,9 +1151,7 @@ def veranstaltung_bearbeiten(veran_id: int):
 
     sg.theme('TanBlue')
         
-    veran= [839287, 'Vor', 'nach', 2384789]
-
-    veran_info_array= []
+    veran= be.get_veranstaltung(veran_id)
 
     layout = [[sg.Text('Veranstaltung bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Veranstaltungs ID:'), sg.Text(veran[0]), 
@@ -1051,9 +1174,9 @@ def veranstaltung_bearbeiten(veran_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            veran_info= veran[0], values['-veran_id-'], values['-veranname-'], 
+            be.change_veranstaltung(veran[0], values['-veran_id-'], values['-veranname-'], 
             values['-doz_id-'], values['-modul_id-']
-            veran_info_array.append(veran_info)
+            )
         elif event == 'zurück':
             break
 
@@ -1073,9 +1196,7 @@ def modul_bearbeiten(modul_id: int):
 
     sg.theme('TanBlue')
         
-    modul= [839287, 'Vor', 'nach', 2384789]
-
-    modul_info_array= []
+    modul= be.get_modul(modul_id)
 
     layout = [[sg.Text('Modul bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Modul ID:'), sg.Text(modul[0]), 
@@ -1098,9 +1219,9 @@ def modul_bearbeiten(modul_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
-            modul_info= modul[0], values['-modul_id-'], values['-modulname-'], 
-            values['-kurs_id-'], values['-credits-']
-            modul_info_array.append(modul_info)
+            be.change_modul(modul[0], values['-modul_id-'], values['-modulname-'], 
+            values['-credits-'], values['-kurs_id-']
+            )
         elif event == 'zurück':
             break
 
