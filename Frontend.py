@@ -47,14 +47,22 @@ def main():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Anmelden":
-            anmelde_daten= values['-id-'], values['-passwort-']
             login_window.close() 
             if values['-nutzer-'] == 'Studierender':
-                studierende_allgemein(values['-id-'])
+                if be.login_student(values['-id-'], values['-passwort-']) == True:
+                    studierende_allgemein(values['-id-'])       
+                else:
+                    sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Dozierender':
-                dozierende_veranstaltung()
+                if be.login_dozent(values['-id-'], values['-passwort-']) == True:
+                    dozierende_veranstaltung(values['-id-'])       
+                else:
+                    sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Admin':
-                administration_allgemein()
+                if be.login_dozent(values['-id-'], values['-passwort-']) == True:
+                    administration_allgemein(values['-id-'])       
+                else:
+                    sg.popup("Falsche Nutzer-ID oder Passwort")
             
     login_window.close()
 
@@ -789,11 +797,11 @@ def doz_anlegen():
     sg.theme('TanBlue')
 
     layout = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Dozierenden ID: *'), 
+              [sg.Text('Dozierenden ID: '), 
                sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
-              [sg.Text('Nachname: *'), 
+              [sg.Text('Nachname: '), 
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: *'), 
+              [sg.Text('Vorname: '), 
                sg.InputText(key= '-vorname-', do_not_clear=False)],
               [sg.Text('Username: '),
                sg.InputText(key= '-username-', do_not_clear=False)],
@@ -833,11 +841,11 @@ def admin_anlegen():
     sg.theme('TanBlue')
 
     layout = [[sg.Text('Administrator anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Admin ID: *'), 
+              [sg.Text('Admin ID: '), 
                sg.InputText(key='-admin_id-', do_not_clear=False)],
-              [sg.Text('Nachname: *'), 
+              [sg.Text('Nachname: '), 
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: *'), 
+              [sg.Text('Vorname: '), 
                sg.InputText(key= '-vorname-', do_not_clear=False)],
               [sg.Text('Username: '),
                sg.InputText(key= '-username-', do_not_clear=False)],
@@ -848,8 +856,8 @@ def admin_anlegen():
                ]
           
     admin_anle_window = sg.Window('Studierendenverwaltungssystem',
-                                layout, modal=True, size=(500, 500)
-                                )
+                                  layout, modal=True, size=(500, 500)
+                                  )
 
     while True:
         event, values = admin_anle_window.read()
