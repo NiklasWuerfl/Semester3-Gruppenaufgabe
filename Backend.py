@@ -1,31 +1,7 @@
 """
-    Modul für interne Berechnungen bzw. Datenbereitstellung
-    muss wahrscheinlich noch aufgeteilt werden für Unterfunktionen
-
-    benötigte Funktionen
-        * Jegliche Datenarten aus der Datenbank holen/Datenbank aktualisieren
-        * Rollenüberprüfung -> Ausgabe an Frontend
-        * Durchschnitt/Beste bzw. schlechteste Note/Median für Klausur bestimmen
-        * GPA für Student berechnen
-
-
-    Beinhaltet API? -> FastAPI
-
-    Frontend -> Backend:
-        -	Login
-        -	Anfragen je nach User:
-            o	Startseite (wird immer angefragt)
-                -	Spezielle Anfrage (wird nur nach User-Interaktion angefragt)
-            o	Studenten: GPA, bisherige Credits
-                -	Unterseite: Alle Module, Noten (pro Semester?)
-            o	Dozenten: Klausuren und deren Durchschnitte
-                -	Einstellung: bester, schlechteste, Median
-                -	Eingabe: Noten der Studierenden
-            o	Admin: Liste der angelegten User
-                -	Eingabe: User verwalten (erstellen, zuweisen, löschen)
-
-    Backend -> Frontend:
-        -	Rolle des Users
+    Modul für interne Berechnungen und Datenbereitstellung
+    Frontend greift auf dieses Modul zu. Die Daten werden dann über die API in "app.py" geladen und intern so
+    modifiziert, dass sie direkt im Frontend integriert werden können.
 
 
     Grundlage der Notenberechnungen: DHBW Richtlinien
@@ -49,28 +25,52 @@ import requests as r
 
 url = "http://localhost:5000"
 
-# querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
 
+def getValues (querystring: str) -> list[list]:
+    """ Schnittstellenfunktion zur API. Führt eine request an den querystring aus und gibt das Ergebnis als
+        (strukturiertes) Array bzw. json zurück
+        Funktioniert nur bei laufender API!
 
-def getValues (querystring):
+        Args:
+            querystring (int): Studenten-ID des Studenten dessen Prüfungsleistungen abgefragt werden
+
+        Returns:
+            list: Liste mit angeforderten Rohdaten aus der Datenbank (via API)
+
+        Test:
+            1) funktionierende API-Verbindung & zulässigen Querystring übergeben
+                -> erwartetes Ergebnis:
+                    * Rückgabewert: Liste mit angeforderten Rohdaten
+            2) funktionierende API-Verbindung & unzulässigen Querystring übergeben
+                -> erwartetes Ergebnis:
+                    * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat.
+            3) nicht funktionierende API-Verbindung
+                -> erwartetes Ergebnis:
+                    * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat.
+    """
     response = r.get(querystring) #.content.decode('UTF-8')
-    if (response.status_code == 200):
+    if response.status_code == 200:
         return response.json()
     else:
         raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten oder es besteht kein Objekt mit der "
                         f"angefragten ID.\n\tError Code: {response.status_code}")
 
 
-def get_student_name(student_id):
+def get_student_name(student_id: int) -> str:
     """
     Methode zum Erhalt des Namens des Students
 
-    :param student_id:
-    :return: name: String in Form: "Nachname, Vorname"
+    Args: student_id: ID des angeforderten Studentens
+    Returns: name: String in Form: "Vorname Nachname"
 
-    Tests:
-    * ungültige Student_id eingeben
-    *
+    Test:
+         1) student_id eines vorhandenen Studenten eingeben
+            -> erwartetes Ergebnis:
+                 * String: "Vorname Nachname" des Studentens
+         2) student_id eines nicht vorhandenen Studentens eingeben
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
     """
     querystring = url + f"/getStudent/{student_id}"
     data_raw = getValues(querystring)
