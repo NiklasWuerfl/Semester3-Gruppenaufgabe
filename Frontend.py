@@ -560,8 +560,8 @@ def doz_admin():
         elif event == 'bearbeiten':
             doz_bearbeiten(values['-dozierenden_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_dozent(values['-dozierenden_id-'])
-                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+            be.delete_dozent(values['-dozierenden_id-'])
+            sg.popup("Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
                      )
     
     doz_admin_window.close()

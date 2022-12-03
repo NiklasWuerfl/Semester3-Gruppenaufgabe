@@ -99,7 +99,7 @@ def create_student(conn: Connection, student: tuple[int, str, str, int, str, str
         conn.commit()
     except Error as create_student_error:
         print(create_student_error)
-    return None
+    return "Die Daten des Studenten wurden erfolgreich erstellt."
 
 
 def create_kurs(conn: Connection, kurs: tuple[int, str, int]):
@@ -133,7 +133,7 @@ def create_kurs(conn: Connection, kurs: tuple[int, str, int]):
         conn.commit()
     except Error as create_kurs_error:
         print(create_kurs_error)
-    return None
+    return "Die Daten des Kurses wurden erfolgreich erstellt."
 
 
 def create_dozent(conn: Connection, dozent: tuple[int, str, str, str, str]):
@@ -168,7 +168,7 @@ def create_dozent(conn: Connection, dozent: tuple[int, str, str, str, str]):
         conn.commit()
     except Error as create_dozent_error:
         print(create_dozent_error)
-    return None
+    return "Die Daten des Dozenten wurden erfolgreich erstellt."
 
 
 def create_modul(conn: Connection, modul: tuple[int, str, int, int]):
@@ -202,7 +202,7 @@ def create_modul(conn: Connection, modul: tuple[int, str, int, int]):
         conn.commit()
     except Error as create_modul_error:
         print(create_modul_error)
-    return None
+    return "Die Daten des Moduls wurden erfolgreich erstellt."
 
 
 def create_veranstaltung(conn: Connection, veranstaltung: tuple[int, str, int, int]):
@@ -236,7 +236,7 @@ def create_veranstaltung(conn: Connection, veranstaltung: tuple[int, str, int, i
         conn.commit()
     except Error as create_veranstaltung_error:
         print(create_veranstaltung_error)
-    return None
+    return "Die Daten der Veranstaltung wurden erfolgreich erstellt."
 
 
 def create_pruefungsleistung(conn: Connection, pruefugsleistung: tuple[int, int, int, int]):
@@ -275,7 +275,7 @@ def create_pruefungsleistung(conn: Connection, pruefugsleistung: tuple[int, int,
             print(create_pruefungsleistung_error)
     else:
         print("Es können nicht mehr Punkte erreicht werden, als möglich ist zu erreichen!")
-    return None
+    return "Die Daten der Prüfungsleistung wurden erfolgreich erstellt."
 
 
 def create_admin(conn: Connection, admin: tuple[int, str, str, str, str]):
@@ -311,7 +311,7 @@ def create_admin(conn: Connection, admin: tuple[int, str, str, str, str]):
         conn.commit()
     except Error as create_admin_error:
         print(create_admin_error)
-    return None
+    return "Die Daten des Admins wurden erfolgreich erstellt."
 
 
 
@@ -346,7 +346,7 @@ def delete_student(conn: Connection, student_id: int):
         conn.commit()
     except Error as delete_student_error:
         print(delete_student_error)
-    return None
+    return "Die Daten des Studenten wurden erfolgreich gelöscht."
 
 
 def delete_kurs(conn: Connection, kurs_id: int):
@@ -380,7 +380,7 @@ def delete_kurs(conn: Connection, kurs_id: int):
         conn.commit()
     except Error as delete_kurs_error:
         print(delete_kurs_error)
-    return None
+    return "Die Daten des Kurses wurden erfolgreich gelöscht."
 
 
 def delete_dozent(conn: Connection, dozent_id: int):
@@ -414,7 +414,7 @@ def delete_dozent(conn: Connection, dozent_id: int):
         conn.commit()
     except Error as delete_dozent_error:
         print(delete_dozent_error)
-    return None
+    return "Die Daten des Dozenten wurden erfolgreich gelöscht."
 
 
 def delete_modul(conn: Connection, modul_id: int):
@@ -448,7 +448,7 @@ def delete_modul(conn: Connection, modul_id: int):
         conn.commit()
     except Error as delete_modul_error:
         print(delete_modul_error)
-    return None
+    return "Die Daten des Moduls wurden erfolgreich gelöscht."
 
 
 def delete_veranstaltung(conn: Connection, veranstaltung_id: int):
@@ -482,7 +482,7 @@ def delete_veranstaltung(conn: Connection, veranstaltung_id: int):
         conn.commit()
     except Error as delete_veranstaltung_error:
         print(delete_veranstaltung_error)
-    return None
+    return "Die Daten der Veranstaltung wurden erfolgreich gelöscht."
 
 
 def delete_pruefungsleistung(
@@ -521,7 +521,7 @@ def delete_pruefungsleistung(
         conn.commit()
     except Error as delete_pruefungsleistung_error:
         print(delete_pruefungsleistung_error)
-    return None
+    return "Die Daten der Prüfungsleistung wurden erfolgreich gelöscht."
 
 
 def delete_admin(conn: Connection, admin_id: int):
@@ -557,7 +557,7 @@ def delete_admin(conn: Connection, admin_id: int):
         conn.commit()
     except Error as delete_admin_error:
         print(delete_admin_error)
-    return None
+    return "Die Daten des Admins wurden erfolgreich gelöscht."
 
 
 def get_student_by_id(conn: Connection, student_id: int) -> list:
@@ -845,7 +845,7 @@ def edit_student_by_id(
         conn.commit()
     except Error as edit_student_by_id_error:
         print(edit_student_by_id_error)
-    return None
+    return "Die Daten des Studenten wurden erfolgreich geändert."
 
 
 def edit_kurs_by_id(conn: Connection, kurs_id: int, kurs: tuple[int, str, int]):
@@ -882,7 +882,7 @@ def edit_kurs_by_id(conn: Connection, kurs_id: int, kurs: tuple[int, str, int]):
         conn.commit()
     except Error as edit_kurs_by_id_error:
         print(edit_kurs_by_id_error)
-    return None
+    return "Die Daten des Kurses wurden erfolgreich geändert."
 
 
 def edit_dozent_by_id(conn: Connection, dozent_id: int, dozent: tuple[int, str, str, str, str]):
@@ -920,7 +920,7 @@ def edit_dozent_by_id(conn: Connection, dozent_id: int, dozent: tuple[int, str, 
         conn.commit()
     except Error as edit_dozent_by_id_error:
         print(edit_dozent_by_id_error)
-    return None
+    return "Die Daten des Dozenten wurden erfolgreich geändert."
 
 
 def edit_modul_by_id(conn: Connection, modul_id: int, modul: tuple[int, str, int, int]):
@@ -957,7 +957,7 @@ def edit_modul_by_id(conn: Connection, modul_id: int, modul: tuple[int, str, int
         conn.commit()
     except Error as edit_modul_by_id_error:
         print(edit_modul_by_id_error)
-    return None
+    return "Die Daten des Moduls wurden erfolgreich geändert."
 
 
 def edit_veranstaltung_by_id(
@@ -999,7 +999,7 @@ def edit_veranstaltung_by_id(
         conn.commit()
     except Error as edit_veranstaltung_by_id_error:
         print(edit_veranstaltung_by_id_error)
-    return None
+    return "Die Daten der Veranstaltung wurden erfolgreich geändert."
 
 
 def edit_pruefungsleistung_by_student_and_veranstaltung(
@@ -1046,7 +1046,7 @@ def edit_pruefungsleistung_by_student_and_veranstaltung(
         conn.commit()
     except Error as edit_pruefungsleistung_by_student_and_veranstaltung_error:
         print(edit_pruefungsleistung_by_student_and_veranstaltung_error)
-    return None
+    return "Die Daten der Prüfungsleistung wurden erfolgreich geändert."
 
 
 def edit_admin_by_id(conn: Connection, admin_id: int, admin: tuple[int, str, str, str, str]):
@@ -1084,7 +1084,7 @@ def edit_admin_by_id(conn: Connection, admin_id: int, admin: tuple[int, str, str
         conn.commit()
     except Error as edit_admin_by_id_error:
         print(edit_admin_by_id_error)
-    return None
+    return "Die Daten des Admins wurden erfolgreich geändert."
 
 
 def get_all_pruefungsleistung_by_student(conn: Connection, student_id: int) -> list[list]:
