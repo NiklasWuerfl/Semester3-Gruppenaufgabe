@@ -916,7 +916,7 @@ def edit_dozent_by_id(conn: Connection, dozent_id: int, dozent: tuple[int, str, 
         WHERE dozent_id=?"""
     try:
         cur = conn.cursor()
-        cur.execute(sql, (dozent[0],dozent[1],dozent[2],dozent[3],dozent[4],dozent_id))
+        cur.execute(sql, (dozent[0], dozent[1], dozent[2], dozent[3], dozent[4], dozent_id))
         conn.commit()
     except Error as edit_dozent_by_id_error:
         print(edit_dozent_by_id_error)

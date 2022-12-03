@@ -359,7 +359,7 @@ def change_kurs(kurs_id_old: int,kurs_id: int, name: str, dozent_id: int):
 def change_dozent(
         dozent_id_old: int,dozent_id: int, vorname: str,
         nachname: str, nutzername: str, passwort: str):
-    querystring = url + f"/createDozent/{dozent_id_old}/{dozent_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
+    querystring = url + f"/changeDozent/{dozent_id_old}/{dozent_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
     r.get(querystring)
     return None
 
@@ -443,7 +443,7 @@ def get_student(student_id: int):
 
 
 def get_dozent(dozent_id: int):
-    querystring = url + f"/deleteDozent/{dozent_id}"
+    querystring = url + f"/getDozent/{dozent_id}"
     response = getValues(querystring)
     return response # als Array
 
@@ -479,6 +479,8 @@ def get_pruefungsleistung(pruefungsleistung_id: int):
 
 
 if __name__ == "__main__":
+    print(get_student(1000))
+    print(get_dozent(555))
     print(app.get_pruefungsleistungen_by_student(2000))
     print(get_veranstaltung_by_dozent(120))
     # print(get_modul(1200))
