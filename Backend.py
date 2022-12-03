@@ -140,7 +140,7 @@ def login_student(student_id, passwort):
 
 def login_dozent(dozent_id, passwort):
     querystring = url + f"/getDozent/{dozent_id}"
-    data_raw = getValues(querystring)
+    data_raw = getValues(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if passwort == data_raw[4]:
@@ -151,7 +151,7 @@ def login_dozent(dozent_id, passwort):
 
 def login_admin(admin_id, passwort):
     querystring = url + f"/getAdmin/{admin_id}"
-    data_raw = getValues(querystring)
+    data_raw = getValues(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if passwort == data_raw[4]:

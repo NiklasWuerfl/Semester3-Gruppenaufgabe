@@ -50,12 +50,12 @@ def login():
             login_window.close() 
             if values['-nutzer-'] == 'Studierender':
                 if be.login_student(values['-id-'], values['-passwort-']) == True:
-                   studierende_allgemein(values['-id-'])
+                    studierende_allgemein(values['-id-'])
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Dozierender':
                 if be.login_dozent(values['-id-'], values['-passwort-']) == True:
-                   dozierende_veranstaltung(values['-id-'])
+                    dozierende_veranstaltung(values['-id-'])
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Admin':
@@ -1349,6 +1349,6 @@ def modul_bearbeiten(modul_id: int):
 
 
 if __name__ == "__main__":
-    administration_allgemein()
+    login()
 
 
