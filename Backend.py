@@ -184,6 +184,23 @@ def access_pruefung_data(student_id):
     return data_raw
 
 
+def get_veranstaltung_by_dozent(dozent_id):
+    querystring = url + f"/get_all_veranstaltungen_by_dozent/{dozent_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
+
+
+def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id):
+    querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
+
+
+
 def get_student_module(student_id):
     # result = []
     # result.append([1234, "Modul1", 5, 1.5])
