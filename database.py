@@ -1154,7 +1154,7 @@ def get_all_veranstaltungen_by_dozent(conn: Connection, dozent_id: int) -> list[
         veranstaltungen = cur.fetchall()
     except Error as get_all_veranstaltungen_by_dozent_error:
         print(get_all_veranstaltungen_by_dozent_error)
-    return veranstaltungen
+    return [veranstaltungen]
 
 
 def get_all_pruefungsleistung_by_veranstaltung(conn: Connection, veranstaltung_id: int) -> list[list]:

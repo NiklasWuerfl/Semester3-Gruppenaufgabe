@@ -827,6 +827,53 @@ def get_pruefungsleistungen_by_student(student_id: int):
     return db.get_all_pruefungsleistung_by_student(my_connect, student_id)
 
 
+@app.route('/get_all_veranstaltungen_by_dozent/<int:dozent_id>', methods=["GET"])
+def get_all_veranstaltungen_by_dozent(dozent_id: int):
+    """ alle Prüfungsleistungen eines Studenten aus Tabelle 'Pruefungsleistung' abfragen
+
+        Args:
+            student_id (int): Studenten-ID des Studenten dessen Prüfungsleistungen abgefragt werden
+
+        Returns:
+            list: Liste mit mit Prüfungsleistungen (entsprechen je: Liste welche Attributwerte der
+                Prüfungsleistungen beinhaltet)
+
+        Test:
+            1) funktionierende Datenbankverbindung & zulässige Eingabeparameter an Funktion
+                übergeben
+                -> erwartetes Ergebnis:
+                    * keine Änderungen in Datenbank
+                    * Rückgabewert: Liste mit Prüfungsleistungen des Students mit erhaltener
+                        Student-ID
+            2)
+                -> erwartetes Ergebnis:
+    """
+    return db.get_all_veranstaltungen_by_dozent(my_connect, dozent_id)
+
+
+@app.route('/get_all_pruefungsleistung_by_veranstaltung/<int:dozent_id>', methods=["GET"])
+def get_all_pruefungsleistung_by_veranstaltung(dozent_id: int):
+    """ alle Prüfungsleistungen eines Studenten aus Tabelle 'Pruefungsleistung' abfragen
+
+        Args:
+            student_id (int): Studenten-ID des Studenten dessen Prüfungsleistungen abgefragt werden
+
+        Returns:
+            list: Liste mit mit Prüfungsleistungen (entsprechen je: Liste welche Attributwerte der
+                Prüfungsleistungen beinhaltet)
+
+        Test:
+            1) funktionierende Datenbankverbindung & zulässige Eingabeparameter an Funktion
+                übergeben
+                -> erwartetes Ergebnis:
+                    * keine Änderungen in Datenbank
+                    * Rückgabewert: Liste mit Prüfungsleistungen des Students mit erhaltener
+                        Student-ID
+            2)
+                -> erwartetes Ergebnis:
+    """
+    return db.get_all_pruefungsleistung_by_veranstaltung(my_connect, dozent_id)
+
 if __name__ == '__main__':
     db.database_setup(my_connect)
     db.fill_testdatabase(my_connect)
