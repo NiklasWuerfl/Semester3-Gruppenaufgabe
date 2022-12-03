@@ -189,7 +189,7 @@ def get_veranstaltung_by_dozent(dozent_id):
     data_raw = getValues(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    return data_raw
+    return [data_raw]
 
 
 def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id):
@@ -479,12 +479,14 @@ def get_pruefungsleistung(pruefungsleistung_id: int):
 
 
 if __name__ == "__main__":
-    print(get_modul(1200))
-    print(get_veranstaltung(1000))
-    print(get_veranstaltung(1001))
-    delete_modul(1200)
-    print(get_modul(1200))
-    print(get_veranstaltung(1000))
+    print(app.get_pruefungsleistungen_by_student(2000))
+    print(get_veranstaltung_by_dozent(120))
+    # print(get_modul(1200))
+    # print(get_veranstaltung(1000))
+    # print(get_veranstaltung(1001))
+    # delete_modul(1200)
+    # print(get_modul(1200))
+    # print(get_veranstaltung(1000))
     # print(get_student(2000))
     # change_student(2000, 2001, "s2001", "Lastname21", 25, "Stud21", "pw")
     # print(get_student(2001))

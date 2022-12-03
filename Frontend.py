@@ -254,7 +254,7 @@ def passwort_aendern():
     passwort_window.close()
 
 
-def dozierende_veranstaltung():
+def dozierende_veranstaltung(doz_id):
     """Alle Veranstaltungen eines Dozenten können eingesehen werden
 
     Tests: 
@@ -264,9 +264,7 @@ def dozierende_veranstaltung():
 
     sg.theme('TanBlue')
 
-    veranstaltung_array = [[239847, 'Statistik', 'BWL'],
-                           [837945, 'Mathe', 'Informatik']
-                           ]
+    veranstaltung_array = be.get_veranstaltung_by_dozent(doz_id)
     
     headings = ['Veranstaltungs ID', 'Veranstaltungsname', 'Kurs']
 
@@ -791,7 +789,7 @@ def studi_anlegen():
         elif event == "OK":
             be.create_student(values['-studi_id-'], values['-vorname-'], 
                               values['-nachname-'], values['-kurs_id-'], 
-                              values['-username-'], values['-passwort']
+                              values['-username-'], values['-passwort-']
                               )
         elif event == 'zurück':
             break
@@ -897,7 +895,7 @@ def admin_anlegen():
         elif event == "OK":
             be.create_admin(values['-admin_id-'], values['-vorname-'], 
                             values['-nachname-'], values['-username-'],
-                            values['-passwort']
+                            values['-passwort-']
                             )
         elif event == 'zurück':
             break
@@ -1098,7 +1096,7 @@ def studi_bearbeiten(studi_id: int):
         elif event == "OK":
             be.change_student(studi[0], values['-studi_id-'], values['-vorname-'], 
                               values['-nachname-'], values['-kurs_id-'], 
-                              values['-username'], values['-passwort']
+                              values['-username-'], values['-passwort-']
                               )
         elif event == 'zurück':
             break
@@ -1148,7 +1146,7 @@ def doz_bearbeiten(dozierenden_id: int):
         elif event == "OK":
             be.change_dozent(doz[0], values['-doz_id-'], 
                              values['-vorname-'], values['-nachname-'], 
-                             values['-username'], values['-passwort']
+                             values['-username-'], values['-passwort-']
                              )
         elif event == 'zurück':
             break
@@ -1199,7 +1197,7 @@ def admin_bearbeiten(admin_id: int):
         elif event == "OK":
             be.change_admin(admin[0], values['-admin_id-'], 
                             values['-vorname-'], values['-nachname-'], 
-                            values['-username'], values['-passwort']
+                            values['-username-'], values['-passwort-']
                             )
         elif event == 'zurück':
             break
