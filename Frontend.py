@@ -127,7 +127,7 @@ def studierende_allgemein(studi_id: int):
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
                 ]
     
-    layout = [[sg.Text('Herzlich Willkommen!'), 
+    layout = [[sg.Text(f'Herzlich Willkommen, {be.get_student_name(studi_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
               [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
@@ -140,8 +140,8 @@ def studierende_allgemein(studi_id: int):
                         row_height=35,
                         enable_events= True)],
               [sg.Text('Gesamt', font=('any', 12, 'bold')), 
-               sg.Text('Cedits gesamt' + be.get_credits_erreicht(studi_id)), 
-               sg.Text('GPA' + be.get_gpa_by_student(studi_id))]
+               sg.Text(f"Cedits gesamt: {be.get_credits_erreicht(studi_id)}"),
+               sg.Text(f"GPA: {be.get_gpa_by_student(studi_id)}")]
                ]
           
     studi_window = sg.Window('Studierendenverwaltungssystem',
@@ -243,9 +243,13 @@ def passwort_aendern():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Ändern":
-            aenderungs_daten= values['-name-'], values['-passwort-'],
+            aenderungs_daten = values['-name-'], values['-passwort-'],
             values['-neuesPasswort-'], values['-wiPasswort-']
-            break
+            # Versuch:
+            # if aenderungs_daten[2] == aenderungs_daten[3]:
+            #     print(be.change_pw_student(aenderungs_daten[0], aenderungs_daten[1], aenderungs_daten[2]))
+            # else:
+            #     raise Exception("Die eingegebenen neuen Passwörter sind nicht identisch")
 
     passwort_window.close()
 

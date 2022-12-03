@@ -7,9 +7,10 @@ noch mit Modul "DATABASE" implementiert
     version: 1.1.1
     licence: free (open source)
 """
-import Backend
+import Backend as be
 import database as db
 import app
+
 
 
 def get_student_name(student_id):
@@ -43,7 +44,7 @@ def notenberechnung(p_erreicht, p_gesamt):
 
 
 def get_raw_pruefung_data(student_id):
-    pruefungen = Backend.access_pruefung_data(student_id)
+    pruefungen = be.access_pruefung_data(student_id)
     veranstaltung_ids = []
     modul_ids = []
     veranstaltung_namen =[]
@@ -58,12 +59,16 @@ def get_raw_pruefung_data(student_id):
     for i in pruefungen:
         v_id = i[1]
         veranstaltung_ids.append(v_id)
-        veranstaltung_namen.append(db.get_veranstaltung_by_id(my_connect, v_id)[1])
-        m_id = db.get_veranstaltung_by_id(my_connect, i[1])[3]
+        querystring = be.url + f"/getVeranstaltung/{v_id}"
+        veranstaltung = be.getValues(querystring)[0]
+        veranstaltung_namen.append(veranstaltung[1])
+        m_id = veranstaltung[3]
         modul_ids.append(m_id)
-        m = db.get_modul_by_id(my_connect, m_id)[0] # gesamte Modul-Infos
-        modul_namen.append(m[1])
-        modul_credits.append(m[2])
+        querystring = be.url + f"/getModul/{m_id}"
+        modul = be.getValues(querystring)[0]
+        # m = db.get_modul_by_id(my_connect, m_id)[0] # gesamte Modul-Infos
+        modul_namen.append(modul[1])
+        modul_credits.append(modul[2])
 
         p_erreicht_list.append(i[3])
         p_gesamt_list.append(i[2])
@@ -96,16 +101,16 @@ def get_raw_modul_data (student_id):
     :param student_id:
     :return:
     """
-    m_ids = [*set(get_raw_pruefung_data(student_id)[6])]
-    m_namen = [*set(get_raw_pruefung_data(student_id)[0])]
+    pruefungen_raw = get_raw_pruefung_data(student_id)
+    m_ids = [*set(pruefungen_raw[6])]
+    m_namen = [*set(pruefungen_raw[0])]
     m_credits = [] # [*set(get_raw_pruefung_data(student_id)[1])]
     m_note = []
     note_dict = {}# {m : 'pass' for m in m_ids}
     p_ids = [] # noch berechnen!
-    raw_pruefung_data = get_raw_pruefung_data(student_id)
     pruefungen_result = []
-    for i in range(len(raw_pruefung_data[0])):
-        pruefungen_result.append([row[i] for row in raw_pruefung_data])
+    for i in range(len(pruefungen_raw[0])):
+        pruefungen_result.append([row[i] for row in pruefungen_raw])
     # print(pruefungen_result)
 
     for modul in m_ids:
@@ -123,14 +128,19 @@ def get_raw_modul_data (student_id):
     module_raw = []
     module_raw.append(m_ids)
     m_namen = []
+    m_bestanden = []
     for m in m_ids:
-        modul = db.get_modul_by_id(my_connect, m)[0]
+        querystring = be.url + f"/getModul/{m}"
+        modul = be.getValues(querystring)[0]
         m_namen.append(modul[1])
         m_credits.append(modul[2])
-        m_note.append(note_dict.get(m))
+        note = note_dict.get(m)
+        m_note.append(note)
+        m_bestanden.append(note <= 4.0)
     module_raw.append(m_namen)
     module_raw.append(m_credits)
     module_raw.append(m_note)
+    module_raw.append(m_bestanden)
 
     return module_raw
 
@@ -147,7 +157,7 @@ def print_student_module(student_id):
     *
     """
     # noch nicht gelöst: Veranstaltungen in ein Modul einbauen
-    raw_modul_data = get_raw_modul_data(student_id)[1:4]
+    raw_modul_data = get_raw_modul_data(student_id)
 
     module = []
     for i in range(len(raw_modul_data[0])):
@@ -244,29 +254,31 @@ my_connect = app.my_connect
 
 
 if __name__ == '__main__':
-    print("_______________TEST START:________________")
-    print(print_student_module(2000))
-    print(' ')
-    print(print_pruefungen_in_modul(1000, 1200))
-    print(internal_pruefungen_in_modul(1000, 1200))
-    print(get_gpa_by_student(2000))
-
-    print(get_student_name(2000))
-    # print(notenberechnung(99,100))
-    print(db.get_modul_by_id(my_connect, 9980))
-    print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
-    print(get_raw_pruefung_data(2000))
-    print(get_raw_modul_data(2000))
-    print("relevante Zeile")
-    print(print_student_module(2000))
-    print(get_credits_erreicht(2000))
-
-    print("\n bis hier funktioniert alles\n")
-    print(db.get_student_by_id(my_connect, 2000))
-    print(app.abmeldung())
-    test = app.getPruefungsleistungenByStudent(2000)
-    # print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
-    # print(get_credits_erreicht(1000))
-    print (test)
-    print("_______________TEST ENDE:________________")
+    print(get_raw_modul_data(1000))
+    print(print_student_module(1000))
+   # print("_______________TEST START:________________")
+   # print(print_student_module(2000))
+   # print(' ')
+   # print(print_pruefungen_in_modul(1000, 1200))
+   # print(internal_pruefungen_in_modul(1000, 1200))
+   # print(get_gpa_by_student(2000))
+#
+   # print(get_student_name(2000))
+   # # print(notenberechnung(99,100))
+   # print(db.get_modul_by_id(my_connect, 9980))
+   # print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
+   # print(get_raw_pruefung_data(2000))
+   # print(get_raw_modul_data(2000))
+   # print("relevante Zeile")
+   # print(print_student_module(2000))
+   # print(get_credits_erreicht(2000))
+#
+   # print("\n bis hier funktioniert alles\n")
+   # print(db.get_student_by_id(my_connect, 2000))
+   # print(app.abmeldung())
+   # test = app.getPruefungsleistungenByStudent(2000)
+   # # print(db.get_all_pruefungsleistung_by_student(my_connect, 1000))
+   # # print(get_credits_erreicht(1000))
+   # print (test)
+   # print("_______________TEST ENDE:________________")
     
