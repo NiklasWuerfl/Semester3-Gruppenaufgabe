@@ -9,7 +9,7 @@ licence: free
 import PySimpleGUI as sg
 import Backend as be
 
-def main():
+def login():
     """Implimentierung der Login Seite
 
     Tests:
@@ -36,8 +36,8 @@ def main():
                          ]
 
     login_window = sg.Window('Studierendenverwaltungssystem',
-                            layout, size=(500, 500), finalize=True
-                            )
+                             layout, size=(500, 500), finalize=True
+                             )
     login_window['-C-'].expand(True, True, True)
     login_window['-1-'].expand(True, True, True)
     login_window['-2-'].expand(True, False, True)
@@ -50,17 +50,17 @@ def main():
             login_window.close() 
             if values['-nutzer-'] == 'Studierender':
                 if be.login_student(values['-id-'], values['-passwort-']) == True:
-                    studierende_allgemein(values['-id-'])       
+                   studierende_allgemein(values['-id-'])
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Dozierender':
                 if be.login_dozent(values['-id-'], values['-passwort-']) == True:
-                    dozierende_veranstaltung(values['-id-'])       
+                   dozierende_veranstaltung(values['-id-'])
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Admin':
-                if be.login_dozent(values['-id-'], values['-passwort-']) == True:
-                    administration_allgemein(values['-id-'])       
+                if be.login_admin(values['-id-'], values['-passwort-']) == True:
+                    administration_allgemein()
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             
@@ -101,7 +101,7 @@ def erfolgreicher_logout():
             break
         elif event == "neu Anmelden":
             logout_window.close()
-            main() 
+            login()
 
     logout_window.close()
 
@@ -589,7 +589,7 @@ def admin_admin():
             break
         elif event == 'zurück':
             admin_admin_window.close()
-        elif event == 'neuen Dozierenden anlegen':
+        elif event == 'neuen Administrator anlegen':
             admin_anlegen()
         elif event == 'bearbeiten':
             admin_bearbeiten(values['-admin_id-'])
@@ -754,26 +754,35 @@ def studi_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Studierende anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Studierenden ID: '), 
-               sg.InputText(key='-studi_id-', do_not_clear=False)],
-              [sg.Text('Nachname: '), 
-               sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: '), 
-               sg.InputText(key= '-vorname-', do_not_clear=False)],
-              [sg.Text('Kurs ID: '), 
-               sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-              [sg.Text('Username: '),
-               sg.InputText(key= '-username-', do_not_clear=False)],
-              [sg.Text('Passwort: '),
-               sg.InputText(key= '-passwort-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')), 
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
+    studi_anlegen_column = [[sg.Text('Studierende anlegen', font=('any', 12, 'bold'))],
+                            [sg.Text('Studierenden ID: '),
+                             sg.InputText(key='-studi_id-', do_not_clear=False)],
+                            [sg.Text('Nachname: '),
+                             sg.InputText(key= '-nachname-', do_not_clear=False)],
+                            [sg.Text('Vorname: '),
+                             sg.InputText(key= '-vorname-', do_not_clear=False)],
+                            [sg.Text('Kurs ID: '),
+                             sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+                            [sg.Text('Username: '),
+                             sg.InputText(key= '-username-', do_not_clear=False)],
+                            [sg.Text('Passwort: '),
+                             sg.InputText(key= '-passwort-', do_not_clear=False)],
+                            [sg.Button('OK', font=('any', 9, 'underline')),
+                             sg.Button('zurück', font=('any', 9, 'underline'))]
+                             ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0, 0), key='-2-'),
+               sg.Column(studi_anlegen_column, vertical_alignment='center',
+                         justification='center', k='-C-')]
+              ]
           
     studi_anle_window = sg.Window('Studierendenverwaltungssystem', 
-                                  layout, modal=True, size=(500, 500)
+                                  layout, modal=True, size=(500, 500), finalize=True
                                   )
+    studi_anle_window['-C-'].expand(True, True, True)
+    studi_anle_window['-1-'].expand(True, True, True)
+    studi_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values = studi_anle_window.read()
@@ -800,24 +809,33 @@ def doz_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Dozierenden ID: '), 
-               sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
-              [sg.Text('Nachname: '), 
-               sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: '), 
-               sg.InputText(key= '-vorname-', do_not_clear=False)],
-              [sg.Text('Username: '),
-               sg.InputText(key= '-username-', do_not_clear=False)],
-              [sg.Text('Passwort: '),
-               sg.InputText(key= '-passwort-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')), 
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
+    doz_anlegen_column = [[sg.Text('Dozierenden anlegen', font=('any', 12, 'bold'))],
+                          [sg.Text('Dozierenden ID: '),
+                           sg.InputText(key='-dozierenden_id-', do_not_clear=False)],
+                          [sg.Text('Nachname: '),
+                           sg.InputText(key= '-nachname-', do_not_clear=False)],
+                          [sg.Text('Vorname: '),
+                           sg.InputText(key= '-vorname-', do_not_clear=False)],
+                          [sg.Text('Username: '),
+                           sg.InputText(key= '-username-', do_not_clear=False)],
+                          [sg.Text('Passwort: '),
+                           sg.InputText(key= '-passwort-', do_not_clear=False)],
+                          [sg.Button('OK', font=('any', 9, 'underline')),
+                           sg.Button('zurück', font=('any', 9, 'underline'))]
+                           ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0, 0), key='-2-'),
+               sg.Column(doz_anlegen_column, vertical_alignment='center',
+                         justification='center', k='-C-')]
+              ]
           
     doz_anle_window = sg.Window('Studierendenverwaltungssystem',
-                                layout, modal=True, size=(500, 500)
+                                layout, modal=True, size=(500, 500), finalize=True
                                 )
+    doz_anle_window['-C-'].expand(True, True, True)
+    doz_anle_window['-1-'].expand(True, True, True)
+    doz_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values= doz_anle_window.read()
@@ -844,24 +862,33 @@ def admin_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Administrator anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Admin ID: '), 
-               sg.InputText(key='-admin_id-', do_not_clear=False)],
-              [sg.Text('Nachname: '), 
-               sg.InputText(key= '-nachname-', do_not_clear=False)], 
-              [sg.Text('Vorname: '), 
-               sg.InputText(key= '-vorname-', do_not_clear=False)],
-              [sg.Text('Username: '),
-               sg.InputText(key= '-username-', do_not_clear=False)],
-              [sg.Text('Passwort: '),
-               sg.InputText(key= '-passwort-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')), 
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
+    admin_anlegen_column = [[sg.Text('Administrator anlegen', font=('any', 12, 'bold'))],
+                            [sg.Text('Admin ID: '),
+                             sg.InputText(key='-admin_id-', do_not_clear=False)],
+                            [sg.Text('Nachname: '),
+                             sg.InputText(key= '-nachname-', do_not_clear=False)],
+                            [sg.Text('Vorname: '),
+                             sg.InputText(key= '-vorname-', do_not_clear=False)],
+                            [sg.Text('Username: '),
+                             sg.InputText(key= '-username-', do_not_clear=False)],
+                            [sg.Text('Passwort: '),
+                             sg.InputText(key= '-passwort-', do_not_clear=False)],
+                            [sg.Button('OK', font=('any', 9, 'underline')),
+                             sg.Button('zurück', font=('any', 9, 'underline'))]
+                             ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0, 0), key='-2-'),
+               sg.Column(admin_anlegen_column, vertical_alignment='center',
+                         justification='center', k='-C-')]
+              ]
           
     admin_anle_window = sg.Window('Studierendenverwaltungssystem',
-                                  layout, modal=True, size=(500, 500)
+                                  layout, modal=True, size=(500, 500), finalize=True
                                   )
+    admin_anle_window['-C-'].expand(True, True, True)
+    admin_anle_window['-1-'].expand(True, True, True)
+    admin_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values = admin_anle_window.read()
@@ -888,20 +915,29 @@ def kurs_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Kurs anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Kurs ID: *'), 
-               sg.InputText(key='-kurs_id-', do_not_clear=False)],
-              [sg.Text('Kurs Name: *'), 
-               sg.InputText(key= '-kurs_name-', do_not_clear=False)], 
-              [sg.Text('Dozierenden ID: *'), 
-               sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')),
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
+    kurs_anlegen_column = [[sg.Text('Kurs anlegen', font=('any', 12, 'bold'))],
+                           [sg.Text('Kurs ID: *'),
+                            sg.InputText(key='-kurs_id-', do_not_clear=False)],
+                           [sg.Text('Kurs Name: *'),
+                            sg.InputText(key= '-kurs_name-', do_not_clear=False)],
+                           [sg.Text('Dozierenden ID: *'),
+                            sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
+                           [sg.Button('OK', font=('any', 9, 'underline')),
+                            sg.Button('zurück', font=('any', 9, 'underline'))]
+                            ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0, 0), key='-2-'),
+               sg.Column(kurs_anlegen_column, vertical_alignment='center',
+                         justification='center', k='-C-')]
+              ]
           
     kurs_anle_window = sg.Window('Studierendenverwaltungssystem', 
-                                 layout, modal=True, size=(500, 500)
+                                 layout, modal=True, size=(500, 500), finalize=True
                                  )
+    kurs_anle_window['-C-'].expand(True, True, True)
+    kurs_anle_window['-1-'].expand(True, True, True)
+    kurs_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values = kurs_anle_window.read()
@@ -927,22 +963,31 @@ def veranstaltung_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Veranstaltung anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Veranstaltung ID: *'), 
-               sg.InputText(key='-veranstaltung_id-', do_not_clear=False)],
-              [sg.Text('Veranstaltungsname: *'), 
-               sg.InputText(key= '-veranstaltungsname-', do_not_clear=False)], 
-              [sg.Text('Dozierenden ID: *'), 
-               sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
-              [sg.Text('Modul ID: *'), 
-               sg.InputText(key= '-modul_id-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')), 
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
+    veranstaltung_anlegen_column = [[sg.Text('Veranstaltung anlegen', font=('any', 12, 'bold'))],
+                                    [sg.Text('Veranstaltung ID: *'),
+                                     sg.InputText(key='-veranstaltung_id-', do_not_clear=False)],
+                                    [sg.Text('Veranstaltungsname: *'),
+                                     sg.InputText(key= '-veranstaltungsname-', do_not_clear=False)],
+                                    [sg.Text('Dozierenden ID: *'),
+                                     sg.InputText(key= '-dozierenden_id-', do_not_clear=False)],
+                                    [sg.Text('Modul ID: *'),
+                                     sg.InputText(key= '-modul_id-', do_not_clear=False)],
+                                    [sg.Button('OK', font=('any', 9, 'underline')),
+                                     sg.Button('zurück', font=('any', 9, 'underline'))]
+                                     ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0, 0), key='-2-'),
+               sg.Column(veranstaltung_anlegen_column, vertical_alignment='center',
+                         justification='center', k='-C-')]
+                         ]
           
     veran_anle_window = sg.Window('Studierendenverwaltungssystem',
-                                  layout, modal=True, size=(500, 500)
+                                  layout, modal=True, size=(500, 500), finalize=True
                                   )
+    veran_anle_window['-C-'].expand(True, True, True)
+    veran_anle_window['-1-'].expand(True, True, True)
+    veran_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values = veran_anle_window.read()
@@ -968,22 +1013,31 @@ def modul_anlegen():
 
     sg.theme('TanBlue')
 
-    layout = [[sg.Text('Modul anlegen', font=('any', 12, 'bold'))],
-              [sg.Text('Modul ID: *'), 
-               sg.InputText(key='-modul_id-', do_not_clear=False)],
-              [sg.Text('Modulname: *'), 
-               sg.InputText(key= '-modulname-', do_not_clear=False)], 
-              [sg.Text('Kurs ID: *'), 
-               sg.InputText(key= '-kurs_id-', do_not_clear=False)],
-              [sg.Text('Credits: *'), 
-               sg.InputText(key= '-credits-', do_not_clear=False)],
-              [sg.Button('OK', font=('any', 9, 'underline')), 
-               sg.Button('zurück', font=('any', 9, 'underline'))]
-               ]
-          
+    modul_anlegen_column = [[sg.Text('Modul anlegen', font=('any', 12, 'bold'))],
+                            [sg.Text('Modul ID: *'),
+                             sg.InputText(key='-modul_id-', do_not_clear=False)],
+                            [sg.Text('Modulname: *'),
+                             sg.InputText(key= '-modulname-', do_not_clear=False)],
+                            [sg.Text('Kurs ID: *'),
+                             sg.InputText(key= '-kurs_id-', do_not_clear=False)],
+                            [sg.Text('Credits: *'),
+                             sg.InputText(key= '-credits-', do_not_clear=False)],
+                            [sg.Button('OK', font=('any', 9, 'underline')),
+                             sg.Button('zurück', font=('any', 9, 'underline'))]
+                             ]
+
+    layout = [[sg.Text(key='-1-', font='ANY 1', pad=(0, 0))],
+              [sg.Text('', pad=(0,0), key='-2-'),
+               sg.Column(modul_anlegen_column, vertical_alignment='center',
+                         justification='center',  k='-C-')]
+                         ]
+
     modul_anle_window = sg.Window('Studierendenverwaltungssystem', 
-                                  layout, modal=True, size=(500, 500)
+                                  layout, modal=True, size=(500, 500), finalize=True
                                   )
+    modul_anle_window['-C-'].expand(True, True, True)
+    modul_anle_window['-1-'].expand(True, True, True)
+    modul_anle_window['-2-'].expand(True, False, True)
 
     while True:
         event, values = modul_anle_window.read()
@@ -1012,12 +1066,14 @@ def studi_bearbeiten(studi_id: int):
 
     sg.theme('TanBlue')
     
-    studi= be.get_student(studi_id)
+    studi_help = be.get_student(studi_id)
+    studi = studi_help[0]
+
 
     layout = [[sg.Text('Studierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Studierenden ID:'), sg.Text(studi[0]), 
                sg.InputText(key='-studi_id-', do_not_clear=False)],
-              [sg.Text('Vorname:'), sg.Text(studi[1]), 
+              [sg.Text('Vorname:'), sg.Text(studi[1]),
                sg.InputText(key= '-vorname-', do_not_clear=False)], 
               [sg.Text('Nachname:'), sg.Text(studi[2]), 
                sg.InputText(key= '-nachname-', do_not_clear=False)],
@@ -1063,7 +1119,8 @@ def doz_bearbeiten(dozierenden_id: int):
 
     sg.theme('TanBlue')
     
-    doz = be.get_dozent(dozierenden_id)
+    doz_help = be.get_dozent(dozierenden_id)
+    doz= doz_help[0]
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Dozierenden ID:'), sg.Text(doz[0]), 
@@ -1113,7 +1170,8 @@ def admin_bearbeiten(admin_id: int):
 
     sg.theme('TanBlue')
     
-    admin = be.get_admin(admin_id)
+    admin_help = be.get_admin(admin_id)
+    admin = admin_help[0]
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Dozierenden ID:'), sg.Text(admin[0]), 
@@ -1162,7 +1220,8 @@ def kurs_bearbeiten(kurs_id :int):
 
     sg.theme('TanBlue')
         
-    kurs = be.get_kurs(kurs_id)
+    kurs_help = be.get_kurs(kurs_id)
+    kurs = kurs_help[0]
 
     layout = [[sg.Text('Kurs bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Kurs ID:'), sg.Text(kurs[0]), 
@@ -1206,7 +1265,8 @@ def veranstaltung_bearbeiten(veran_id: int):
 
     sg.theme('TanBlue')
         
-    veran = be.get_veranstaltung(veran_id)
+    veran_help = be.get_veranstaltung(veran_id)
+    veran = veran_help[0]
 
     layout = [[sg.Text('Veranstaltung bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Veranstaltungs ID:'), sg.Text(veran[0]), 
@@ -1253,7 +1313,8 @@ def modul_bearbeiten(modul_id: int):
 
     sg.theme('TanBlue')
         
-    modul = be.get_modul(modul_id)
+    modul_help = be.get_modul(modul_id)
+    modul = modul_help[0]
 
     layout = [[sg.Text('Modul bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Modul ID:'), sg.Text(modul[0]), 
@@ -1288,6 +1349,6 @@ def modul_bearbeiten(modul_id: int):
 
 
 if __name__ == "__main__":
-    main()
+    administration_allgemein()
 
 

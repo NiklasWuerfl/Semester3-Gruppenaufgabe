@@ -1122,6 +1122,76 @@ def get_all_pruefungsleistung_by_student(conn: Connection, student_id: int) -> l
     return pruefungsleistungen
 
 
+def get_all_veranstaltungen_by_dozent(conn: Connection, dozent_id: int) -> list[list]:
+    """alle Veranstaltungen eines Dozenten aus Tabelle 'Veranstaltungen' abfragen
+
+        Args:
+            conn (Connection): Connection-Objekt für Verbindung zur Datenbank
+            dozent_id (int): einzigartige ID des Dozenten, die in Tabelle 'Veranstaltungen'
+                als Verlinkung zum Dozenten dient
+
+        Returns:
+            list: Liste mit Listen welche Attribute-Werte aller gesuchten Veranstaltungen
+                beinhaltet
+
+        Test:
+            1) Ausführen der Funktion mit gültigem Connection-Objekt und Eingabeparameter
+                -> erwartetes Ergebnis:
+                    * SQL-Befehls-String & Cursor werden erstellt
+                    * SQL-Befehl wird ausgeführt
+                    * keine Veränderungen werden in Datenbank durchgeführt
+                    * Rückgabewert: Liste mit Veranstaltungen (als Liste) des Dozenten
+            2) Ausführen der Funktion mit ungültigem Connection-Objekt
+                -> erwartetes Ergebnis:
+                    * beim Versuch Cursor zu erstellen wird Exception ausgelöst
+                    * Error wird ausgegeben
+    """
+    sql = """SELECT * FROM Veranstaltungen WHERE dozent_id=?"""
+    veranstaltungen = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (dozent_id,))
+        veranstaltungen = cur.fetchall()
+    except Error as get_all_veranstaltungen_by_dozent_error:
+        print(get_all_veranstaltungen_by_dozent_error)
+    return veranstaltungen
+
+
+def get_all_pruefungsleistung_by_veranstaltung(conn: Connection, veranstaltung_id: int) -> list[list]:
+    """alle Prüfungsleistungen einer Veranstaltung aus Tabelle 'Pruefungsleistung' abfragen
+
+        Args:
+            conn (Connection): Connection-Objekt für Verbindung zur Datenbank
+            student_id (int): einzigartige ID des Studenten, die in Tabelle 'Pruefungsleistung'
+                als Verlinkung zum Studenten dient
+
+        Returns:
+            list: Liste mit Listen welche Attribute-Werte aller gesuchten Prüfungsleistungen
+                beinhaltet
+
+        Test:
+            1) Ausführen der Funktion mit gültigem Connection-Objekt und Eingabeparameter
+                -> erwartetes Ergebnis:
+                    * SQL-Befehls-String & Cursor werden erstellt
+                    * SQL-Befehl wird ausgeführt
+                    * keine Veränderungen werden in Datenbank durchgeführt
+                    * Rückgabewert: Liste mit Prüfungsleistungen (als Liste) des Student
+            2) Ausführen der Funktion mit ungültigem Connection-Objekt
+                -> erwartetes Ergebnis:
+                    * beim Versuch Cursor zu erstellen wird Exception ausgelöst
+                    * Error wird ausgegeben
+    """
+    sql = """SELECT * FROM Pruefungsleistung WHERE student_id=?"""
+    pruefungsleistungen = None
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, (veranstaltung_id,))
+        pruefungsleistungen = cur.fetchall()
+    except Error as get_all_pruefungsleistung_by_veranstaltung_error:
+        print(get_all_pruefungsleistung_by_veranstaltung_error)
+    return pruefungsleistungen
+
+
 def database_setup(conn: Connection):
     """alle Tabellen in Datenbank erstellt
             (Student, Kurs, Dozent, Veranstaltung, Modul, Pruefungsleistung, Admin)

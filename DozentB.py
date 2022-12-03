@@ -6,9 +6,24 @@ noch mit Modul "DATABASE" implementiert
     version: 1.1.1
     licence: free (open source)
 """
-import database as db
 import app
+import database as db
+from flask import Flask
+import requests as r
 import Backend
+
+url = "http://localhost:5000"
+
+# querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
+
+
+def getValues (querystring):
+    response = r.get(querystring) #.content.decode('UTF-8')
+    if (response.status_code == 200):
+        return response.json()
+    else:
+        raise Exception(f"Es ist ein Fehler beim Zugriff auf die API aufgetreten oder es besteht kein Objekt mit der "
+                        f"angefragten ID.\n\tError Code: {response.status_code}")
 
 
 def get_dozent_name(dozent_id):
@@ -108,19 +123,23 @@ def print_pruefungen_in_modul (student_id, modul_id):
     return result
 
 
-def best_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
+def best_note(veranstaltung_id):
     """"" 
     Methode, um die beste Note zu ermitteln
     :param student_id:
     :return: bNote
     """
 
-    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
+    querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    pruefungsleistungen = data_raw
     result = []
     bNote = []
     bestNote = 0
     
-    for p in pruefungen:
+    for p in pruefungsleistungen:
         
         if result[p] > result[bestNote]:
         
@@ -130,19 +149,23 @@ def best_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
         return bNote
 
 
-def worst_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
+def worst_note(veranstaltung_id):
     """"" 
     Methode, um die schlechteste Note zu ermitteln
     :param student_id
     :return: wNote
     """
 
-    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
+    querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    pruefungsleistungen = data_raw
     result = []
     wNote = []
     worstNote = 0
     
-    for p in pruefungen:
+    for p in pruefungsleistungen:
         
         if result[p] < result[worstNote]:
         
@@ -152,19 +175,23 @@ def worst_note(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
         return wNote
 
 
-def get_mean(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
+def get_mean(veranstaltung_id):
     """"" 
     Methode, um den Mittelwert zu ermitteln
     :param student_id
     :return: mean_list
     """
 
-    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
+    querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    pruefungsleistungen = data_raw
     result = []
     mean_list = []
     mean = 0
     
-    for p in pruefungen:
+    for p in pruefungsleistungen:
         
         sum = result[p] + sum
         mean = sum / p
@@ -174,19 +201,23 @@ def get_mean(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
         return mean_list
 
 
-def get_median(pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id):
+def get_median(veranstaltung_id):
     """"" 
     Methode, um den Median zu ermitteln
     :param student_id
     :return: mean_list
     """
 
-    pruefungen = db.get_pruefungsleistung_by_id(my_connect, pruefungsleistung_student_id, pruefungsleistung_veranstaltung_id)
-    data = sorted(pruefungen)
+    querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
+    data_raw = getValues(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    pruefungsleistungen = data_raw
+    data = sorted(pruefungsleistungen)
     index = len(data) // 2
     
     # If the dataset is odd  
-    if len(pruefungen) % 2 != 0:
+    if len(pruefungsleistungen) % 2 != 0:
         return data[index]
     
     # If the dataset is even
