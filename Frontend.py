@@ -118,10 +118,11 @@ def studierende_allgemein(studi_id: int):
     """
 
     sg.theme('TanBlue')
+    nutzer= 'Studierender'
 
     modul_information_array = be.get_student_module(studi_id)
 
-    headings = ['Modul ID','Modul', 'Cedits', 'Note', 'best.']
+    headings = ['Modul ID','Modul', 'Credits', 'Note', 'best.']
 
     buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')),
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
@@ -153,7 +154,7 @@ def studierende_allgemein(studi_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            passwort_aendern()
+            passwort_aendern(nutzer)
         elif event == "Abmelden":
             studi_window.close()
             erfolgreicher_logout()
@@ -212,7 +213,7 @@ def studierende_modul(studi_id: int, modul_info):
     studi_modul_window.close()
 
 
-def passwort_aendern():
+def passwort_aendern(nutzer):
     """Seite zum ändern des Passwortes
 
     Tests:
@@ -223,13 +224,13 @@ def passwort_aendern():
     sg.theme('TanBlue')
 
     layout = [[sg.Text('Passwort ändern', font=('any', 12, 'bold'))],
-              [sg.Text('Username *'),
-               sg.InputText(key='-name-', do_not_clear=False)],
-              [sg.Text('Passwort *'),
+              [sg.Text('ID'),
+               sg.InputText(key='-id-', do_not_clear=False)],
+              [sg.Text('Passwort'),
                sg.InputText(key='-passwort-', do_not_clear=False)],
-              [sg.Text('neues Passwort *'),
+              [sg.Text('neues Passwort'),
                sg.InputText(key='-neuesPasswort-', do_not_clear=False)],
-              [sg.Text('Passwort wiederholen *'), 
+              [sg.Text('Passwort wiederholen'),
                sg.InputText(key='-wiPasswort-', do_not_clear=False)],
               [sg.Button('Ändern')]
                ]
@@ -243,19 +244,24 @@ def passwort_aendern():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Ändern":
-            aenderungs_daten = values['-name-'], values['-passwort-'],
-            values['-neuesPasswort-'], values['-wiPasswort-']
-            # Versuch:
-            # if aenderungs_daten[2] == aenderungs_daten[3]:
-            #     print(be.change_pw_student(aenderungs_daten[0], aenderungs_daten[1], aenderungs_daten[2]))
-            # else:
-            #     raise Exception("Die eingegebenen neuen Passwörter sind nicht identisch")
+            if values['-neuesPasswort-'] == values['-wiPasswort-']:
+                if nutzer == 'Studierender':
+                    sg.popup(be.change_pw_student(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
+                elif nutzer == 'Dozierende':
+                    sg.popup(be.change_pw_dozent(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
+                elif nutzer == 'Admin':
+                    sg.popup(be.change_pw_admin(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
+            else:
+                sg.popup("Die eingegebenen neuen Passwörter sind nicht identisch")
 
     passwort_window.close()
 
 
-def dozierende_veranstaltung():
+def dozierende_veranstaltung(doz_id: int):
     """Alle Veranstaltungen eines Dozenten können eingesehen werden
+
+    Args:
+        doz_id (int): ID des angemeldeten Dozierenden als Integer
 
     Tests: 
     * auf Zeile mit einer Veranstaltung klicken
@@ -263,6 +269,7 @@ def dozierende_veranstaltung():
     """
 
     sg.theme('TanBlue')
+    nutzer= 'Dozierender'
 
     veranstaltung_array = [[239847, 'Statistik', 'BWL'],
                            [837945, 'Mathe', 'Informatik']
@@ -298,7 +305,7 @@ def dozierende_veranstaltung():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            passwort_aendern()
+            passwort_aendern(nutzer)
         elif event == "Abmelden":
             veran_window.close()
             erfolgreicher_logout()
@@ -405,6 +412,7 @@ def administration_allgemein():
     """
 
     sg.theme('TanBlue')
+    nutzer= 'admin'
 
     buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), 
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
@@ -439,7 +447,7 @@ def administration_allgemein():
         if event == sg.WIN_CLOSED:
             break
         elif event == "Passwort ändern":
-            passwort_aendern()
+            passwort_aendern(nutzer)
         elif event == "Abmelden":
             admin_window.close()
             erfolgreicher_logout()
@@ -502,7 +510,9 @@ def studi_admin():
         elif event == 'bearbeiten':
             studi_bearbeiten(values['-studi_id-'])
         elif event == 'löschen': 
-            sg.popup(be.delete_student(values['-studi_id_']))
+            sg.popup(be.delete_student(values['-studi_id_'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     studi_admin_window.close()
 
@@ -550,13 +560,19 @@ def doz_admin():
         elif event == 'bearbeiten':
             doz_bearbeiten(values['-dozierenden_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_dozent(values['-dozierenden_id-']))
+            sg.popup(be.delete_dozent(values['-dozierenden_id-'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     doz_admin_window.close()
 
 
 def admin_admin():
-    """
+    """Einen Administrator bearbeiten/ anlegen oder löschen
+
+    Tests:
+    * Button für Administrator neu anlegen anklicken
+    * Admin ID eingeben und bearbeiten/ löschen klicken
     """
 
     sg.theme('TanBlue')
@@ -594,7 +610,9 @@ def admin_admin():
         elif event == 'bearbeiten':
             admin_bearbeiten(values['-admin_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_admin(values['-admin_id-']))
+            sg.popup(be.delete_admin(values['-admin_id-'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     admin_admin_window.close()
 
@@ -642,7 +660,9 @@ def kurs_admin():
         elif event == 'bearbeiten':
             kurs_bearbeiten(values['-kurs_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_kurs['-kurs_id-'])
+            sg.popup(be.delete_kurs(values['-kurs_id-'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     kurs_admin_window.close()
 
@@ -691,7 +711,9 @@ def veranstaltung_admin():
         elif event == 'bearbeiten':
             veranstaltung_bearbeiten(values['-veranstaltung_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_veranstaltung(values['-veranstaltung_id-']))
+            sg.popup(be.delete_veranstaltung(values['-veranstaltung_id-'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     veran_admin_window.close()
 
@@ -739,7 +761,9 @@ def modul_admin():
         elif event == 'bearbeiten':
             modul_bearbeiten(values['-modul_id-'])
         elif event == 'löschen':
-            sg.popup(be.delete_modul(values['-modul_id-']))
+            sg.popup(be.delete_modul(values['-modul_id-'])
+                     + "Es könnten Daten inkonsistenzen entstanden sein, dies sollte überprüft werden!"
+                     )
     
     modul_admin_window.close()
 
@@ -748,7 +772,7 @@ def studi_anlegen():
     """Einen neuen Studierenden anlegen
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Studierenden neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -789,10 +813,12 @@ def studi_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            studi_anle_window.close()
             be.create_student(values['-studi_id-'], values['-vorname-'], 
                               values['-nachname-'], values['-kurs_id-'], 
-                              values['-username-'], values['-passwort']
+                              values['-username-'], values['-passwort-']
                               )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -803,7 +829,7 @@ def doz_anlegen():
     """Ein neuer Dozierender angelegt
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Dozierenden neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -842,10 +868,12 @@ def doz_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            doz_anle_window.close()
             be.create_dozent(values['-dozierenden_id-'], values['-vorname-'], 
                              values['-nachname-'], values['-username-'],
-                             values['-passwort']
+                             values['-passwort-']
                              )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -856,7 +884,7 @@ def admin_anlegen():
     """Einen neuen Administrator anlegen
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Administrator neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -895,10 +923,12 @@ def admin_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            admin_anle_window.close()
             be.create_admin(values['-admin_id-'], values['-vorname-'], 
                             values['-nachname-'], values['-username-'],
-                            values['-passwort']
+                            values['-passwort-']
                             )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -909,7 +939,7 @@ def kurs_anlegen():
     """Ein neuer Kurs angelegt
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Kurs neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -944,9 +974,11 @@ def kurs_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            kurs_anle_window.close()
             be.create_kurs(values['-kurs_id-'], 
                            values['-kurs_name-'], values['-dozierenden_id-']
                            )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -957,7 +989,7 @@ def veranstaltung_anlegen():
     """Eine neue Veranstaltung angelegt
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Veranstaltung neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -994,9 +1026,11 @@ def veranstaltung_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            veran_anle_window.close()
             be.create_veranstaltung(values['-veranstaltung_id-'], values['-veranstaltungsname-'], 
                                     values['-dozierenden_id-'], values['-modul_id-']
                                     )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -1007,7 +1041,7 @@ def modul_anlegen():
     """Ein neues Modul angelegt
 
     Tests:
-        * Daten korrekt/ inkorrekt in Eingabefelder eintragen
+        * Daten in Eingabefelder eintragen und damit Modul neu anlegen
         * 'zurück'-Button anklicken
     """
 
@@ -1044,9 +1078,11 @@ def modul_anlegen():
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            modul_anle_window.close()
             be.create_modul(values['-modul_id-'], values['-modulname-'], 
                             values['-kurs_id-'], values['-credits-']
                             )
+            sg.popup("Es wurde erfolgreich angelegt")
         elif event == 'zurück':
             break
 
@@ -1060,7 +1096,7 @@ def studi_bearbeiten(studi_id: int):
         studi_id (int): ID eines Studierende als Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1071,6 +1107,7 @@ def studi_bearbeiten(studi_id: int):
 
 
     layout = [[sg.Text('Studierenden bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Studierenden ID:'), sg.Text(studi[0]), 
                sg.InputText(key='-studi_id-', do_not_clear=False)],
               [sg.Text('Vorname:'), sg.Text(studi[1]),
@@ -1096,10 +1133,14 @@ def studi_bearbeiten(studi_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            studi_bear_window.close()
             be.change_student(studi[0], values['-studi_id-'], values['-vorname-'], 
                               values['-nachname-'], values['-kurs_id-'], 
-                              values['-username'], values['-passwort']
+                              values['-username-'], values['-passwort-']
                               )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
@@ -1113,7 +1154,7 @@ def doz_bearbeiten(dozierenden_id: int):
         Dozierenden_id (int): ID eines Dozierenden als Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1123,6 +1164,7 @@ def doz_bearbeiten(dozierenden_id: int):
     doz= doz_help[0]
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Dozierenden ID:'), sg.Text(doz[0]), 
                sg.InputText(key='-doz_id-', do_not_clear=False)],
               [sg.Text('Nachname:'), sg.Text(doz[1]), 
@@ -1146,10 +1188,14 @@ def doz_bearbeiten(dozierenden_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            doz_bear_window.close()
             be.change_dozent(doz[0], values['-doz_id-'], 
                              values['-vorname-'], values['-nachname-'], 
-                             values['-username'], values['-passwort']
+                             values['-username-'], values['-passwort-']
                              )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
@@ -1164,7 +1210,7 @@ def admin_bearbeiten(admin_id: int):
                         bearbeitet werden soll in Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1174,6 +1220,7 @@ def admin_bearbeiten(admin_id: int):
     admin = admin_help[0]
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Dozierenden ID:'), sg.Text(admin[0]), 
                sg.InputText(key='-doz_id-', do_not_clear=False)],
               [sg.Text('Nachname:'), sg.Text(admin[1]), 
@@ -1197,10 +1244,14 @@ def admin_bearbeiten(admin_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            admin_bear_window.close()
             be.change_admin(admin[0], values['-admin_id-'], 
                             values['-vorname-'], values['-nachname-'], 
-                            values['-username'], values['-passwort']
+                            values['-username-'], values['-passwort-']
                             )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
@@ -1214,7 +1265,7 @@ def kurs_bearbeiten(kurs_id :int):
         Kurs_id (int): ID eines Kurses als Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1224,6 +1275,7 @@ def kurs_bearbeiten(kurs_id :int):
     kurs = kurs_help[0]
 
     layout = [[sg.Text('Kurs bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Kurs ID:'), sg.Text(kurs[0]), 
                sg.InputText(key='-kurs_id-', do_not_clear=False)],
               [sg.Text('Kursname:'), sg.Text(kurs[1]), 
@@ -1243,9 +1295,13 @@ def kurs_bearbeiten(kurs_id :int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            kurs_bear_window.close()
             be.change_kurs(kurs[0], values['-kurs_id-'], 
                            values['-kursname-'], values['-doz_id-']
                            )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
@@ -1259,7 +1315,7 @@ def veranstaltung_bearbeiten(veran_id: int):
         Veran_id (int): ID einer Veranstaltung als Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1269,6 +1325,7 @@ def veranstaltung_bearbeiten(veran_id: int):
     veran = veran_help[0]
 
     layout = [[sg.Text('Veranstaltung bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Veranstaltungs ID:'), sg.Text(veran[0]), 
                sg.InputText(key='-veran_id-', do_not_clear=False)],
               [sg.Text('Veranstaltungsname:'), sg.Text(veran[1]), 
@@ -1290,10 +1347,14 @@ def veranstaltung_bearbeiten(veran_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            veran_bear_window.close()
             be.change_veranstaltung(veran[0], values['-veran_id-'], 
                                     values['-veranname-'], values['-doz_id-'], 
                                     values['-modul_id-']
                                     )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
@@ -1307,7 +1368,7 @@ def modul_bearbeiten(modul_id: int):
         Modul_id (int): ID eines Moduls als Integer
 
     Tests:
-        * hinter die falsche Information die Änderung in das Inputfeld eintragen
+        * die Änderungen in die Inputfelder eintragen
         * 'zurück'-Button anklicken
     """
 
@@ -1317,6 +1378,7 @@ def modul_bearbeiten(modul_id: int):
     modul = modul_help[0]
 
     layout = [[sg.Text('Modul bearbeiten', font=('any', 12, 'bold'))],
+              [sg.Text('Es müssen alle Felder gefüllt werden!')],
               [sg.Text('Modul ID:'), sg.Text(modul[0]), 
                sg.InputText(key='-modul_id-', do_not_clear=False)],
               [sg.Text('Modulname:'), sg.Text(modul[1]), 
@@ -1338,10 +1400,14 @@ def modul_bearbeiten(modul_id: int):
         if event == sg.WIN_CLOSED:
             break
         elif event == "OK":
+            modul_bear_window.close()
             be.change_modul(modul[0], values['-modul_id-'], 
                             values['-modulname-'], values['-credits-'], 
                             values['-kurs_id-']
                             )
+            sg.popup("Änderungen wurden übernommen! Es können Daten inkosistenzen "
+                     "entstanden sein, dies sollte überprüft werden!"
+                     )
         elif event == 'zurück':
             break
 
