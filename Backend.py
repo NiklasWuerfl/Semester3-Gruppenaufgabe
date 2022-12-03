@@ -26,9 +26,9 @@ import requests as r
 url = "http://localhost:5000"
 
 
-def getValues (querystring: str) -> list[list]:
+def get_values (querystring: str) -> list[list]:
     """ Schnittstellenfunktion zur API. Führt eine request an den querystring aus und gibt das Ergebnis als
-        (strukturiertes) Array bzw. json zurück
+        (strukturiertes) Array bzw. json zurück bzw. erstellt und verändert Datensätze.
         Funktioniert nur bei laufender API!
 
         Args:
@@ -57,8 +57,7 @@ def getValues (querystring: str) -> list[list]:
 
 
 def get_student_name(student_id: int) -> str:
-    """
-    Methode zum Erhalt des Namens des Students
+    """ Methode zum Erhalt des Namens des Students
 
     Args: student_id: ID des angeforderten Studentens
     Returns: name: String in Form: "Vorname Nachname"
@@ -73,7 +72,7 @@ def get_student_name(student_id: int) -> str:
                  nicht existiert.
     """
     querystring = url + f"/getStudent/{student_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     data = data_raw[0]
@@ -83,19 +82,23 @@ def get_student_name(student_id: int) -> str:
     return name
 
 
-def get_dozent_name(dozent_id):
-    """
-    Methode zum Erhalt des Namens des Students
+def get_dozent_name(dozent_id: int) -> str:
+    """ Methode zum Erhalt des Namens des Dozents
 
-    :param dozent_id:
-    :return: name: String in Form: "Nachname, Vorname"
+    Args: dozent_id: ID des angeforderten Studentens
+    Returns: name: String in Form: "Vorname Nachname"
 
-    Tests:
-    * ungültige Dozent_id eingeben
-    *
+    Test:
+         1) dozent_id eines vorhandenen Dozenten eingeben
+            -> erwartetes Ergebnis:
+                 * String: "Vorname Nachname" des Dozenten
+         2) dozent_id eines nicht vorhandenen Dozenten eingeben
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
     """
     querystring = url + f"/getDozent/{dozent_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     data = data_raw[0]
@@ -105,19 +108,24 @@ def get_dozent_name(dozent_id):
     return name
 
 
-def get_admin_name(admin_id):
+def get_admin_name(admin_id: int) -> str:
     """
-    Methode zum Erhalt des Namens des Students
+    Methode zum Erhalt des Namens des Admins
 
-    :param admin_id:
-    :return: name: String in Form: "Nachname, Vorname"
+    Args: admin_id: ID des angeforderten Studentens
+    Returns: name: String in Form: "Vorname Nachname"
 
-    Tests:
-    * ungültige Student_id eingeben
-    *
+    Test:
+         1) admin_id eines vorhandenen Admins eingeben
+            -> erwartetes Ergebnis:
+                 * String: "Vorname Nachname" des Admins
+         2) admin_id eines nicht vorhandenen Admins eingeben
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
     """
     querystring = url + f"/getAdmin/{admin_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     data = data_raw[0]
@@ -127,42 +135,78 @@ def get_admin_name(admin_id):
     return name
 
 
-def login_student(student_id, passwort):
+def login_student(student_id: int, passwort: str) -> bool:
+    """ Überprüft Login Daten des Benutzers
+
+    Args: student_id: ID des Studierenden, der sich anmelden möchte
+    Returns: True, wenn Passwort zu User passt, ansonsten False
+    Test:
+         1) gültige ID und dazugehöriges Passwort angeben
+            -> erwartetes Ergebnis:
+                 * Rückgabewert: True
+         2) gültige ID und falsches Passwort angeben
+             -> erwartetes Ergebnis:
+                 * Rückgabewert: False
+    """
     querystring = url + f"/getStudent/{student_id}"
-    data_raw = getValues(querystring)[0]
+    data_raw = get_values(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if passwort == data_raw[5]:
         return True
     else:
-        raise Exception("Falsche Nutzer-ID oder Passwort")
+        return False
 
 
-def login_dozent(dozent_id, passwort):
+def login_dozent(dozent_id: int, passwort: str) ->bool:
+    """ Überprüft Login Daten des Benutzers
+
+        Args: dozent_id: ID des Dozierenden, der sich anmelden möchte
+        Returns: True, wenn Passwort zu User passt, ansonsten False
+        Test:
+             1) gültige ID und dazugehöriges Passwort angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: True
+             2) gültige ID und falsches Passwort angeben
+                 -> erwartetes Ergebnis:
+                     * Rückgabewert: False
+        """
     querystring = url + f"/getDozent/{dozent_id}"
-    data_raw = getValues(querystring)[0]
+    data_raw = get_values(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if passwort == data_raw[4]:
         return True
     else:
-        raise Exception("Falsche Nutzer-ID oder Passwort")
+        return False
 
 
-def login_admin(admin_id, passwort):
+def login_admin(admin_id: int, passwort: str) -> bool:
+    """ Überprüft Login Daten des Benutzers
+
+        Args: admin_id: ID des Admins, der sich anmelden möchte
+        Returns: True, wenn Passwort zu User passt, ansonsten False
+        Test:
+             1) gültige ID und dazugehöriges Passwort angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: True
+             2) gültige ID und falsches Passwort angeben
+                 -> erwartetes Ergebnis:
+                     * Rückgabewert: False
+        """
     querystring = url + f"/getAdmin/{admin_id}"
-    data_raw = getValues(querystring)[0]
+    data_raw = get_values(querystring)[0]
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     if passwort == data_raw[4]:
         return True
     else:
-        raise Exception("Falsche Nutzer-ID oder Passwort")
+        return False
 
 
 def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung):
     querystring = url + f"/edit_pruefungsleistung_by_student_and_veranstaltung/{pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return data_raw
@@ -170,38 +214,38 @@ def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltun
 
 def create_pruefungsleistung(pruefungsleistung):
     querystring = url + f"/create_pruefungsleistung/{pruefungsleistung}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return data_raw
 
 
-def access_pruefung_data(student_id):
+def access_pruefung_data(student_id: int) -> list[list]:
     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return data_raw
 
 
-def get_veranstaltung_by_dozent(dozent_id):
+def get_veranstaltung_by_dozent(dozent_id: int) -> list[list]:
     querystring = url + f"/get_all_veranstaltungen_by_dozent/{dozent_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return [data_raw]
 
 
-def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id):
+def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id: int) -> list[list]:
     querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     return data_raw
 
 
 
-def get_student_module(student_id):
+def get_student_module(student_id: int) -> list[list]:
     # result = []
     # result.append([1234, "Modul1", 5, 1.5])
     # result.append([4234, "Modul2", 7, 2.7])
@@ -209,15 +253,15 @@ def get_student_module(student_id):
     return Student_be.print_student_module(student_id)
 
 
-def get_credits_erreicht(student_id):
+def get_credits_erreicht(student_id: int) -> list[list]:
     return Student_be.get_credits_erreicht(student_id)
 
 
-def get_gpa_by_student(student_id):
+def get_gpa_by_student(student_id: int) -> list[list]:
     return Student_be.get_gpa_by_student(student_id)
 
 
-def get_modul_id_namen_student(student_id):
+def get_modul_id_namen_student(student_id: int) -> list[list]:
     return Student_be.get_modul_id_namen_student(student_id)
 
 
@@ -239,7 +283,7 @@ def get_median(student_id):
 
 def internal_pruefungen_in_modul (student_id: int, modul_id: int):
     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
-    data_raw = getValues(querystring)
+    data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
     pruefungen = data_raw
@@ -248,21 +292,21 @@ def internal_pruefungen_in_modul (student_id: int, modul_id: int):
     for p in pruefungen:
         veranstaltung_id = p[1]
         querystring2 = url + f"/getVeranstaltung/{veranstaltung_id}"
-        data_raw2 = getValues(querystring2)
+        data_raw2 = get_values(querystring2)
         m_id = data_raw2[3]
         if m_id == modul_id:
             result.append(p)
     return result
 
 
-def print_all_pruefungen_student (student_id, modul_id):
+def print_all_pruefungen_student (student_id: int, modul_id: int) -> list[list]:
     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
     result = []
     for p in pruefungen:
         details = []
         v_id = p[1]
         querystring = url + f"/getVeranstaltung/{v_id}"
-        data_raw = getValues(querystring)
+        data_raw = get_values(querystring)
         veranstaltung = data_raw[0]
         details.append(veranstaltung[1])  # Veranstaltungsname
         details.append(p[2])  # gesamte Punkte
@@ -272,14 +316,14 @@ def print_all_pruefungen_student (student_id, modul_id):
     return result
 
 
-def print_pruefungen_in_modul(student_id, modul_id):
+def print_pruefungen_in_modul(student_id: int, modul_id: int) -> list[list]:
     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
     result = []
     for p in pruefungen:
         details = []
         v_id = p[1]
         querystring = url + f"/getVeranstaltung/{v_id}"
-        data_raw = getValues(querystring)
+        data_raw = get_values(querystring)
         veranstaltung = data_raw[0]
         if veranstaltung[3] == modul_id:
             details.append(veranstaltung[0])  # veranstaltung_id
@@ -291,52 +335,71 @@ def print_pruefungen_in_modul(student_id, modul_id):
     return result
 
 
-def create_student(student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str):
+def create_student(student_id: int, vorname: str, nachname: str, kurs_id: int, nutzername: str, passwort:str) -> None:
     querystring = url + f"/createStudent/{student_id}/{vorname}/{nachname}/{kurs_id}/{nutzername}/{passwort}"
     r.get(querystring)
     return None
 
 
-def create_dozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort:str):
+def create_dozent(dozent_id: int, vorname: str, nachname: str, nutzername: str, passwort:str) -> None:
     querystring = url + f"/createDozent/{dozent_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
     r.get(querystring)
     return None
 
 
-def create_admin(admin_id: int, vorname: str, nachname: str, nutzername: str, passwort:str):
+def create_admin(admin_id: int, vorname: str, nachname: str, nutzername: str, passwort:str) -> None:
     querystring = url + f"/createAdmin/{admin_id}/{vorname}/{nachname}/{nutzername}/{passwort}"
     r.get(querystring)
     return None
 
 
-def create_kurs(kurs_id: int, name: str, dozent_id: int):
+def create_kurs(kurs_id: int, name: str, dozent_id: int) -> None:
     querystring = url + f"/createKurs/{kurs_id}/{name}/{dozent_id}"
     r.get(querystring)
     return None
 
 
-def create_modul(modul_id: int, modulname: str, module_credits: int, kurs_id: int):
+def create_modul(modul_id: int, modulname: str, module_credits: int, kurs_id: int) -> None:
     querystring = url + f"/createModul/{modul_id}/{modulname}/{module_credits}"
     r.get(querystring)
     return None
 
 
-def create_veranstaltung(veranstaltung_id: int, name: str, dozent_id: int, modul_id: int):
+def create_veranstaltung(veranstaltung_id: int, name: str, dozent_id: int, modul_id: int) -> None:
     querystring = url + f"/createVeranstaltung/{veranstaltung_id}/{name}/{dozent_id}/{modul_id}"
     r.get(querystring)
     return None
 
 
 def create_pruefungsleistung(
-        student_id: int, veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int):
+        student_id: int, veranstaltung_id: int, punkte_gesamt: int, punkte_erreicht: int) -> None:
     querystring = url + f"/createPruefungsleistung/{student_id}/{veranstaltung_id}/{punkte_gesamt}/{punkte_erreicht}"
     r.get(querystring)
     return None
 
+
 def change_pw_student(student_id,old_password, new_password):
-    old_data = get_student(student_id)
+    old_data = get_student(student_id)[0]
     if old_data[5] == old_password:
         change_student(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
+        return "Das Passwort wurde erfolgreich geändert"
+    else:
+        raise Exception("Ihr Passwort ist nicht korrekt")
+
+
+def change_pw_dozent(dozent_id, old_password, new_password):
+    old_data = get_dozent(dozent_id)
+    if old_data[5] == old_password:
+        change_dozent(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
+        return "Das Passwort wurde erfolgreich geändert"
+    else:
+        raise Exception("Ihr Passwort ist nicht korrekt")
+
+
+def change_pw_admin(admin_id, old_password, new_password):
+    old_data = get_admin(admin_id)
+    if old_data[5] == old_password:
+        change_admin(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
         return "Das Passwort wurde erfolgreich geändert"
     else:
         raise Exception("Ihr Passwort ist nicht korrekt")
@@ -436,46 +499,159 @@ def delete_pruefungsleistung(pruefungsleistung_id: int):
     return None
 
 
-def get_student(student_id: int):
+def get_student(student_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz eines Studenten aus der Tabelle Student und liefert diesen als Array zurück
+
+        Args: student_id: ID des Studenten, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [student_id, Vorname, Nachname, Kurs_id,
+         Nutzername, passwort]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [student_id, Vorname, Nachname, Kurs_id, Nutzername, passwort] des konkreten
+                      Studenten
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getStudent/{student_id}"
-    response = getValues(querystring)
-    return response # als Array
+    response = get_values(querystring)
+    return response
 
 
-def get_dozent(dozent_id: int):
+def get_dozent(dozent_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz eines Dozenten aus der Tabelle Dozent und liefert diesen als Array zurück
+
+        Args: dozent_id: ID des Dozenten, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [dozent_id, Vorname, Nachname,
+         Nutzername, passwort]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [student_id, Vorname, Nachname, Nutzername, passwort] des konkreten Dozenten
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getDozent/{dozent_id}"
-    response = getValues(querystring)
+    response = get_values(querystring)
     return response # als Array
 
 
-def get_admin(admin_id: int):
+def get_admin(admin_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz eines Admins aus der Tabelle Admin und liefert diesen als Array zurück
+
+        Args: admin_id: ID des Admins, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [admin_id, Vorname, Nachname, Nutzername
+        , passwort]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [student_id, Vorname, Nachname, Kurs_id, Nutzername, passwort] des konkreten
+                      Studenten
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getAdmin/{admin_id}"
-    response = getValues(querystring)
+    response = get_values(querystring)
     return response # als Array
 
 
-def get_kurs(kurs_id: int):
+def get_kurs(kurs_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz eines Kurses aus der Tabelle Kurs und liefert diesen als Array zurück
+
+        Args: kurs_id: ID des Kurses, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [kurs_id,name,dozent_id]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [kurs_id,name,dozent_id] des konkreten Kurses
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getKurs/{kurs_id}"
-    response = getValues(querystring)
+    response = get_values(querystring)
     return response # als Array
 
 
-def get_modul(modul_id: int):
+def get_modul(modul_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz eines Moduls aus der Tabelle Modul und liefert diesen als Array zurück
+
+        Args: modul_id: ID des Moduls, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [modul_id,modulname,credits,kurs_id]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [modul_id,modulname,credits,kurs_id] des konkreten Moduls
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getModul/{modul_id}"
-    response = getValues(querystring)
-    return response # als Array
+    response = get_values(querystring)
+    return response
 
 
-def get_veranstaltung(veranstaltung_id: int):
+def get_veranstaltung(veranstaltung_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz einer Veranstaltung aus der Tabelle Veranstaltung und liefert diesen als Array
+    zurück
+
+        Args: veranstaltung_id: ID der Veranstaltung, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [modul_id,modulname,credits,kurs_id]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [veranstaltung_id,name,dozent_id,modul_id] der konkreten Veranstaltung
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getVeranstaltung/{veranstaltung_id}"
-    response = getValues(querystring)
-    return response # als Array
+    response = get_values(querystring)
+    return response
 
 
-def get_pruefungsleistung(pruefungsleistung_id: int):
+def get_pruefungsleistung(pruefungsleistung_id: int) -> list[list]:
+    """ Ermittelt den gesamten Datensatz einer Prüfungsleistung aus der Tabelle Prüfungsleistung und liefert diesen als
+    Array zurück
+
+        Args: pruefungsleistung_id: ID der Prüfungsleistung, dessen Daten angefordert werden
+        Returns: Liste mit den Daten in der Reihenfolge aus der Datenbank, also [modul_id,modulname,credits,kurs_id]
+        Test:
+             1) laufende API und gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Rückgabewert: Liste [student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht] der konkreten
+                     Prüfungsleistung
+             2) nicht laufende API und gültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API
+            3) laufende API und ungültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
+        """
     querystring = url + f"/getPruefungsleistung/{pruefungsleistung_id}"
-    response = getValues(querystring)
-    return response # als Array
+    response = get_values(querystring)
+    return response
 
 
 if __name__ == "__main__":

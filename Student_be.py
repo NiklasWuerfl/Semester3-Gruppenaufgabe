@@ -60,12 +60,12 @@ def get_raw_pruefung_data(student_id):
         v_id = i[1]
         veranstaltung_ids.append(v_id)
         querystring = be.url + f"/getVeranstaltung/{v_id}"
-        veranstaltung = be.getValues(querystring)[0]
+        veranstaltung = be.get_values(querystring)[0]
         veranstaltung_namen.append(veranstaltung[1])
         m_id = veranstaltung[3]
         modul_ids.append(m_id)
         querystring = be.url + f"/getModul/{m_id}"
-        modul = be.getValues(querystring)[0]
+        modul = be.get_values(querystring)[0]
         # m = db.get_modul_by_id(my_connect, m_id)[0] # gesamte Modul-Infos
         modul_namen.append(modul[1])
         modul_credits.append(modul[2])
@@ -131,7 +131,7 @@ def get_raw_modul_data (student_id):
     m_bestanden = []
     for m in m_ids:
         querystring = be.url + f"/getModul/{m}"
-        modul = be.getValues(querystring)[0]
+        modul = be.get_values(querystring)[0]
         m_namen.append(modul[1])
         m_credits.append(modul[2])
         note = note_dict.get(m)
