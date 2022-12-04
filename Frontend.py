@@ -1677,10 +1677,11 @@ def modul_bearbeiten(modul_id: int):
                sg.InputText(key='-modul_id-', do_not_clear=False)],
               [sg.Text('Modulname:'), sg.Text(modul[1]), 
                sg.InputText(key='-modulname-', do_not_clear=False)],
-              [sg.Text('Kurs ID:'), sg.Text(modul[2]), 
-               sg.InputText(key='-kurs_id-', do_not_clear=False)],
-              [sg.Text('Credits:'), sg.Text(modul[3]), 
+              [sg.Text('Credits:'), sg.Text(modul[2]),
                sg.InputText(key='-credits-', do_not_clear=False)],
+              [sg.Text('Kurs ID:'), sg.Text(modul[3]),
+               sg.InputText(key='-kurs_id-', do_not_clear=False)],
+
               [sg.Button('OK', font=('any', 9, 'underline')), 
                sg.Button('zurück', font=('any', 9, 'underline'))]
               ]
