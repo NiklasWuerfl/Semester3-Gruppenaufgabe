@@ -226,7 +226,7 @@ def studierende_modul(studi_id: int, modul_info):
     modul_note = str(modul_info[3])
     modulinhalt = be.print_pruefungen_in_modul(studi_id, modul_info[0])
 
-    headings = ['Veranstalungs ID', 'Veranstaltung', 'P. g.', 'P. e.', 'Note']
+    headings = ['Veranstalungs ID', 'Veranstaltung', 'Punkte gesamt', 'Punkte erreicht', 'Note']
 
     layout = [[sg.Text(modul_name)],
               [sg.Table(values=modulinhalt, headings=headings, max_col_width=35,
@@ -298,7 +298,7 @@ def passwort_aendern(nutzer):
                 passwort_window.close()
                 if nutzer == 'Studierender':
                     sg.popup(be.change_pw_student(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
-                elif nutzer == 'Dozierende':
+                elif nutzer == 'Dozierender':
                     sg.popup(be.change_pw_dozent(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
                 elif nutzer == 'Admin':
                     sg.popup(be.change_pw_admin(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
@@ -508,7 +508,7 @@ def administration_allgemein(admin_id: int):
     """
 
     sg.theme('TanBlue')
-    nutzer = 'admin'
+    nutzer = 'Admin'
 
     buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), 
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
