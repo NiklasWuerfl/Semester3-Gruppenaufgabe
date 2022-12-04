@@ -253,12 +253,12 @@ def create_pruefungsleistung(pruefungsleistung):
     return data_raw
 
 
-# def access_pruefung_data(student_id: int) -> list[list]:
-#     querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
-#     data_raw = get_values(querystring)
-#     if type(data_raw) is Exception:
-#         raise Exception(data_raw)
-#     return data_raw
+def access_pruefung_data(student_id: int) -> list[list]:
+    querystring = url + f"/getPruefungsleistungenByStudent/{student_id}"
+    data_raw = get_values(querystring)
+    if type(data_raw) is Exception:
+        raise Exception(data_raw)
+    return data_raw
 
 
 def get_veranstaltung_by_dozent(dozent_id: int) -> list[list]:
@@ -774,9 +774,9 @@ def change_pw_dozent(dozent_id: int, old_password: str, new_password: str) -> st
                 -> erwartetes Ergebnis:
                      * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
         """
-    old_data = get_dozent(dozent_id)
-    if old_data[5] == old_password:
-        change_dozent(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
+    old_data = get_dozent(dozent_id)[0]
+    if old_data[4] == old_password:
+        change_dozent(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], new_password)
         return "Das Passwort wurde erfolgreich geändert"
     else:
         raise Exception("Ihr Passwort ist nicht korrekt")
@@ -803,9 +803,9 @@ def change_pw_admin(admin_id: int, old_password: str, new_password: str) -> str:
                 -> erwartetes Ergebnis:
                      * Exception: Fehler bei Verbindung zu API bzw. Objekt nicht gefunden
         """
-    old_data = get_admin(admin_id)
-    if old_data[5] == old_password:
-        change_admin(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], old_data[4], new_password)
+    old_data = get_admin(admin_id)[0]
+    if old_data[4] == old_password:
+        change_admin(old_data[0], old_data[0], old_data[1], old_data[2], old_data[3], new_password)
         return "Das Passwort wurde erfolgreich geändert"
     else:
         raise Exception("Ihr Passwort ist nicht korrekt")
@@ -1328,7 +1328,8 @@ def get_pruefungsleistung(pruefungsleistung_id: int) -> list[list]:
 
 
 if __name__ == "__main__":
-    print(get_veranstaltung_by_dozent(310))
+    print(change_pw_student(1000, "passwort", "neu"))
+    # print(get_veranstaltung_by_dozent(310))
     # print(get_student(1000))
     # print(get_dozent(555))
     # print(app.get_pruefungsleistungen_by_student(2000))
