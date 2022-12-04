@@ -19,8 +19,8 @@
 import Student_be
 import DozentB
 import app
-import database as db
 from flask import Flask
+import database as db
 import requests as r
 
 url = "http://localhost:5000"
@@ -205,6 +205,23 @@ def login_admin(admin_id: int, passwort: str) -> bool:
 
 
 def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung):
+    """ Methode zum Ändern der Prüfungsdaten
+
+    Args: pruefungsleistung_student: Pruefungsleistung des angeforderten Studenten als int
+          pruefungsleistung_veranstaltung: pruefungsleistung der gesamten Veranstaltung als Liste
+
+    Returns: data_raw: veränderte Prüfungsdaten
+
+    Test:
+         1) Prüfungsleistung eines vorhandenen Studentens verändern
+            -> erwartetes Ergebnis:
+                 * verändert die Note des Studentens
+         2) Prüfungsleistung eines nicht vorhandenen Studentens verändern
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+
     querystring = url + f"/edit_pruefungsleistung_by_student_and_veranstaltung/{pruefungsleistung_student, pruefungsleistung_veranstaltung, pruefungsleistung}"
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
@@ -213,6 +230,22 @@ def edit_pruefung_data(pruefungsleistung_student, pruefungsleistung_veranstaltun
 
 
 def create_pruefungsleistung(pruefungsleistung):
+    """ Methode zum Erstellen der Prüfungsdaten
+
+    Args: pruefungsleistung: prüfungsleistung als int
+
+    Returns: data_raw: erstellte Prüfungsdaten
+
+    Test:
+         1) Prüfungsleistung eines vorhandenen Studentens erstellen
+            -> erwartetes Ergebnis:
+                 * erstellt die Prüfungsleistung des Studentens
+         2) Prüfungsleistung eines nicht vorhandenen Studentens erstellen
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+
     querystring = url + f"/create_pruefungsleistung/{pruefungsleistung}"
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
@@ -229,6 +262,22 @@ def create_pruefungsleistung(pruefungsleistung):
 
 
 def get_veranstaltung_by_dozent(dozent_id: int) -> list[list]:
+    """ Methode, um die Veranstaltungen eines Dozenten zu bekommen
+
+    Args: dozent_id: ID des Dozierenden, von dem man die Veranstaltungen möchte
+
+    Returns: data_raw: die Veranstaltungen des Dozenten als Liste
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Veranstaltungen des Dozenten
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+
     querystring = url + f"/get_all_veranstaltungen_by_dozent/{dozent_id}"
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
@@ -237,6 +286,22 @@ def get_veranstaltung_by_dozent(dozent_id: int) -> list[list]:
 
 
 def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id: int) -> list[list]:
+    """ Methode, um die Prüfungsleistungen einer Veranstaltung zu bekommen
+
+    Args: veranstaltung_id: ID der Veranstaltung, von der man die Prüfungsleistungen möchte
+
+    Returns: data_raw: die Prüfungsleistungen der Veranstaltung als Liste
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Prüfungsleistungen der Veranstaltung als Liste
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+
     querystring = url + f"/get_all_pruefungsleistung_by_veranstaltung/{veranstaltung_id}"
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
@@ -290,20 +355,80 @@ def get_gpa_and_credits_student(student_id: int) -> list[list]:
 #     return Student_be.get_modul_id_namen_student(student_id)
 
 
-def get_best_note(student_id):
-    return DozentB.best_note(student_id)
+def get_best_note(veranstaltung_id):
+    """ Methode, um die beste Note einer Veranstaltung zu bekommen
+
+    Args: veranstaltung_id: ID der Veranstaltung, von der man die beste Note möchte
+
+    Returns: data_raw: die beste Note der Veranstaltungen 
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * beste Note der Veranstaltungen
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+    return DozentB.best_note(veranstaltung_id)
 
 
-def get_worst_note(student_id):
-    return DozentB.worst_note(student_id)
+def get_worst_note(veranstaltung_id):
+    """ Methode, um die schlechteste Note einer Veranstaltung zu bekommen
+
+    Args: veranstaltung_id: ID der Veranstaltung, von der man die schlechteste Note möchte
+
+    Returns: data_raw: die schlechteste Note der Veranstaltungen 
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * schlechteste Note der Veranstaltungen
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+    return DozentB.worst_note(veranstaltung_id)
 
 
-def get_mean(student_id):
-    return DozentB.get_mean(student_id)
+def get_mean(veranstaltung_id):
+    """ Methode, um den Mittelwert einer Veranstaltung zu bekommen
+
+    Args: veranstaltung_id: ID der Veranstaltung, von der man den Mittelwert möchte
+
+    Returns: data_raw: der Mittelwert der Veranstaltungen 
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Mittelwert der Veranstaltungen
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+    return DozentB.get_mean(veranstaltung_id)
 
 
-def get_median(student_id):
-    return DozentB.get_median(student_id)
+def get_median(veranstaltung_id):
+    """ Methode, um den Median einer Veranstaltung zu bekommen
+
+    Args: veranstaltung_id: ID der Veranstaltung, von der man den Median möchte
+
+    Returns: data_raw: der Median der Veranstaltungen 
+
+    Test:
+         1) gültige ID angeben
+                -> erwartetes Ergebnis:
+                     * Median der Veranstaltungen
+             2) ungültige ID angeben
+                 -> erwartetes Ergebnis:
+                     * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        """
+    return DozentB.get_median(veranstaltung_id)
 
 
 def internal_pruefungen_in_modul (student_id: int) -> list[list]:
@@ -1203,10 +1328,11 @@ def get_pruefungsleistung(pruefungsleistung_id: int) -> list[list]:
 
 
 if __name__ == "__main__":
-    print(get_student(1000))
-    print(get_dozent(555))
-    print(app.get_pruefungsleistungen_by_student(2000))
-    print(get_veranstaltung_by_dozent(120))
+    print(get_veranstaltung_by_dozent(310))
+    # print(get_student(1000))
+    # print(get_dozent(555))
+    # print(app.get_pruefungsleistungen_by_student(2000))
+    # print(get_veranstaltung_by_dozent(120))
     # print(get_modul(1200))
     # print(get_veranstaltung(1000))
     # print(get_veranstaltung(1001))
