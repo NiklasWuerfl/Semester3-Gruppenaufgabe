@@ -214,7 +214,7 @@ def studierende_modul(studi_id: int, modul_info):
     studi_modul_window.close()
 
 
-def passwort_aendern(nutzer):
+def passwort_aendern(nutzer: str):
     """Seite zum ändern des Passwortes
 
     Tests:
@@ -244,7 +244,7 @@ def passwort_aendern(nutzer):
         event, values = passwort_window.read()
         if event == sg.WIN_CLOSED:
             break
-        elif event == "Ändern":
+        elif event == 'Ändern':
             if values['-neuesPasswort-'] == values['-wiPasswort-']:
                 if nutzer == 'Studierender':
                     sg.popup(be.change_pw_student(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
@@ -252,6 +252,8 @@ def passwort_aendern(nutzer):
                     sg.popup(be.change_pw_dozent(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
                 elif nutzer == 'Admin':
                     sg.popup(be.change_pw_admin(values['-id-'], values['-passwort-'], values['-neuesPasswort-']))
+                else:
+                    sg.popup("Etwas ist schief gelaufen.")
             else:
                 sg.popup("Die eingegebenen neuen Passwörter sind nicht identisch")
 
@@ -270,7 +272,7 @@ def dozierende_veranstaltung(doz_id: int):
     """
 
     sg.theme('TanBlue')
-    nutzer= 'Dozierender'
+    nutzer= 'Dozierende'
 
     veranstaltung_array = [[239847, 'Statistik', 'BWL'],
                            [837945, 'Mathe', 'Informatik']
@@ -413,7 +415,7 @@ def administration_allgemein(admin_id: int):
     """
 
     sg.theme('TanBlue')
-    nutzer= 'admin'
+    nutzer = 'Admin'
 
     buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')), 
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
