@@ -1146,7 +1146,7 @@ def get_all_veranstaltungen_by_dozent(conn: Connection, dozent_id: int) -> list[
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """SELECT * FROM Veranstaltungen WHERE dozent_id=?"""
+    sql = """SELECT * FROM Veranstaltung WHERE dozent_id=?"""
     veranstaltungen = None
     try:
         cur = conn.cursor()
@@ -1154,7 +1154,7 @@ def get_all_veranstaltungen_by_dozent(conn: Connection, dozent_id: int) -> list[
         veranstaltungen = cur.fetchall()
     except Error as get_all_veranstaltungen_by_dozent_error:
         print(get_all_veranstaltungen_by_dozent_error)
-    return [veranstaltungen]
+    return veranstaltungen
 
 
 def get_all_pruefungsleistung_by_veranstaltung(conn: Connection, veranstaltung_id: int) -> list[list]:
@@ -1338,7 +1338,7 @@ def fill_testdatabase(conn: Connection):
     """
     sql_fill_students="""
         INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
-            VALUES (1000,'s1000','Lastname10',23,'Stud10','passwort');
+            VALUES (1000,'Max','Mustermann',23,'Stud10','passwort');
         INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
             VALUES (2000,'s2000','Lastname20',23,'Stud20','passwort');
         INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)

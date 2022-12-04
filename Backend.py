@@ -1328,7 +1328,8 @@ def get_pruefungsleistung(pruefungsleistung_id: int) -> list[list]:
 
 
 if __name__ == "__main__":
-    print(change_pw_student(1000, "passwort", "neu"))
+    print(app.get_all_veranstaltungen_by_dozent(110))
+    # print(change_pw_student(1000, "passwort", "neu"))
     # print(get_veranstaltung_by_dozent(310))
     # print(get_student(1000))
     # print(get_dozent(555))

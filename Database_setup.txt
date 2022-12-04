@@ -1,0 +1,64 @@
+sql_fill_students="""
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (1000,'Max','Mustermann',23,'Stud10','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (2000,'s2000','Lastname20',23,'Stud20','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (3000,'s3000','Lastname30',23,'Stud30','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (4000,'s4000','Lastname40',23,'Stud40','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (1100,'s1100','Lastname11',56,'Stud11','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (2100,'s2100','Lastname21',56,'Stud21','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (3100,'s3100','Lastname31',56,'Stud31','passwort');
+    INSERT INTO Student(student_id,vorname,nachname,kurs_id,nutzername,passwort)
+        VALUES (4100,'s4100','Lastname41',56,'Stud41','passwort');"""
+sql_fill_kurs="""
+    INSERT INTO Kurs(kurs_id,name,dozent_id) VALUES (23,'WWI2021E',555);
+    INSERT INTO Kurs(kurs_id,name,dozent_id) VALUES (56,'BWL1999U',666);"""
+sql_fill_dozent="""
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (110,'Peter','Kurz','PKurz','KURZpeter');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (120,'Sebastian','Fichtner','SFichtner','FICHTNERsebastian');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (310,'Andrea','Schlauer','ASchlauer','SCHLAUERandrea');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (810,'Johannes','Unkreativ','JUnkreativ','UNKREATIVjohannes');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (900,'Jochen','Grewatsch','JGrewatsch','GREWATSCHjochen');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (555,'Marcus','Vogt','MVogt','VOGTmarcus');
+    INSERT INTO Dozent(dozent_id,vorname,nachname,nutzername,passwort) VALUES (666,'Alter','Sgleiter','ASgleiter','SGLEITERalter');"""
+sql_fill_modul="""
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (1200,'Mathematik II',8,23);
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (3000,'IT Konzepte',5,23);
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (9980,'Finanz- und Rechnungslehre',5,23);
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (1201,'Mathematik II',8,56);
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (3001,'IT Konzepte',5,56);
+    INSERT INTO Modul(modul_id,modulname,credits,kurs_id) VALUES (9981,'Finanz- und Rechnungslehre',5,56);"""
+sql_fill_veranstaltung="""
+    INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (1000,'Statistik',110,1200);
+    INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (1001,'Operations Research',120,1200);
+    INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (2000,'Kommunikationssysteme',310,3000);
+    INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (2001,'Grundlagen IT',810,3000);
+    INSERT INTO Veranstaltung(veranstaltung_id,name,dozent_id,modul_id) VALUES (3000,'Finanzierung',900,9980);"""
+sql_fill_pruefungsleistung="""
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,1000,60,52);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,1001,60,58);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,2000,80,75);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,2001,40,36);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (1000,3000,120,108);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,1000,60,32);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,1001,60,41);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,2000,80,52);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,2001,40,20);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (2000,3000,120,64);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,1000,60,45);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,1001,60,50);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,2000,80,57);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,2001,40,34);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (3000,3000,120,98);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,1000,60,52);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,1001,60,48);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,2000,80,66);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,2001,40,31);
+    INSERT INTO Pruefungsleistung(student_id,veranstaltung_id,punkte_gesamt,punkte_erreicht) VALUES (4000,3000,120,null);"""
+sql_fill_admin="""
+    INSERT INTO Admin(admin_id,vorname,nachname,nutzername,passwort) VALUES (99,'Power','Admin','AdminUser','AdminPW')"""

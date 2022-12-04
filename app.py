@@ -877,4 +877,5 @@ def get_all_pruefungsleistung_by_veranstaltung(dozent_id: int):
 if __name__ == '__main__':
     db.database_setup(my_connect)
     db.fill_testdatabase(my_connect)
+    get_all_veranstaltungen_by_dozent(110)
     app.run(debug=True)
