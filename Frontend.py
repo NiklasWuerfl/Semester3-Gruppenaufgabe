@@ -166,6 +166,7 @@ def studierende_allgemein(studi_id: int):
     layout = [[sg.Text(f'Herzlich Willkommen, {be.get_student_name(studi_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
+              [sg.Text('Für mehr Informationen über ein Modul kann dieses angeklickt werden!')]
               [sg.Text('Leistungsübersicht', font=('any', 12, 'bold'))],
               [sg.Table(values=modul_information_array, headings=headings, max_col_width=35,
                         auto_size_columns=True,
@@ -349,6 +350,7 @@ def dozierende_veranstaltung(doz_id: int):
     layout = [[sg.Text(f'Herzlich Willkommen, {be.get_dozent_name(doz_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
+              [sg.Text('Für mehr Informationen über eine Veranstaltung kann auf diese geklickt werden!')]
               [sg.Text('Veranstaltungen', font=('any', 12, 'bold')),
                sg.Button('neue Veranstaltungsnoten eintragen', font=('any', 9, 'underline'))],
               [sg.Table(values=veranstaltung_array, headings=headings, max_col_width=35,
