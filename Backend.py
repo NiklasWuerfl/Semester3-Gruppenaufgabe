@@ -282,7 +282,7 @@ def get_veranstaltung_by_dozent(dozent_id: int) -> list[list]:
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    return [data_raw]
+    return data_raw
 
 
 def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id: int) -> list[list]:
@@ -306,7 +306,12 @@ def get_all_pruefungsleistungen_by_veranstaltung(veranstaltung_id: int) -> list[
     data_raw = get_values(querystring)
     if type(data_raw) is Exception:
         raise Exception(data_raw)
-    return data_raw
+    data = []
+    data.append(data_raw[0])
+    data.append(data_raw[2])
+    data.append(data_raw[3])
+    # data.append(Student_be.notenberechnung(data_raw[3], data_raw[2]))
+    return data
 
 
 

@@ -337,11 +337,9 @@ def dozierende_veranstaltung(doz_id: int):
     sg.theme('TanBlue')
     nutzer = 'Dozierender'
 
-    veranstaltung_array = [[239847, 'Statistik', 'BWL'],
-                           [837945, 'Mathe', 'Informatik']
-                           ]
+    veranstaltung_array = be.get_veranstaltung_by_dozent(doz_id)
     
-    headings = ['Veranstaltungs ID', 'Veranstaltungsname', 'Kurs']
+    headings = ['Veranstaltungs ID', 'Veranstaltungsname']
 
     buttons = [[sg.Button('Passwort ändern', font=('any', 9, 'underline')),
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
@@ -350,7 +348,7 @@ def dozierende_veranstaltung(doz_id: int):
     layout = [[sg.Text(f'Herzlich Willkommen, {be.get_dozent_name(doz_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
-              [sg.Text('Für mehr Informationen über eine Veranstaltung kann auf diese geklickt werden!')]
+              [sg.Text('Für mehr Informationen über eine Veranstaltung kann auf diese geklickt werden!', font=('any', 9, 'bold'))],
               [sg.Text('Veranstaltungen', font=('any', 12, 'bold')),
                sg.Button('neue Veranstaltungsnoten eintragen', font=('any', 9, 'underline'))],
               [sg.Table(values=veranstaltung_array, headings=headings, max_col_width=35,
@@ -407,10 +405,9 @@ def veranstaltung_kurs(veran_info):
     sg.theme('TanBlue')
 
     veranstaltung_name = veran_info[1]
-    kurs_info = [[9823057, 'nach1', 'Vor1', 2.6],
-                 [2739474, 'nach2', 'Vor2', 1.8]]
+    kurs_info = be.get_all_pruefungsleistungen_by_veranstaltung(veran_info[0])
 
-    headings = ['Matrikelnummer', 'Nachname', 'Vorname', 'Note']
+    headings = ['Matrikelnummer', 'Veranstaltungs_id', 'Gesamtpunktzahl', 'erreichte Punkte']
 
     layout = [[sg.Text(veranstaltung_name)],
               [sg.Table(values=kurs_info, headings=headings, max_col_width=35,
@@ -461,8 +458,8 @@ def veranstaltungsnoten_eintragen():
               [sg.Text('Studierenden ID:'), 
                sg.InputText(key='-studi_id-', do_not_clear=False)],
               [sg.Text('Punkte gesamt'), 
-               sg.InputText(key='-punkte_gesamt-', do_not_clear=True),
-               sg.Text('Punkte erreicht'), 
+               sg.InputText(key='-punkte_gesamt-', do_not_clear=True)],
+               [sg.Text('Punkte erreicht'),
                sg.InputText(key='-punkte_erreicht-', do_not_clear=False)],
               [sg.Button('OK', font=('any', 9, 'underline')),
                sg.Button('zurück', font=('any', 9, 'underline'))]

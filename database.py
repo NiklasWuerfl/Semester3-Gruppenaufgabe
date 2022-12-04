@@ -1181,7 +1181,7 @@ def get_all_pruefungsleistung_by_veranstaltung(conn: Connection, veranstaltung_i
                     * beim Versuch Cursor zu erstellen wird Exception ausgelöst
                     * Error wird ausgegeben
     """
-    sql = """SELECT * FROM Pruefungsleistung WHERE student_id=?"""
+    sql = """SELECT * FROM Pruefungsleistung WHERE veranstaltung_id=?"""
     pruefungsleistungen = None
     try:
         cur = conn.cursor()
