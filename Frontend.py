@@ -60,7 +60,7 @@ def login():
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             elif values['-nutzer-'] == 'Admin':
                 if be.login_admin(values['-id-'], values['-passwort-']) == True:
-                    administration_allgemein()
+                    administration_allgemein(values['-id-'])
                 else:
                     sg.popup("Falsche Nutzer-ID oder Passwort")
             
@@ -121,6 +121,7 @@ def studierende_allgemein(studi_id: int):
     nutzer= 'Studierender'
 
     modul_information_array = be.get_student_module(studi_id)
+    total_information_array = be.get_gpa_and_credits_student(studi_id)
 
     headings = ['Modul ID','Modul', 'Credits', 'Note', 'best.']
 
@@ -141,8 +142,8 @@ def studierende_allgemein(studi_id: int):
                         row_height=35,
                         enable_events= True)],
               [sg.Text('Gesamt', font=('any', 12, 'bold')), 
-               sg.Text(f"Cedits gesamt: {be.get_credits_erreicht(studi_id)}"),
-               sg.Text(f"GPA: {be.get_gpa_by_student(studi_id)}")]
+               sg.Text(f"Credits gesamt: {total_information_array[1]}"),
+               sg.Text(f"GPA: {total_information_array[0]}")]
                ]
           
     studi_window = sg.Window('Studierendenverwaltungssystem',
@@ -281,7 +282,7 @@ def dozierende_veranstaltung(doz_id: int):
                 sg.Button('Abmelden', font=('any', 9, 'underline'))]
                 ]
 
-    layout = [[sg.Text('Herzlich Willkommen!'),
+    layout = [[sg.Text(f'Herzlich Willkommen, {be.get_dozent_name(doz_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
               [sg.Text('Veranstaltungen', font=('any', 12, 'bold')),
@@ -312,7 +313,7 @@ def dozierende_veranstaltung(doz_id: int):
         elif event == "neue Veranstaltungsnoten eintragen":
             veranstaltungsnoten_eintragen()
         elif event== "-table-":
-            selected_row_index= values['-Table-'][0]
+            selected_row_index= values['-table-'][0]
             veranstaltungs_information= veranstaltung_array[selected_row_index]
             veranstaltung_kurs(veranstaltungs_information)
 
@@ -402,7 +403,7 @@ def veranstaltungsnoten_eintragen():
     veran_noten_window.close()
 
 
-def administration_allgemein():
+def administration_allgemein(admin_id: int):
     """ Sollen Studierende, Dozierende, Studiengangsleitung, Veranstaltungen 
         oder Module bearbeitet, neu angelet oder gelöscht werden
 
@@ -427,7 +428,7 @@ def administration_allgemein():
                      sg.Button('Modul', font=('any', 9, 'underline'), size=(15, 3))]
                      ]
 
-    layout = [[sg.Text('Herzlich Willkommen!'), 
+    layout = [[sg.Text(f'Herzlich Willkommen, {be.get_admin_name(admin_id)}!'),
                sg.Column(buttons, element_justification='right', expand_x=True)],
               [sg.HorizontalSeparator()],
               [sg.Text(key='-1-', font='ANY 1', pad=(0, 0))], 
@@ -1221,8 +1222,8 @@ def admin_bearbeiten(admin_id: int):
 
     layout = [[sg.Text('Dozierenden bearbeiten', font=('any', 12, 'bold'))],
               [sg.Text('Es müssen alle Felder gefüllt werden!')],
-              [sg.Text('Dozierenden ID:'), sg.Text(admin[0]), 
-               sg.InputText(key='-doz_id-', do_not_clear=False)],
+              [sg.Text('Admin ID:'), sg.Text(admin[0]),
+               sg.InputText(key='-admin_id-', do_not_clear=False)],
               [sg.Text('Nachname:'), sg.Text(admin[1]), 
                sg.InputText(key= '-nachname-', do_not_clear=False)], 
               [sg.Text('Vorname:'), sg.Text(admin[2]), 

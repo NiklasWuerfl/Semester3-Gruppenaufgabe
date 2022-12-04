@@ -625,7 +625,7 @@ def get_kurs_by_id(conn: Connection, kurs_id: int) -> list:
         kurs = cur.fetchall()
     except Error as get_kurs_by_id_error:
         print(get_kurs_by_id_error)
-    return kurs[0]
+    return [kurs[0]]
 
 
 def get_dozent_by_id(conn: Connection, dozent_id: int) -> list:

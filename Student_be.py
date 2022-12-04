@@ -1,37 +1,16 @@
 """
 Modul um die nötigen Informationen für die Studenten-Startseite zu erhalten
-noch mit Modul "DATABASE" implementiert
 
     author: Niklas Würfl
-    date: 07.11.2022
-    version: 1.1.1
+    date: 04.12.2022
+    version: 1.3
     licence: free (open source)
 """
 import Backend as be
-import database as db
-import app
 
 
-
-def get_student_name(student_id):
-    """
-    Methode zum Erhalt des Namens des Students
-
-    :param student_id:
-    :return: name: String in Form: "Nachname, Vorname"
-
-    Tests:
-    * ungültige Student_id eingeben
-    *
-    """
-    vorname = db.get_student_by_id(my_connect, student_id)[0][1]
-    nachname = db.get_student_by_id(my_connect, student_id)[0][2]
-    name = nachname + ", " + vorname
-    return name
-
-
-def notenberechnung(p_erreicht, p_gesamt):
-    """
+def notenberechnung(p_erreicht: int, p_gesamt: int) -> float:
+    """ berechnet aus Gesamtpunktzahl und erreichter Punktzahl die Note aus (nach DHBW-Richtlinien
 
     :param p_erreicht:
     :param p_gesamt:
@@ -166,88 +145,102 @@ def print_student_module(student_id):
     return module
 
 
-def get_credits_erreicht(student_id: int):
-    ects_list = get_raw_modul_data(student_id)[2]
-    noten = get_raw_modul_data(student_id)[3] # evtl. vereinfachbar in ein Array
-    credits_erreicht = 0
+def get_gpa_and_credits_student(student_id):
+    """ Methode zum Erhalt des Durchschnitts und der erreichten Credits eines Studenten
 
-    for i in range(len(noten)):
-        if noten[i] <= 4.0:
-            credits_erreicht += ects_list[i]
+    Args: student_id: ID des angeforderten Studenten
+    Returns: list: Liste in Form von [gpa, credits_erreicht] für den konkreten Studenten
 
-    # kurs_id = db.get_student_by_id(my_connect, student_id)[3]
-
-    # punkte_erreicht = 0
-    # for pruefung in db.get_all_pruefungsleistung_by_student(my_connect, student_id):
-    #     punkte_erreicht += pruefung[1]
-    # credits_list = db.get_modul_by_id()[2]
-
-    return credits_erreicht
-
-
-def get_gpa_by_student(student_id):
+    Test:
+         1) student_id eines vorhandenen Studenten eingeben
+            -> erwartetes Ergebnis:
+                 * Liste: [gpa, credits_erreicht]
+         2) student_id eines nicht vorhandenen Studenten eingeben
+             -> erwartetes Ergebnis:
+                 * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+                 nicht existiert.
+        3) Test mit laufender bzw. nicht laufender API, bei nicht laufender, soll Exception ausgelöst werden.
+    """
+    modul_data = get_raw_modul_data(student_id)
     gewichtete_noten_sum = 0.0
     ects_reached = 0.0
-    credits = get_raw_modul_data(student_id)[2]
-    note = get_raw_modul_data(student_id)[3]
+    credits = modul_data[2]
+    note = modul_data[3]
     # bestanden = get_raw_modul_data(student_id)[5]
     for i in range(len(credits)):
         if note[i] <= 4.0:
             gewichtete_noten_sum += credits[i] * note[i]
             ects_reached += credits[i]
-    # alle_noten = db.get_all_modules(my_connect, student_id)
-    # ects_reached = get_credits_erreicht(my_connect, student_id)
-    # print(alle_noten)
-    # print(ects_reached)
-    # print (list(alle_noten.values()))
 
     gpa = gewichtete_noten_sum/ects_reached
     # truncate
     gpa = int(gpa*10)
     gpa /= 10
-    return gpa
+    return [gpa, ects_reached]
 
 
-def get_modul_id_namen_student(student_id):
-    """
-    obsolete Funktion
-    :param student_id:
-    :return:
-    """
-    modul_ids = [*set(get_raw_pruefung_data(student_id)[6])]
-    # modul_namen = [*set(get_raw_modul_data(student_id)[0])]
-    # module_raw = [modul_ids, modul_namen]
-    # module_result = []
-    # for i in range(len(module_raw[0])):
-    #     module_result.append([row[i] for row in module_raw])
-    return modul_ids
+# def get_modul_id_namen_student(student_id):
+#     """
+#     obsolete Funktion
+#     :param student_id:
+#     :return:
+#     """
+#     modul_ids = [*set(get_raw_pruefung_data(student_id)[6])]
+#     # modul_namen = [*set(get_raw_modul_data(student_id)[0])]
+#     # module_raw = [modul_ids, modul_namen]
+#     # module_result = []
+#     # for i in range(len(module_raw[0])):
+#     #     module_result.append([row[i] for row in module_raw])
+#     return modul_ids
 
 
-def internal_pruefungen_in_modul(student_id, modul_id):
-    pruefungen = db.get_all_pruefungsleistung_by_student(my_connect, student_id)
-    result = []
-    for p in pruefungen:
-        if db.get_veranstaltung_by_id(my_connect, p[1])[3] == modul_id:
-            result.append(p)
-    return result
+# def internal_pruefungen_in_modul(student_id, modul_id):
+#     # pruefungen = db.get_all_pruefungsleistung_by_student(my_connect, student_id)
+#     querystring = be.url + f"/getPruefungsleistungenByStudent/{student_id}"
+#     pruefungen = be.get_values(querystring)
+#     result = []
+#     for p in pruefungen:
+#         querystring = be.url + f"/getVeranstaltung/{p[1]}"
+#         veranstaltung = be.get_values(querystring)
+#         if veranstaltung[3] == modul_id:
+#             result.append(p)
+#     return result
 
 
-def print_pruefungen_in_modul (student_id, modul_id):
-    pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
-    result = []
-    for p in pruefungen:
-        details = []
-        veranstaltung = db.get_veranstaltung_by_id(my_connect, p[1])
-        details.append(veranstaltung[1]) # Veranstaltungsname
-        details.append(p[2]) # gesamte Punkte
-        details.append(p[3]) # erreichte Punkte
-        details.append(notenberechnung(p[3], p[2]))
-        result.append(details)
-    return result
+# def print_pruefungen_in_modul (student_id: int, modul_id: int) -> list[list]:
+#     """ Methode zum Erhalt aller Prüfungen eines Studenten in einem Modul
+#
+#     Args:   student_id: ID des angeforderten Studenten
+#             modul_id: ID des angefragten Moduls
+#     Returns: list: Liste von Listen in Form von [veranstaltung_id,punkte_gesamt,punkte_erreicht] für den konkreten
+#     Studenten und das konkrete Modul
+#
+#     Test:
+#          1) student_id eines vorhandenen Studenten und modul_id eines vorhandenen Moduls eingeben
+#             -> erwartetes Ergebnis:
+#                  * Liste: [veranstaltung_id,punkte_gesamt,punkte_erreicht]
+#          2) student_id eines nicht vorhandenen Dozenten eingeben
+#              -> erwartetes Ergebnis:
+#                  * Exception: Mitteilung, dass Datenbankverbindung nicht funktioniert hat bzw. das angeforderte Objekt
+#                  nicht existiert.
+#         3) Test mit laufender bzw. nicht laufender API, bei nicht laufender, soll Exception ausgelöst werden.
+#     """
+#     pruefungen = internal_pruefungen_in_modul(student_id, modul_id)
+#     result = []
+#     for p in pruefungen:
+#         details = []
+#         querystring = be.url + f"/getVeranstaltung/{p[1]}"
+#         veranstaltung = be.get_values(querystring)
+#         details.append(veranstaltung[1]) # Veranstaltungsname
+#         details.append(p[2]) # gesamte Punkte
+#         details.append(p[3]) # erreichte Punkte
+#         details.append(notenberechnung(p[3], p[2]))
+#         result.append(details)
+#     return result
 
 
 # database elements
-my_connect = app.my_connect
+# my_connect = app.my_connect
 # DATABASE_FILE = "data.db"
 # my_connect = db.create_database_connection(DATABASE_FILE)
 # my_cursor = my_connect.cursor()
